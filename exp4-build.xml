@@ -22,7 +22,7 @@ Example 3:
     ant run
 Sets the play path to the build.xml directly.
 -->
-<project name="exp4main" basedir=".">
+<project name="exp4todo" basedir=".">
   <!-- env variables -->
   <property environment="env"/>
   <property name="play.path" value="${env.PLAY_PATH}"/>
@@ -32,16 +32,16 @@ Sets the play path to the build.xml directly.
   <property name="app.dir" value="." />
   <property name="log.dir" value="${app.dir}/logs" />
   <property name="zip.file" value="${env.USER}.zip" />
-
+  
   <!-- cleanup -->
   <target name="logclean">
-    <delete>
-      <fileset dir="logs" includes="*" />
+   <delete includeemptydirs="true">
+      <fileset dir="logs" includes="**/*" />    
     </delete>
   </target>
   <target name="tmpclean">
-    <delete>
-      <fileset dir="tmp" includes="*" />
+    <delete includeemptydirs="true">
+      <fileset dir="tmp" includes="**/*" />    
     </delete>
   </target>
   <target name="dotclean">
@@ -56,5 +56,5 @@ Sets the play path to the build.xml directly.
       <exclude name="${zip.file}" />
     </zip>
   </target>
-
+  
 </project>
