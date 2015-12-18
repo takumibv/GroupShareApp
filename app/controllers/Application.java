@@ -1,19 +1,18 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import models.Group;
-import models.Project;
+import java.util.List;
+
 import models.User;
-
-import models.*;
-
-import javax.persistence.*;
-import java.util.*;
+import play.data.validation.Error;
+import play.mvc.Controller;
 
 
 public class Application extends Controller {
-
+	private final static String SESSION_KEY_USER = "username";
+	private final static String SESSION_KEY_LOGIN_STATUS = "session_status";
+	private final static String SESSION_STATUS_LOGIN = "login";
+	private final static String SESSION_STATUS_LOGOUT = "logout";
+	
 	// トップページ
     public static void index() {
         render();
@@ -21,7 +20,7 @@ public class Application extends Controller {
 
     // アカウント登録ページ
     public static void signup() {
-        render();
+    	render();
     }
 
     // 設定ページ
@@ -60,13 +59,49 @@ public class Application extends Controller {
     }
 
     // アカウントを作成する
-    public static void makeAccount(){
-    	mypage();
+    public static void makeAccount(String name, String password, String password_conf){
+    	validation.required(name); 
+    	validation.required(password);
+    	validation.required(password_conf);
+    	validation.equals(password, password_conf);
+    	
+        if(validation.hasErrors()) {
+            for(Error error : validation.errors()) {
+                System.out.println(error.message());
+            }
+            signup();
+        }
+        else if(User.isExists(name)){
+            signup();
+        }
+        else{
+        	User newUser = new User(name, password);
+        	newUser.save();
+
+    		session.put(SESSION_KEY_USER, name);
+    		session.put(SESSION_KEY_LOGIN_STATUS, SESSION_STATUS_LOGIN);
+          	
+        	mypage();
+        }
     }
 
     // サインインする
-    public static void signin() {
-        mypage();
+    public static void signin(String name, String password) {
+    	validation.required(name); 
+    	validation.required(password);
+    	
+    	//signin
+    	if(User.isAbleToLogin(name, password)){
+    		session.put(SESSION_KEY_USER, name);
+    		session.put(SESSION_KEY_LOGIN_STATUS, SESSION_STATUS_LOGIN);
+            mypage();
+    	}
+    	//signin failed
+    	else{
+    		session.put(SESSION_KEY_USER, name);
+    		session.put(SESSION_KEY_LOGIN_STATUS, SESSION_STATUS_LOGOUT);
+    		index();
+    	}
     }
 
     // パスワードを変更する
@@ -76,6 +111,7 @@ public class Application extends Controller {
 
     // ログアウトする
     public static void logout(){
+		session.put(SESSION_KEY_LOGIN_STATUS, SESSION_STATUS_LOGOUT);
     	index();
     }
 
