@@ -1,0 +1,17 @@
+*{<meta charset="utf-8">}*
+#{extends 'Application/header.html' /}
+<h2>設定</h2>
+
+<form action="changePass">
+	<input type="password" name="password" placeholder="パスワード">
+	<input type="password" name="password-conf" placeholder="パスワード（確認）">
+	<input type="submit" value="パスワードを変更">
+</form>
+
+<form action="signout">
+	<input type="submit" value="退会">
+</form>
+
+<form action="mypage">
+	<input type="submit" value="戻る">
+</form>

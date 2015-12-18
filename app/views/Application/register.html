@@ -1,0 +1,23 @@
+*{<meta charset="utf-8">}*
+#{extends 'Application/header.html' /}
+<h2>登録</h2>
+
+<form action="saveRegistration">
+	<p>第１志望</p>
+	<select name="group-1">
+		<option value="1">グループ１</option>
+		<option value="2">グループ２</option>
+		<option value="3">グループ３</option>
+	</select>
+	<p>第２志望</p>
+	<select name="group-2">
+		<option value="1">グループ１</option>
+		<option value="2">グループ２</option>
+		<option value="3">グループ３</option>
+	</select>
+	<input type="submit" value="登録する">
+</form>
+
+<form action="mypage">
+	<input type="submit" value="マイページに戻る">
+</form>

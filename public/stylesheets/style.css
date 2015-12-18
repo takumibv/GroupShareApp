@@ -1,0 +1,32 @@
+body {
+	color: #555;
+	font-size: 12px;
+}
+
+#header {
+	background-color: #eee;
+}
+
+#main {
+	background-color: #ddd;
+}
+
+a {
+	color: #1aa;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+h1 {
+	font-size: 24px;
+}
+
+h2 {
+	font-size: 20px;
+}
+
+p {
+	font-size: 12px;
+}

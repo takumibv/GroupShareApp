@@ -1,0 +1,18 @@
+*{<meta charset="utf-8">}*
+#{extends 'Application/header.html' /}
+<h2>マイページ</h2>
+
+<form action="makeProject">
+	<input type="submit" value="プロジェクト作成">
+</form>
+
+<form action="setting">
+	<input type="submit" value="設定">
+</form>
+
+<form action="logout">
+	<input type="submit" value="ログアウト">
+</form>
+
+<a href="@{project()}">プロジェクト名</a> <a href="@{editProject()}">編集</a>
+<a href="@{result()}">結果を見る</a>

@@ -1,5 +1,13 @@
 *{<meta charset="utf-8">}*
-#{extends 'Application/main.html' /}
-<p>あなたの予想に反して、このページが見えているでしょうか?</p>
-<p>たくみ</p>
-<p>だいき</p>
+#{extends 'Application/header.html' /}
+<h2>トップ</h2>
+
+<form action="signup">
+	<input type="submit" value="アカウントを作る">
+</form>
+
+<form action="signin">
+	<input type="text" name="name" placeholder="ユーザ名">
+	<input type="password" name="password" placeholder="パスワード">
+	<input type="submit" value="サインイン">
+</form>
