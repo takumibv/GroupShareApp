@@ -1,18 +1,22 @@
+/*********
+ * 1.style 
+ * 2.header 
+ * 3.main 
+ * 4.topページ
+ *********/
+
+
+/*********
+ * 1.style 
+ *********/
 body {
 	color: #555;
 	font-size: 12px;
-}
-
-#header {
-	background-color: #fff;
-}
-
-#main {
-	background-color: #fff;
+	font-family: 'TsukuARdGothic-Regular';
 }
 
 a {
-	color: #1aa;
+	color: #555;
 }
 
 a:hover {
@@ -30,3 +34,119 @@ h2 {
 p {
 	font-size: 12px;
 }
+
+.container {
+	width: 850px;
+	position: relative;
+}
+
+/*********
+ * 2.header 
+ *********/
+#header {
+	background-color: #fff;
+	border-bottom: thin solid #999;
+    height: 52px;
+}
+
+#header h1 {
+    font-size: 32px;
+    line-height: 1.5;
+    float: left;
+}
+
+#header h1 a {
+	font-weight: bold;
+}
+
+#header .right-nav {
+    float: right;
+}
+
+#header .right-nav p {
+	font-size: 16px;
+	float: left;
+	margin-top: 14px;
+	margin-right: 20px;
+}
+
+#header .right-nav .login-btn {
+    margin-right: 20px;
+}
+
+#header .right-nav .signup-btn {
+	font-size: 20px;
+    color: #fff;
+    background-color: #FF8240;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    border-radius: 6px;
+    margin-top: 12px;
+}
+
+/*********
+ * 3.main 
+ *********/
+#main {
+	background-color: #fff;
+}
+
+/*********
+ * 4.topページ 
+ *********/
+@media (min-width: 960px) {
+	#main_visual {
+		background-size: 100%;
+	}
+}
+
+#main_visual {
+	height: 400px;
+	background-image: url("/public/images/main_visual.png");
+	box-shadow: 0 5px 10px #ccc;
+}
+
+#main_visual .signup-btn {
+	margin-top: 20px;
+    background-color: #FF8240;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#main_visual .box {
+	width: 220px;
+	border: none;
+    border-radius: 6px;
+    box-shadow: 0 0 5px #aaa;
+}
+
+#main_visual .sub-title {
+	position: absolute;
+    top: 60px;
+    right: 20px;
+    color: #fff;
+    font-size: 30px;
+    line-height: 1.5;
+}
+
+#login-box {
+    background-color: #eee;
+    padding: 20px;
+    margin-top: 60px;
+}
+
+#login-box input {
+	width: 100%;
+	margin-bottom: 12px;
+}
+
+#login-box .signin-btn {
+	background-color: #4688FC;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+}
+

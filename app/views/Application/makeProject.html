@@ -10,9 +10,32 @@
 		<option value="2">ジャンケン</option>
 	</select>
 	<input type="number" name="project[wish_limit]">
-	<input type="submit" value="保存">
+	
+	<button type="button" class="btn" data-toggle="modal" data-target="#add-group-modal">グループを追加</button>
+	<div id="groups-field"></div>
+
+	<input class="btn" type="submit" value="保存">
 </form>
 
 <form action="mypage">
-	<input type="submit" value="戻る">
+	<input class="btn" type="submit" value="戻る">
 </form>
+
+<!-- グループ追加 Modal -->
+<div class="modal fade" id="add-group-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        テスト
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        <button type="button" class="btn btn-primary">追加する</button>
+      </div>
+    </div>
+  </div>
+</div>

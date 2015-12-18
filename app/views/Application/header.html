@@ -7,13 +7,21 @@
   <link rel="stylesheet" type="text/css" href="/public/stylesheets/reset.css">
   <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <link meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="@{'/public/javascripts/jquery-2.1.4.js'}" type="text/javascript" charset="utf-8"></script>
+  <script src="/public/javascripts/main.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
   <title>exp4main</title>
 </head>
 <body>
 <div id="header">
-	<h1><a href="@{mypage()}">グループ振り分けアプリ</a></h1>
+	<div class="container">
+    <h1><a href="@{mypage()}">グループ振り分けアプリ</a></h1>
+    <div class="right-nav clearfix">
+      <p>ユーザ名</p>
+      <a href=""><p class="setting-btn">設定</p></a>
+      <a href=""><p class="logout-btn">ログアウト</p></a>
+    </div>
+  </div>
 </div>
 <div id="main" class="container">
 #{doLayout /}
