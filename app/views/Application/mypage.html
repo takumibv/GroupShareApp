@@ -2,10 +2,10 @@
 #{extends 'Application/header.html' /}
 <h2>マイページ</h2>
 
-<div id="news-block">
+<div id="news-block" class="sans-serif">
 	<h3>お知らせ</h3>
-	<p >件のお知らせがあります。</p>
-	<p >過去のお知らせを見る</p>
+	<p class="note">2件のお知らせがあります。</p>
+	<a class="seeMore" href="">過去のお知らせを見る</a>
 	<table class="table table-bordered">
 		<tbody>
 			<tr>
@@ -17,12 +17,13 @@
 </div>
 
 <form action="makeProject">
-	<input type="submit" value="プロジェクト作成">
+	<input class="makeproject-btn btn" type="submit" value="プロジェクト作成">
 </form>
 
-<div id="invited-block">
+<div id="invited-projects-block" class="projects-block">
+	<div class="view-toggle"><i class="fa fa-caret-down"></i></div>
 	<h3>招待されているプロジェクト</h3>
-	<table class="table table-bordered">
+	<table class="table table-bordered project-table">
 		<tbody>
 			<tr>
 				<th>プロジェクト</th>
@@ -30,18 +31,58 @@
 				<th>登録</th>
 			</tr>
 			<tr>
-				<td>H26 情報工学科研究室振り分け</td>
-				<td>12/18</td>
-				<td>登録</td>
+				<td class="column-1"><a href="@{project()}">H26 情報工学科研究室振り分け</a></td>
+				<td class="column-2">12/18</td>
+				<td class="column-3"><a class="register-btn btn" href="@{register()}">登録する</a></td>
 			</tr>
 			<tr>
-				<td>H26 情報工学科研究室振り分け</td>
-				<td>12/18</td>
-				<td>登録</td>
+				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
+				<td class="column-2">12/18</td>
+				<td class="column-3">登録済み</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
 
-<a href="@{project()}">プロジェクト名</a> <a href="@{editProject()}">編集</a>
-<a href="@{result()}">結果を見る</a>
+<div id="created-projects-block" class="projects-block">
+	<div class="view-toggle"><i class="fa fa-caret-down"></i></div>
+	<h3>作成したプロジェクト</h3>
+	<table class="table table-bordered project-table">
+		<tbody>
+			<tr>
+				<th>プロジェクト</th>
+				<th>締め切り</th>
+				<th>登録</th>
+			</tr>
+			<tr>
+				<td class="column-1"><a href="@{project()}">H26 情報工学科研究室振り分け</a></td>
+				<td class="column-2">12/18</td>
+				<td class="column-3"><a class="edit-btn btn" href="@{editProject()}">編集する</a></td>
+			</tr>
+			<tr>
+				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
+				<td class="column-2">終了</td>
+				<td class="column-3"><a class="result-btn btn" href="@{result()}">結果を見る</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="join-projects-block" class="projects-block">
+	<div class="view-toggle"><i class="fa fa-caret-down"></i></div>
+	<h3>参加したプロジェクト</h3>
+	<table class="table table-bordered project-table">
+		<tbody>
+			<tr>
+				<th>プロジェクト</th>
+				<th>あなたのグループ</th>
+				<th>登録</th>
+			</tr>
+			<tr>
+				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
+				<td class="column-2">林研究室</td>
+				<td class="column-3"><a class="result-btn btn" href="@{result()}">結果を見る</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

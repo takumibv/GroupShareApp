@@ -27,10 +27,12 @@ body {
 
 a {
 	color: #555;
+	font-family: 'TsukuARdGothic-Regular';
 }
 
 a:hover {
 	text-decoration: none;
+	opacity: 0.8;
 }
 
 h1 {
@@ -48,6 +50,18 @@ p {
 .container {
 	width: 850px;
 	position: relative;
+}
+
+.btn {
+	font-family: 'TsukuARdGothic-Regular';
+	color: #fff;
+	border: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+.btn:hover {
+	color: #fff;
+	opacity: 0.8;
 }
 
 /*********
@@ -90,13 +104,9 @@ p {
 
 #header .right-nav .signup-btn {
 	font-size: 20px;
-    color: #fff;
     background-color: #FF8240;
-    height: 30px;
-    width: 100px;
     text-align: center;
-    border-radius: 6px;
-    margin-top: 12px;
+    margin-top: 6px;
 }
 
 /*********
@@ -133,7 +143,6 @@ p {
 #main_visual .signup-btn {
 	margin-top: 20px;
     background-color: #FF8240;
-    color: #fff;
     font-size: 20px;
     font-weight: bold;
 }
@@ -167,11 +176,8 @@ p {
 
 #login-box .signin-btn {
 	background-color: #4688FC;
-    color: #fff;
     font-size: 16px;
     margin: 12px 0;
-    border: none;
-    border-radius: 6px;
 }
 
 #top-main {
@@ -191,4 +197,94 @@ p {
 #footer {
     height: 60px;
     background-color: #ccc;
+}
+
+/*********
+ * 6.mypageページ
+ *********/
+.makeproject-btn {
+	margin: 8px 0;
+    background-color: #FF8240;
+    box-shadow: 0 0 3px #888;
+}
+
+.register-btn {
+	background-color: #FF8240;
+}
+
+.edit-btn {
+	background-color: #57B239;
+}
+
+.result-btn {
+	background-color: #4688FC;
+}
+
+#news-block h3 {
+	float: left;
+    font-size: 18px;
+    margin-right: 20px;
+}
+
+#news-block .note {
+	float: left;
+    color: #f00;
+}
+
+#news-block .seeMore {
+	float: right;
+    font-size: 14px;
+}
+
+.view-toggle {
+	background-color: #DDD;
+    float: left;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+.view-toggle i {
+	font-size: 24px;
+    line-height: 1.3;
+}
+
+.projects-block {
+	margin-top: 32px;
+	font-family: "游ゴシック体", "Yu Gothic", YuGothic, sans-serif;
+}
+
+.projects-block h3 {
+	font-size: 18px;
+    height: 30px;
+    line-height: 1.5;
+}
+
+.project-table th {
+	padding: 0 !important;
+    height: 20px;
+    text-align: center;
+}
+
+.project-table td {
+	height: 44px;
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.project-table .column-1 {
+	width: 60%;
+}
+
+.project-table .column-1 a {
+	color: #FF8240;
+	font-family: 'TsukuARdGothic-Regular';
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.project-table .column-2 {
+	width: 20%;
 }
