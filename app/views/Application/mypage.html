@@ -2,17 +2,46 @@
 #{extends 'Application/header.html' /}
 <h2>マイページ</h2>
 
+<div id="news-block">
+	<h3>お知らせ</h3>
+	<p >件のお知らせがあります。</p>
+	<p >過去のお知らせを見る</p>
+	<table class="table table-bordered">
+		<tbody>
+			<tr>
+				<td>12/18</td>
+				<td>プロジェクト「H26 情報工学科研究室振り分け」に招待されました。</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
 <form action="makeProject">
 	<input type="submit" value="プロジェクト作成">
 </form>
 
-<form action="setting">
-	<input type="submit" value="設定">
-</form>
-
-<form action="logout">
-	<input type="submit" value="ログアウト">
-</form>
+<div id="invited-block">
+	<h3>招待されているプロジェクト</h3>
+	<table class="table table-bordered">
+		<tbody>
+			<tr>
+				<th>プロジェクト</th>
+				<th>締め切り</th>
+				<th>登録</th>
+			</tr>
+			<tr>
+				<td>H26 情報工学科研究室振り分け</td>
+				<td>12/18</td>
+				<td>登録</td>
+			</tr>
+			<tr>
+				<td>H26 情報工学科研究室振り分け</td>
+				<td>12/18</td>
+				<td>登録</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 
 <a href="@{project()}">プロジェクト名</a> <a href="@{editProject()}">編集</a>
 <a href="@{result()}">結果を見る</a>

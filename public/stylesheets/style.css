@@ -3,16 +3,26 @@
  * 2.header 
  * 3.main 
  * 4.topページ
+ * 5.footer
  *********/
 
 
 /*********
  * 1.style 
  *********/
+html {
+	height: 100%;
+}
+
 body {
 	color: #555;
 	font-size: 12px;
 	font-family: 'TsukuARdGothic-Regular';
+	height: 100%;
+}
+
+.sans-serif {
+  font-family: "游ゴシック体", "Yu Gothic", YuGothic, sans-serif;
 }
 
 a {
@@ -53,10 +63,14 @@ p {
     font-size: 32px;
     line-height: 1.5;
     float: left;
+    font-weight: bold;
 }
 
-#header h1 a {
-	font-weight: bold;
+#header .icon {
+	margin: 6px 0;
+	margin-right: 8px;
+    float: left;
+    width: 40px;
 }
 
 #header .right-nav {
@@ -90,6 +104,15 @@ p {
  *********/
 #main {
 	background-color: #fff;
+	padding-bottom: 20px;
+	min-height: calc(100% - 112px);
+}
+
+#main h2 {
+	font-size: 30px;
+    line-height: 1.5;
+    font-weight: bold;
+    margin: 8px 0;
 }
 
 /*********
@@ -146,7 +169,26 @@ p {
 	background-color: #4688FC;
     color: #fff;
     font-size: 16px;
+    margin: 12px 0;
     border: none;
     border-radius: 6px;
 }
 
+#top-main {
+	min-height: calc(100% - 512px);
+}
+
+#top-main .sub-title {
+    margin: 40px 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/*********
+ * 5.footer
+ *********/
+#footer {
+    height: 60px;
+    background-color: #ccc;
+}
