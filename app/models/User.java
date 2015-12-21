@@ -23,33 +23,70 @@ public class User extends Model {
 		this.password = createHashedPassword(password);
 		this.isDeleted = false;
 	}
-	
-	public static String createHashedPassword(String password) {
-		return DigestGenerator.getSHA256(password);
+
+	public static boolean createUser(String name, String password){
+		if(isExists(name)){
+			return false;
+		}
+
+		User newUser = new User(name, password);
+		newUser.save();
+		return true;
 	}
-	
+
+	public static void signOut(String name){
+		if(!isExists(name))return;
+
+		List<User> users = User.find("name=?", name).fetch();
+		final User user = users.get(0);
+
+		user.isDeleted = true;
+		user.save();
+	}
+
 	public static boolean isAbleToLogin(String name, String password) {
 		if(!isExists(name)){
 			return false;
 		}
-		
+
 		List<User> users = User.find("name=?", name).fetch();
 		final User user = users.get(0);
-		
-		if(!user.isPasswordEqual(password)){
+
+		if(user.isDeleted){
+			return false;
+		}
+		else if(!user.isPasswordEqual(password)){
 			return false;
 		}
 		
 		return true;		
 	}
+
+	public static boolean changePass(String name, String password){
+		if(!isExists(name)){
+			return false;
+		}
+
+		List<User> users = User.find("name=?", name).fetch();
+		final User user = users.get(0);
+
+		user.password = createHashedPassword(password);
+		user.save();
+
+		return true;
+	}
 	
 	public static boolean isExists(String name){
+		if(name == null)return false;
 		List<User> users = User.find("name=?", name).fetch();
 		return (users != null) && (users.size() == 1);
 	}
 	
-	private boolean isPasswordEqual(String password){
+	public boolean isPasswordEqual(String password){
 		return this.password.equals(createHashedPassword(password));
 	}
 
+	private static String createHashedPassword(String password) {
+		return DigestGenerator.getSHA256(password);
+	}
 }
