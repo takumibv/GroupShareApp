@@ -155,6 +155,7 @@ public class Application extends Controller {
 
 		// プロジェクトを保存する
 		public static void saveProject(){ 
+			/*
 			// プロジェクト保存
 			Project p = new Project();
 			// project保存
@@ -175,6 +176,7 @@ public class Application extends Controller {
 					, Integer.parseInt(params.get("Group-" + i + "capacity"))
 					, p.getId());
 			}
+			*/
 
 			mypage();
     }
