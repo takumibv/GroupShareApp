@@ -22,5 +22,5 @@ public class Wish extends Model {
 		this.user_id = user_id;
 		this.group_id = group_id;
 		this.rank = rank;
-		
+	}		
 }

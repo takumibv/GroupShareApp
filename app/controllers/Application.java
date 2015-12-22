@@ -1,6 +1,6 @@
 package controllers;
 
-import models.User;
+import models.*;
 import play.data.validation.Error;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -156,27 +156,24 @@ public class Application extends Controller {
 		// プロジェクトを保存する
 		public static void saveProject(){ 
 			// プロジェクト保存
-			Project p;
-			/*project保存*/
+			Project p = new Project();
+			// project保存
 			p.save();
 
 			// ユーザプロジェクト追加
-			UserProject up;
 			for(int i = 0; i < Integer.parseInt(params.get("user_size"));i++){
-				if(User.find("name = ?", params.get("user-" + i + "name").count > 0){
-					up = new UserProject(User.find("name = ?", params.get("user-" + i + "name")).first().id, p.id);
-					up.save();
+				if(User.count("name = ?", params.get("user-" + i + "name")) > 0){
+					User u = User.find("name = ?", params.get("user-" + i + "name")).first();
+					UserProject.createUserProject(u.getId(), p.getId());
 				}
 			}
 			
 			// グループ追加
-			Group g;
 			for(int i = 0; i < Integer.parseInt(params.get("group_size"));i++){
-				g = new Group(params.get("Group-" + i + "name")
+				Group.createGroup(params.get("Group-" + i + "name")
 					, params.get("Group-" + i + "detail")
 					, Integer.parseInt(params.get("Group-" + i + "capacity"))
-					, p.id);
-				g.save();
+					, p.getId());
 			}
 
 			mypage();
