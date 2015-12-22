@@ -16,4 +16,14 @@ public class UserProject extends Model {
 
 	public Long project_id;
 
+	public UserProject(Long user_id, Long project_id){
+		this.user_id = user_id;
+		this.project_id = project_id;
+	}
+
+	public static boolean createUserProject(Long user_id, Long project_id){
+		UserProject newUsrPro = new UserProject(user_id, project_id);
+		newUsrPro.save();
+		return true;
+	}
 }

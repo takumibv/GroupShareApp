@@ -21,4 +21,10 @@ public class Group extends Model {
     this.capacity = capacity;
     this.project_id = project_id;
   }
+
+	public static boolean createGroup(String name, String detail, int capacity, long project_id){
+		Group newGroup = new Group(name, detail, capacity, project_id);
+		newGroup.save();
+		return true;
+	}
 }
