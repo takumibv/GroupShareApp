@@ -3,13 +3,13 @@
 <h2>プロジェクトを作成</h2>
 
 <form action="@{saveProject}">
-	<input type="text" name="project[name]">
-	<input type="date" name="project[deadline]">
-	<select name="project[assign_system]">
+	<input type="text" name="name">
+	<input type="date" name="deadline">
+	<select name="assign_system">
 		<option value="1">点数優劣</option>
 		<option value="2">ジャンケン</option>
 	</select>
-	<input type="number" name="project[wish_limit]">
+	<input type="number" name="wish_limit">
 	
 	<button type="button" class="btn" data-toggle="modal" data-target="#add-group-modal">グループを追加</button>
 	<div id="groups-field"></div>

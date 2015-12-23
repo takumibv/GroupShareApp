@@ -4,6 +4,7 @@ import models.*;
 import play.data.validation.Error;
 import play.mvc.Before;
 import play.mvc.Controller;
+import java.util.*;
 
 
 public class Application extends Controller {
@@ -11,6 +12,7 @@ public class Application extends Controller {
 	private final static String SESSION_KEY_LOGIN_STATUS = "login_status";
 	private final static String SESSION_LOGIN = "login";
 	private final static String SESSION_LOGOUT = "logout";
+	private final static String SESSION_MAKEPROJECT_ID = "-1";
 
 
 	@Before(unless={"index", "signup", "makeAccount", "signin"})
@@ -54,6 +56,9 @@ public class Application extends Controller {
 
     // プロジェクト作成ページ
     public static void makeProject() {
+				User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+				Project newProject = Project.createNewProject(owner.getId());
+				session.put(SESSION_MAKEPROJECT_ID, newProject.getId().toString());
         render();
     }
 
@@ -154,30 +159,16 @@ public class Application extends Controller {
     }
 
 		// プロジェクトを保存する
-		public static void saveProject(){ 
-			/*
-			// プロジェクト保存
-			Project p = new Project();
-			// project保存
-			p.save();
-
-			// ユーザプロジェクト追加
-			for(int i = 0; i < Integer.parseInt(params.get("user_size"));i++){
-				if(User.count("name = ?", params.get("user-" + i + "name")) > 0){
-					User u = User.find("name = ?", params.get("user-" + i + "name")).first();
-					UserProject.createUserProject(u.getId(), p.getId());
-				}
-			}
-			
-			// グループ追加
-			for(int i = 0; i < Integer.parseInt(params.get("group_size"));i++){
-				Group.createGroup(params.get("Group-" + i + "name")
-					, params.get("Group-" + i + "detail")
-					, Integer.parseInt(params.get("Group-" + i + "capacity"))
-					, p.getId());
-			}
-			*/
-
+		public static void saveProject(String name, Date deadline, int assign_system, int wish_limit){ 
+	    validation.required(name);
+	    validation.required(deadline);
+	    validation.required(assign_system);
+	    validation.required(wish_limit);
+			Project.editProject(Long.parseLong(session.get(SESSION_MAKEPROJECT_ID)),
+													name, deadline, assign_system, wish_limit,
+													Project.makeInvitationCode(session.get(SESSION_MAKEPROJECT_ID)));
+			System.out.println(session.get(SESSION_MAKEPROJECT_ID) + "\n"
++ name + "\n" + deadline + "\n" + assign_system + "\n" + wish_limit + "\n" + Project.makeInvitationCode(session.get(SESSION_MAKEPROJECT_ID)));
 			mypage();
     }
 
