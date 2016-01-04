@@ -4,6 +4,7 @@
  * 3.main 
  * 4.topページ
  * 5.footer
+ * 6.modal
  *********/
 
 
@@ -54,14 +55,17 @@ p {
 
 .btn {
 	font-family: 'TsukuARdGothic-Regular';
-	color: #fff;
-	border: none;
+    color: #fff;
+    border: none;
     border-radius: 6px;
-    font-weight: bold;
 }
 .btn:hover {
 	color: #fff;
 	opacity: 0.8;
+}
+
+.btn-default {
+	background-color: #aaa;
 }
 
 /*********
@@ -123,6 +127,101 @@ p {
     line-height: 1.5;
     font-weight: bold;
     margin: 8px 0;
+}
+
+/* make-project form */
+.panel-body {
+    border: thin solid #ccc;
+    border-radius: 6px;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.panel-body-inner {
+	padding: 12px 16px;
+}
+
+h3 {
+	font-size: 22px;
+    color: #FE8900;
+}
+
+.panel-body .btn {
+	color: #333;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	margin: 12px 0;
+}
+
+.panel-body .table {
+}
+
+.panel-body th {
+	text-align: center;
+	background-color: #ccc;
+	border-top: none !important;
+}
+
+.panel-body td {
+	text-align: center;
+	border: thin solid #ccc;
+} 
+
+.panel-body .th-right {
+	border-radius: 0 6px 0 0 ;
+	width: 60px;
+}
+
+.panel-body .th-left {
+	border-radius: 6px 0 0 0;
+}
+
+.panel-body .th-score, .panel-body .th-capacity {
+	width: 60px;
+}
+
+.panel-body .delete {
+	cursor: pointer;
+}
+
+.input-group {
+    margin: 12px 0;
+    width: 100%;
+}
+
+.input-group .input-group-addon {
+    width: 160px;
+}
+
+.modal-body .input-group-addon {
+	width: 120px;
+}
+
+.input-group .form-date {
+	width: 200px;
+}
+
+.input-group .form-number {
+	width: 120px;
+}
+
+.input-group textarea {
+	margin: 0px;
+    width: 100%;
+    padding: 8px 12px;
+    border: thin solid #ccc;
+    border-radius: 0 4px 4px 0;
+}
+
+.table .replace-input {
+    width: 100%;
+}
+
+.ng {
+    color: #f00;
+}
+.ok {
+    color: #53CACA;
 }
 
 /*********
@@ -225,6 +324,10 @@ p {
 	background-color: #4688FC;
 }
 
+.back-btn {
+	margin-top: 12px;
+}
+
 #news-block h3 {
 	float: left;
     font-size: 18px;
@@ -292,4 +395,25 @@ p {
 
 .project-table .column-2 {
 	width: 20%;
+}
+
+/*********
+ * 6.modal 
+ *********/
+
+.modal-open {
+	overflow: visible!important;
+	position: static!important;
+}
+
+.modal-header {
+    padding: 6px 12px;
+}
+
+.modal-header h3 {
+	color: #888;
+}
+
+.modal-header .close {
+    margin-top: 6px;
 }
