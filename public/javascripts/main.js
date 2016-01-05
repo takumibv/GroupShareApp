@@ -133,7 +133,7 @@ $(document).ready(function(){
 		$('#users-field .user').each(function(){
 			$("#input-users-field").append(
 				  "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
-				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".capacity").html() +"'>");
+				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
 			user_num++;
 		});
 
