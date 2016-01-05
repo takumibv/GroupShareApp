@@ -2,19 +2,21 @@
 #{extends 'Application/header.html' /}
 <h2>登録</h2>
 
-<form action="saveRegistration">
-	<p>第１志望</p>
-	<select name="group-1">
-		<option value="1">グループ１</option>
-		<option value="2">グループ２</option>
-		<option value="3">グループ３</option>
+<form action="@{saveRegistration}">
+<input type="hidden" name="projectID" value="${projectID}" />
+<input type="hidden" name="wishLimit" value="${wishLimit}" />
+
+
+#{list items:wishRank, as:'rank'}
+	<p>第${rank}志望</p>
+	
+	<select name="wish-${rank}">
+		#{list items:groups, as:'group'}
+			<option value="${group.id}">${group.name}</option>
+		#{/list}
 	</select>
-	<p>第２志望</p>
-	<select name="group-2">
-		<option value="1">グループ１</option>
-		<option value="2">グループ２</option>
-		<option value="3">グループ３</option>
-	</select>
+#{/list}
+
 	<input type="submit" value="登録する">
 </form>
 

@@ -23,4 +23,8 @@ public class Wish extends Model {
 		this.group_id = group_id;
 		this.rank = rank;
 	}		
+	
+	public static void createWish(Long user_id, Long group_id, int rank){
+		new Wish(user_id, group_id, rank).save();
+	}
 }

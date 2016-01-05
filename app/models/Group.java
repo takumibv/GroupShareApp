@@ -27,4 +27,8 @@ public class Group extends Model {
 		newGroup.save();
 		return true;
 	}
+	
+	public static List<Group> getGroupListByProjectID(long projectID){
+		return Group.find("project_id=?", projectID).fetch();
+	}
 }

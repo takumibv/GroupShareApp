@@ -37,7 +37,15 @@
 			<tr>
 				<td class="column-1"><a href="@{project()}">H26 情報工学科研究室振り分け</a></td>
 				<td class="column-2">12/18</td>
-				<td class="column-3"><a class="register-btn btn" href="@{register()}">登録する</a></td>
+				<td class="column-3">
+				
+				<!-- テストのため、フォーム送信に変更しました -->
+				登録する
+				<form method="post" action="@{register}">
+					<input type="hidden" name="projectID" value="1"/>
+					<input type="submit"/>
+				</form>
+				</td>
 			</tr>
 			<tr>
 				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
@@ -59,7 +67,14 @@
 				<th>登録</th>
 			</tr>
 			<tr>
-				<td class="column-1"><a href="@{project()}">H26 情報工学科研究室振り分け</a></td>
+				<!-- テストのため、フォーム送信に変更しました -->
+				<td class="column-1">
+				H26 情報工学科研究室振り分け
+				<form method="post" action="@{project}">
+					<input type="hidden" name="projectID" value="1"/>
+					<input type="submit"/>
+				</form>
+				</td>
 				<td class="column-2">12/18</td>
 				<td class="column-3"><a class="edit-btn btn" href="@{editProject()}">編集する</a></td>
 			</tr>

@@ -7,6 +7,7 @@ import models.User;
 import util.DigestGenerator;
 
 import javax.persistence.*;
+
 import java.util.*;
 
 @Entity
@@ -45,5 +46,10 @@ public class Project extends Model {
 
 	public static String makeInvitationCode(String id){
 		return DigestGenerator.getSHA256(id).substring(0,6);
+	}
+	
+	public static int getWishLimit(long id){
+		Project project = Project.find("id=?", id).first();
+		return project.wish_limit;
 	}
 }
