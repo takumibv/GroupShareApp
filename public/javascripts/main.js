@@ -1,4 +1,7 @@
 $(document).ready(function(){
+	// 日付処理
+	var today = new Date();
+	$(".input-group .form-date").attr({"min" : today.getFullYear() +"-"+ ('0'+(today.getMonth()+1)).slice( -2 ) +"-"+ ('0'+today.getDate()).slice( -2 )});
 /****
  * マイページ
  ****/
