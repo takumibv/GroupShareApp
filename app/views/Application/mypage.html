@@ -2,10 +2,6 @@
 #{extends 'Application/header.html' /}
 <h2>マイページ</h2>
 
-%{
-	// SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
-}%
-
 <div id="news-block" class="sans-serif">
 	<h3>お知らせ</h3>
 	<p class="note">2件のお知らせがあります。</p>
@@ -58,16 +54,6 @@
 				<td class="column-3">登録済み</td>
 			</tr>
 			#{/list}
-			<!-- <tr>
-				<td class="column-1"><a href="@{project()}">H26 情報工学科研究室振り分け</a></td>
-				<td class="column-2">12/18</td>
-				<td class="column-3"><a class="register-btn btn" href="@{register()}">登録する</a></td>
-			</tr>
-			<tr>
-				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
-				<td class="column-2">12/18</td>
-				<td class="column-3">登録済み</td>
-			</tr> -->
 		</tbody>
 	</table>
 	#{/else}
@@ -83,11 +69,14 @@
 				<th>締め切り</th>
 				<th>登録</th>
 			</tr>
+			<!-- 作成したプロジェクト -->
+			#{list items:MP, as : 'ele'}
 			<tr>
-				<td class="column-1"><a href="@{project()}">H26 情報工学科研究室振り分け</a></td>
-				<td class="column-2">12/18</td>
-				<td class="column-3"><a class="edit-btn btn" href="@{editProject()}">編集する</a></td>
+				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="column-2">${ele.deadline.getMonth()+1}/${ele.deadline.getDate()}</td>
+				<td class="column-3"><a class="edit-btn btn" href="@{editProject(ele.id)}">編集する</a></td>
 			</tr>
+			#{/list}
 			<tr>
 				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
 				<td class="column-2">終了</td>

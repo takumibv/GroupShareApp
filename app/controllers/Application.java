@@ -58,7 +58,11 @@ public class Application extends Controller {
 				renderArgs.put("InR", Inviteted_notRegistered);
 				renderArgs.put("IR", Inviteted_Registered);
 				renderArgs.put("FnR", Finished_notRegistered);
-				renderArgs.put("FR", Finished_Registered);
+                renderArgs.put("FR", Finished_Registered);
+
+                // 仮
+                List<Project> make_project = Project.find("owner_id =  ?", owner.getId()).fetch();
+				renderArgs.put("MP", make_project);
         render();
     }
 
@@ -68,7 +72,24 @@ public class Application extends Controller {
     }
 
     // プロジェクト編集ページ
-    public static void editProject() {
+    public static void editProject(Long id) {
+        // 仮
+        Project project = Project.find("id = ?", id).first();
+        List<UserProject> users_id = UserProject.find("project_id = ?", id).fetch();
+        ArrayList<User> users = new ArrayList<User>();
+        HashMap<Long, Integer> user_score = new HashMap<Long, Integer>();
+        for(UserProject u : users_id){
+            User user = User.find("id = ?", u.user_id).first();
+            users.add(user);
+            user_score.put(u.user_id, u.score);
+        } 
+        // List<Group> groups = Group.find("project_id = ?", id).fetch();
+        renderArgs.put("project", project);
+        renderArgs.put("users", users);
+        renderArgs.put("user_score", user_score);
+        // renderArgs.put("groups", groups);
+
+
         render();
     }
 

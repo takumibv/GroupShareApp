@@ -1,11 +1,146 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
-<h2>プロジェクトを編集する</h2>
+<h2>プロジェクトを作成</h2>
 
-<form action="saveProject">
-	<input type="submit" value="保存">
+<form id="make-project" action="@{saveProject}">
+
+<div class="panel-body">
+  <div class="panel-body-inner">
+    <h3>基本情報</h3> 
+    <div class="input-group">
+      <span class="input-group-addon">名前</span>
+      <input class="form-control" type="text" name="name" value="${project.name}" required>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">締め切り</span>
+      <input class="form-control form-date" type="date" name="deadline" value="${((String)project.deadline).substring(0,10)}" required>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">決定基準</span>
+      <select class="form-control form-number" name="assign_system">
+        <option value="1" #{if project.assign_system=='1'}selected#{/if}>点数優先</option>
+        <option value="2" #{if project.assign_system=='2'}selected#{/if}>じゃんけん</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">第n希望まで登録</span>
+      <select class="form-control form-number" name="wish_limit">
+        <option value="1" #{if project.wish_limit=='1'}selected#{/if}>1</option>
+        <option value="2" #{if project.wish_limit=='2'}selected#{/if}>2</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="panel-body panel-group">
+  <div class="panel-body-inner">
+    <h3>グループ</h3>
+    <p id="validation-group"></p>
+    <button type="button" class="btn" data-toggle="modal" data-target="#add-group-modal">＋グループを追加</button>
+    <table class="table">
+      <tbody id="groups-field">
+        <tr>
+          <th class="th-left">グループ名</th>
+          <th class="th-capacity">定員</th>
+          <th>詳細</th>
+          <th class="th-right">削除</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel-body panel-users">
+  <div class="panel-body-inner">
+    <h3>参加ユーザ</h3>
+    <p id="validation-user"></p>
+    <button type="button" class="btn" data-toggle="modal" data-target="#add-user-modal">＋ユーザを追加</button>
+    <table class="table">
+      <tbody id="users-field">
+        <tr>
+          <th class="th-left"><span>ユーザ名</span></th>
+          <th class="th-score">点数</th>
+          <th class="th-right">削除</th>
+        </tr>
+        #{list items:users, as : 'user'}
+        <tr id="user-${user.id}" class="user">
+        	<td><span class="name">${user.name}</span></td>
+        	<td><span class="score">${user_score.get(user.id)}</span></td>
+        	<td><span class="delete">削除</span></td>
+        </tr>
+        #{/list}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  <div id="input-groups-field"></div>
+  <input type="hidden" name="group-num" value="0">
+  <div id="input-users-field"></div>
+  <input type="hidden" name="user-num" value="0">
+  <input class="register-btn btn" type="submit" value="プロジェクトを保存する">
 </form>
 
 <form action="mypage">
-	<input type="submit" value="戻る">
+  <input class="back-btn btn" type="submit" value="戻る">
 </form>
+
+<!-- グループ追加 Modal -->
+<div class="modal fade" id="add-group-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">グループを追加</h3>
+      </div>
+      <div class="modal-body">
+    <div class="input-group">
+      <span class="input-group-addon">グループ名</span>
+      <input class="form form-control" type="text" name="name">
+    </div>
+    <p id="validation-group-name"></p>
+    <div class="input-group">
+      <span class="input-group-addon">定員</span>
+      <input class="form form-control form-number" type="text" name="capacity">
+    </div>
+    <p id="validation-group-capacity"></p>
+    <div class="input-group">
+      <span class="input-group-addon">詳細</span>
+      <textarea class="form" name="detail"></textarea>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        <button id="add-group-btn" type="button" class="btn btn-primary" disabled data-dismiss="modal">追加する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 参加ユーザ追加 Modal -->
+<div class="modal fade" id="add-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">ユーザを追加</h3>
+      </div>
+      <div class="modal-body">
+    <div class="input-group">
+      <span class="input-group-addon">ユーザ名</span>
+      <input class="form form-control" type="text" name="name">
+    </div>
+    <p id="validation-user-name"></p>
+    <div class="input-group">
+      <span class="input-group-addon">点数</span>
+      <input class="form form-control form-number" type="text" name="score">
+    </div>
+    <p id="validation-user-score"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        <button id="add-user-btn" type="button" class="btn btn-primary" data-dismiss="modal" disabled>追加する</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -38,4 +38,5 @@ public class Project extends Model {
 		p.invitation_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
 		p.save();
 	}
+
 }
