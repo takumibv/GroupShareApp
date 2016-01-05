@@ -160,10 +160,6 @@ public class Application extends Controller {
 
 	// プロジェクトを保存する
 	public static void saveProject(String name, Date deadline, int assign_system, int wish_limit){
-        String project_name             = params.get("project[name]");
-        String project_deadline         = params.get("project[deadline]");
-        String project_assign_system    = params.get("project[assign_system]");
-        String project_wish_limit       = params.get("project[wish_limit]");
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
 
