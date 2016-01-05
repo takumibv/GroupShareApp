@@ -179,7 +179,7 @@ function isValidUser(name){
     }).responseJSON;
 
 	var isExists = result.isExists;
-	// valid_flg = isExists; // 存在するユーザ名ならば、有効
+	valid_flg = isExists; // 存在するユーザ名ならば、有効
 
 	// リストに既に存在する名前であるかどうか
 	$('#users-field .user .name').each(function(){
