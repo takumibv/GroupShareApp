@@ -89,4 +89,17 @@
 			</tr>
 		</tbody>
 	</table>
+
+	#{list items:InR, as : 'InR'}
+	${InR.deadline}
+	#{/list}
+	#{list items:IR, as : 'IR'}
+	${IR.deadline}
+	#{/list}
+	#{list items:FnR, as : 'FnR'}
+	${FnR.deadline}
+	#{/list}
+	#{list items:FR, as : 'FR'}
+	${R.deadline}
+	#{/list}
 </div>

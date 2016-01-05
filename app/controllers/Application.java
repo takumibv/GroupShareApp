@@ -50,6 +50,15 @@ public class Application extends Controller {
 
     // マイページ
     public static void mypage() {
+				User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+				ArrayList<Project> Inviteted_notRegistered = UserProject.findProject(owner.getId(), false, false);
+				ArrayList<Project> Inviteted_Registered = UserProject.findProject(owner.getId(), true, false);
+				ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
+				ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
+				renderArgs.put("InR", Inviteted_notRegistered);
+				renderArgs.put("IR", Inviteted_Registered);
+				renderArgs.put("FnR", Finished_notRegistered);
+				renderArgs.put("FR", Finished_Registered);
         render();
     }
 
