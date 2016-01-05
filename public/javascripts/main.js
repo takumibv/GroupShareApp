@@ -19,9 +19,9 @@ $(document).ready(function(){
 		}
 		// グループが有効かどうかのチェック
 		if(!isValidGroup(name)){
-			$("#validation-group-name").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>このアカウント名は無効です。");
+			$("#validation-group-name").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>このグループ名は無効です。");
 		}else{
-			$("#validation-group-name").removeClass("ng").addClass("ok").html("<i class='fa fa-check-circle'></i>このアカウント名は有効です。");
+			$("#validation-group-name").removeClass("ng").addClass("ok").html("<i class='fa fa-check-circle'></i>このグループ名は有効です。");
 		}
 	});
 
