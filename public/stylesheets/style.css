@@ -68,6 +68,10 @@ p {
 	background-color: #aaa;
 }
 
+.error-form {
+	border: 3px solid #f00;
+}
+
 /*********
  * 2.header 
  *********/

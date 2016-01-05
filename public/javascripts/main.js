@@ -102,13 +102,18 @@ $(document).ready(function(){
 			parent.find("textarea").select();
 		}
 	});
+	// フォームの送信を阻止
+	$(document).on("submit", ".replace-input", function(){
+		return false;
+	});
 	$(document).on("keydown", ".group .replace-input, .user .replace-input", function(e){
 		if(!event.shiftKey){
 			if ( e.which == 13 ) {
 				if($(this).parent().parent().attr("class")=="group" && $(this).attr("name")=="name"){
 					if(isValidGroup($(this).val())){
-						alert("無効なグループ名です。");
 						$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ $(this).val() +"</span>");
+					}else{
+						alert("無効なグループ名です。");
 					}
 				}else{
 					$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ $(this).val() +"</span>");
@@ -118,6 +123,12 @@ $(document).ready(function(){
 	});
 
 	$("#make-project").on("submit", function(){
+		var edit_form = $(document).find(".replace-input").size();
+		if(edit_form > 0){
+			$(".replace-input").addClass("error-form");
+			return false;
+		}
+
 		var group_num = 0;
 		$("#input-groups-field").html("");
 		$('#groups-field .group').each(function(){
@@ -138,14 +149,14 @@ $(document).ready(function(){
 		});
 
 		if(group_num < 2){
-			$("#validation-group").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>グループは最低2つ追加してください。");
+			$("#validation-group").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>グループは2つ以上追加してください。");
 			return false;
 		}else{
 			$("#validation-group").html("");
 		}
 		$("input[name=group-num]").val(group_num);
 		if(user_num < 2){
-			$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは最低2人追加してください。");
+			$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは2人以上追加してください。");
 			return false;
 		}else{
 			$("#validation-group").html("");
