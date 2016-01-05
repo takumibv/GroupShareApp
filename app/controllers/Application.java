@@ -12,7 +12,6 @@ public class Application extends Controller {
 	private final static String SESSION_KEY_LOGIN_STATUS = "login_status";
 	private final static String SESSION_LOGIN = "login";
 	private final static String SESSION_LOGOUT = "logout";
-	private final static String SESSION_MAKEPROJECT_ID = "-1";
 
 
 	@Before(unless={"index", "signup", "makeAccount", "signin"})
@@ -56,9 +55,6 @@ public class Application extends Controller {
 
     // プロジェクト作成ページ
     public static void makeProject() {
-				User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-				Project newProject = Project.createNewProject(owner.getId());
-				session.put(SESSION_MAKEPROJECT_ID, newProject.getId().toString());
         render();
     }
 
@@ -178,11 +174,11 @@ public class Application extends Controller {
 	    validation.required(deadline);
 	    validation.required(assign_system);
 	    validation.required(wish_limit);
-			Project.editProject(Long.parseLong(session.get(SESSION_MAKEPROJECT_ID)),
-													name, deadline, assign_system, wish_limit,
-													Project.makeInvitationCode(session.get(SESSION_MAKEPROJECT_ID)));
-			System.out.println(session.get(SESSION_MAKEPROJECT_ID) + "\n"
-+ name + "\n" + deadline + "\n" + assign_system + "\n" + wish_limit + "\n" + Project.makeInvitationCode(session.get(SESSION_MAKEPROJECT_ID)));
+
+			User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+
+			Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
+			System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 			mypage();
     }
 

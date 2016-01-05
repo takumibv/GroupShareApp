@@ -18,32 +18,24 @@ public class Project extends Model {
 	public int wish_limit;
 	public String invitation_code;
 
-	public Project(String name, Long owner_id, Date deadline, int assign_system, int wish_limit, String invitation_code){
+	public Project(String name, Long owner_id, Date deadline, int assign_system, int wish_limit){
 		this.name = name;
 		this.owner_id = owner_id;
 		this.deadline = deadline;
 		this.assign_system = assign_system;
 		this.wish_limit = wish_limit;
-		this.invitation_code = invitation_code;
 	}
 
-	public static Project createNewProject(Long owner_id){
-		Project newProject = new Project(null, owner_id, new Date(), -1, -1, null);
+	public static Project makeProject(String name, Long owner_id, Date deadline, int assign_system, int wish_limit){
+		Project newProject = new Project(name, owner_id, deadline, assign_system, wish_limit);
 		newProject.save();
+		setInvitationCode(newProject.getId());
 		return newProject;
 	}
 
-	public static void editProject(Long id, String name, Date deadline, int assign_system, int wish_limit, String invitation_code){
-		Project project = Project.find("ID = ?", id).first();
-		project.name = name;
-		project.deadline = deadline;
-		project.assign_system = assign_system;
-		project.wish_limit = wish_limit;
-		project.invitation_code = invitation_code;
-		project.save();
-	}
-
-	public static String makeInvitationCode(String id){
-		return DigestGenerator.getSHA256(id).substring(0,6);
+	public static void setInvitationCode(Long id){
+		Project p = Project.find("ID = ?", id).first();
+		p.invitation_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
+		p.save();
 	}
 }
