@@ -165,11 +165,6 @@ public class Application extends Controller {
             System.out.println("詳細：" + params.get("group-"+ i +"[detail]"));
         }
 
-        for(int i=0; i<user_num; i++){
-            System.out.println("ユーザ名：" + params.get("user-"+ i +"[name]"));
-            System.out.println("点数：" + params.get("user-"+ i +"[score]"));
-        }
-
 	    validation.required(name);
 	    validation.required(deadline);
 	    validation.required(assign_system);
@@ -179,6 +174,14 @@ public class Application extends Controller {
 
 			Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
 			System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
+
+        for(int i=0; i<user_num; i++){
+            User addUser = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
+						UserProject.createUserProject(addUser.getId(), p.getId(),
+	            Integer.parseInt(params.get("user-"+ i +"[score]")));
+						System.out.println(addUser.getId() + "\n" +  p.getId() + "\n" + 
+	            Integer.parseInt(params.get("user-"+ i +"[score]")));
+        }
 			mypage();
     }
 
