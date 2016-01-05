@@ -73,12 +73,12 @@ public class Application extends Controller {
     }
 
     // プロジェクト詳細ページ
-    public static void project() {
+    public static void project(Long id) {
         render();
     }
 
     // グループ登録ページ
-    public static void register() {
+    public static void register(Long id) {
 	    render();
     }
 

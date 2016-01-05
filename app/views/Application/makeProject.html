@@ -60,12 +60,6 @@
           <th>詳細</th>
           <th class="th-right">削除</th>
         </tr>
-        <tr class="group">
-          <td><span class="name">グループA</span></td>
-          <td><span class="capacity">5</span></td>
-          <td><span class="detail">http://asdfasdfasdfasdfasdfasdfasdfasdfasdgsdfbsdb</span></td>
-          <td><a class="delete">削除</a></td>
-        </tr>
       </tbody>
     </table>
   </div>
@@ -82,11 +76,6 @@
           <th class="th-left"><span>ユーザ名</span></th>
           <th class="th-score">点数</th>
           <th class="th-right">削除</th>
-        </tr>
-        <tr class="user">
-          <td><span class="name">ユーザ1</span></td>
-          <td><span class="score">85</span></td>
-          <td><a class="delete">削除</a></td>
         </tr>
       </tbody>
     </table>
@@ -133,6 +122,7 @@
       <span class="input-group-addon">定員</span>
       <input class="form form-control form-number" type="text" name="capacity">
     </div>
+    <p id="validation-group-capacity"></p>
     <div class="input-group">
       <span class="input-group-addon">詳細</span>
       <textarea class="form" name="detail"></textarea>
@@ -164,6 +154,7 @@
       <span class="input-group-addon">点数</span>
       <input class="form form-control form-number" type="text" name="score">
     </div>
+    <p id="validation-user-score"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>

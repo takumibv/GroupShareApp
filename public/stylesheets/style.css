@@ -221,6 +221,12 @@ h3 {
     width: 100%;
 }
 
+.table .detail {
+    display: inline-block;
+    min-width: 100%;
+    min-height: 16px;
+}
+
 .ng {
     color: #f00;
 }
