@@ -186,4 +186,11 @@ public class Application extends Controller {
     public static void saveRegistration(){
     	mypage();
     }
+
+    // ユーザ名が存在するかを返す
+    public static void isExistsUser(String name){
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("isExists", User.isExists(name));
+        renderJSON(result);
+    }
 }

@@ -158,20 +158,33 @@ $(document).ready(function(){
 // 引数のユーザ名が有効かどうかを返す ajax
 function isValidUser(name){
 	var valid_flg = true;
+
+	var result = $.ajax({
+        type: 'GET',
+        url: '/isExistsUser',
+        data: "name="+name,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+
+	var isExists = result.isExists;
+	// valid_flg = isExists; // 存在するユーザ名ならば、有効
+
+	// リストに既に存在する名前であるかどうか
 	$('#users-field .user .name').each(function(){
-        console.log( $(this).html() );
         if(name == $(this).html()){
         	valid_flg = false;
         }
     });
 
-    return valid_flg;
+	return valid_flg; 
+
 }
+
 // 引数のグループ名が有効かどうかを返す
 function isValidGroup(name){
 	var valid_flg = true;
 	$('#groups-field .group .name').each(function(){
-        console.log( $(this).html() );
         if(name == $(this).html()){
         	valid_flg = false;
         }
