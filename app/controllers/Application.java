@@ -13,7 +13,6 @@ public class Application extends Controller {
 	private final static String SESSION_KEY_LOGIN_STATUS = "login_status";
 	private final static String SESSION_LOGIN = "login";
 	private final static String SESSION_LOGOUT = "logout";
-	private final static String SESSION_MAKEPROJECT_ID = "-1";
 
 
 	@Before(unless={"index", "signup", "makeAccount", "signin"})
@@ -52,14 +51,20 @@ public class Application extends Controller {
 
     // マイページ
     public static void mypage() {
+				User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+				ArrayList<Project> Inviteted_notRegistered = UserProject.findProject(owner.getId(), false, false);
+				ArrayList<Project> Inviteted_Registered = UserProject.findProject(owner.getId(), true, false);
+				ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
+				ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
+				renderArgs.put("InR", Inviteted_notRegistered);
+				renderArgs.put("IR", Inviteted_Registered);
+				renderArgs.put("FnR", Finished_notRegistered);
+				renderArgs.put("FR", Finished_Registered);
         render();
     }
 
     // プロジェクト作成ページ
     public static void makeProject() {
-				User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-				Project newProject = Project.createNewProject(owner.getId());
-				session.put(SESSION_MAKEPROJECT_ID, newProject.getId().toString());
         render();
     }
 
@@ -69,14 +74,13 @@ public class Application extends Controller {
     }
 
     // プロジェクト詳細ページ
-    public static void project() {
+    public static void project(Long id) {
         render();
     }
 
     // グループ登録ページ
-    //required HTML form params : projectID
-    public static void register(long projectID) {
-     	validation.required(projectID);
+    public static void register(long id) {
+     	validation.required(id);
 
         if(validation.hasErrors()) {
             for(Error error : validation.errors()) {
@@ -84,6 +88,8 @@ public class Application extends Controller {
             }
             mypage();
         }
+
+	    final long projectID = id;
 
         //for debug
 		Group.createGroup("test1", "test for registration. projectID is "+ projectID, 3, projectID);
@@ -191,10 +197,6 @@ public class Application extends Controller {
 
 	// プロジェクトを保存する
 	public static void saveProject(String name, Date deadline, int assign_system, int wish_limit){
-        String project_name             = params.get("project[name]");
-        String project_deadline         = params.get("project[deadline]");
-        String project_assign_system    = params.get("project[assign_system]");
-        String project_wish_limit       = params.get("project[wish_limit]");
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
 
@@ -204,20 +206,23 @@ public class Application extends Controller {
             System.out.println("詳細：" + params.get("group-"+ i +"[detail]"));
         }
 
-        for(int i=0; i<user_num; i++){
-            System.out.println("ユーザ名：" + params.get("user-"+ i +"[name]"));
-            System.out.println("点数：" + params.get("user-"+ i +"[score]"));
-        }
-
 	    validation.required(name);
 	    validation.required(deadline);
 	    validation.required(assign_system);
 	    validation.required(wish_limit);
-			Project.editProject(Long.parseLong(session.get(SESSION_MAKEPROJECT_ID)),
-													name, deadline, assign_system, wish_limit,
-													Project.makeInvitationCode(session.get(SESSION_MAKEPROJECT_ID)));
-			System.out.println(session.get(SESSION_MAKEPROJECT_ID) + "\n"
-+ name + "\n" + deadline + "\n" + assign_system + "\n" + wish_limit + "\n" + Project.makeInvitationCode(session.get(SESSION_MAKEPROJECT_ID)));
+
+			User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+
+			Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
+			System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
+
+        for(int i=0; i<user_num; i++){
+            User addUser = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
+						UserProject.createUserProject(addUser.getId(), p.getId(),
+	            Integer.parseInt(params.get("user-"+ i +"[score]")));
+						System.out.println(addUser.getId() + "\n" +  p.getId() + "\n" + 
+	            Integer.parseInt(params.get("user-"+ i +"[score]")));
+        }
 			mypage();
     }
 
@@ -246,5 +251,12 @@ public class Application extends Controller {
         }
         	
     	mypage();
+    }
+
+    // ユーザ名が存在するかを返す
+    public static void isExistsUser(String name){
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("isExists", User.isExists(name));
+        renderJSON(result);
     }
 }

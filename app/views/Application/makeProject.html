@@ -24,22 +24,22 @@
     <h3>基本情報</h3> 
     <div class="input-group">
       <span class="input-group-addon">名前</span>
-      <input class="form-control" type="text" name="project[name]" required>
+      <input class="form-control" type="text" name="name" required>
     </div>
     <div class="input-group">
       <span class="input-group-addon">締め切り</span>
-      <input class="form-control form-date" type="date" name="project[deadline]" min="2016-01-04" required>
+      <input class="form-control form-date" type="date" name="deadline" min="2016-01-04" required>
     </div>
     <div class="input-group">
       <span class="input-group-addon">決定基準</span>
-      <select class="form-control form-number" name="project[assign_system]">
+      <select class="form-control form-number" name="assign_system">
         <option value="1">点数優先</option>
         <option value="2">じゃんけん</option>
       </select>
     </div>
     <div class="input-group">
       <span class="input-group-addon">第n希望まで登録</span>
-      <select class="form-control form-number" name="project[wish_limit]">
+      <select class="form-control form-number" name="wish_limit">
         <option value="1">1</option>
         <option value="2">2</option>
       </select>
@@ -60,12 +60,6 @@
           <th>詳細</th>
           <th class="th-right">削除</th>
         </tr>
-        <tr class="group">
-          <td><span class="name">グループ名</span></td>
-          <td><span class="capacity">5</span></td>
-          <td><span class="detail">http://asdfasdfasdfasdfasdfasdfasdfasdfasdgsdfbsdb</span></td>
-          <td><a class="delete">削除</a></td>
-        </tr>
       </tbody>
     </table>
   </div>
@@ -82,11 +76,6 @@
           <th class="th-left"><span>ユーザ名</span></th>
           <th class="th-score">点数</th>
           <th class="th-right">削除</th>
-        </tr>
-        <tr class="user">
-          <td><span class="name">ユーザ名</span></td>
-          <td><span class="score">85</span></td>
-          <td><a class="delete">削除</a></td>
         </tr>
       </tbody>
     </table>
@@ -133,6 +122,7 @@
       <span class="input-group-addon">定員</span>
       <input class="form form-control form-number" type="text" name="capacity">
     </div>
+    <p id="validation-group-capacity"></p>
     <div class="input-group">
       <span class="input-group-addon">詳細</span>
       <textarea class="form" name="detail"></textarea>
@@ -164,6 +154,7 @@
       <span class="input-group-addon">点数</span>
       <input class="form form-control form-number" type="text" name="score">
     </div>
+    <p id="validation-user-score"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>

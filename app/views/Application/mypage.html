@@ -2,6 +2,10 @@
 #{extends 'Application/header.html' /}
 <h2>マイページ</h2>
 
+%{
+	// SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
+}%
+
 <div id="news-block" class="sans-serif">
 	<h3>お知らせ</h3>
 	<p class="note">2件のお知らせがあります。</p>
@@ -25,8 +29,12 @@
 </form>
 
 <div id="invited-projects-block" class="projects-block">
-	<div class="view-toggle"><i class="fa fa-caret-down"></i></div>
+	<div class="view-toggle"><i class="fa fa-caret-up"></i></div>
 	<h3>招待されているプロジェクト</h3>
+	#{if InR.size()==0 && IR.size()==0}
+	<p>プロジェクトはありません。</p>
+	#{/if}
+	#{else}
 	<table class="table table-bordered project-table">
 		<tbody>
 			<tr>
@@ -34,7 +42,23 @@
 				<th>締め切り</th>
 				<th>登録</th>
 			</tr>
+			<!-- 招待された登録未完了 -->
+			#{list items:InR, as : 'ele'}
 			<tr>
+				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="column-2">${ele.deadline.getMonth()+1}/${ele.deadline.getDate()}</td>
+				<td class="column-3"><a class="register-btn btn" href="@{register(ele.id)}">登録する</a></td>
+			</tr>
+			#{/list}
+			<!-- 招待された登録完了 -->
+			#{list items:IR, as : 'ele'}
+			<tr>
+				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="column-2">${ele.deadline.getMonth()+1}/${ele.deadline.getDate()}</td>
+				<td class="column-3">登録済み</td>
+			</tr>
+			#{/list}
+			<!-- <tr>
 				<td class="column-1"><a href="@{project()}">H26 情報工学科研究室振り分け</a></td>
 				<td class="column-2">12/18</td>
 				<td class="column-3"><a class="register-btn btn" href="@{register()}">登録する</a></td>
@@ -43,13 +67,14 @@
 				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
 				<td class="column-2">12/18</td>
 				<td class="column-3">登録済み</td>
-			</tr>
+			</tr> -->
 		</tbody>
 	</table>
+	#{/else}
 </div>
 
 <div id="created-projects-block" class="projects-block">
-	<div class="view-toggle"><i class="fa fa-caret-down"></i></div>
+	<div class="view-toggle"><i class="fa fa-caret-up"></i></div>
 	<h3>作成したプロジェクト</h3>
 	<table class="table table-bordered project-table">
 		<tbody>
@@ -73,8 +98,12 @@
 </div>
 
 <div id="join-projects-block" class="projects-block">
-	<div class="view-toggle"><i class="fa fa-caret-down"></i></div>
+	<div class="view-toggle"><i class="fa fa-caret-up"></i></div>
 	<h3>参加したプロジェクト</h3>
+	#{if FnR.size()==0 && FR.size()==0}
+	<p>プロジェクトはありません。</p>
+	#{/if}
+	#{else}
 	<table class="table table-bordered project-table">
 		<tbody>
 			<tr>
@@ -82,11 +111,24 @@
 				<th>あなたのグループ</th>
 				<th>登録</th>
 			</tr>
+			<!-- 終了した登録未完了 -->
+			#{list items:FnR, as : 'ele'}
 			<tr>
-				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
-				<td class="column-2">林研究室</td>
+				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="column-2"></td>
 				<td class="column-3"><a class="result-btn btn" href="@{result()}">結果を見る</a></td>
 			</tr>
+			#{/list}
+			<!-- 終了した登録完了 -->
+			#{list items:FR, as : 'ele'}
+			<tr>
+				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="column-2"></td>
+				<td class="column-3"><a class="result-btn btn" href="@{result()}">結果を見る</a></td>
+			</tr>
+			#{/list}
 		</tbody>
 	</table>
+	#{/else}
+
 </div>

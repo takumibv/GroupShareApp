@@ -17,7 +17,7 @@
 	<div class="container">
     <h1><a href="@{mypage()}"><img class="icon" src="/public/images/icon.png"></a></h1>
     <div class="right-nav clearfix">
-      <p class="sans-serif">ユーザ名</p>
+      <p class="sans-serif">${session.username}</p>
       <a href="@{setting()}"><p class="setting-btn">設定</p></a>
       <a href="@{logout()}"><p class="logout-btn">ログアウト</p></a>
     </div>
