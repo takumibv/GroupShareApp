@@ -252,6 +252,8 @@ public class Application extends Controller {
         }
     	
     	long userID = User.getIDByName(session.get(SESSION_KEY_USER));
+
+	    Wish.resettWishByUserID(userID);
     	
         for(int wishRank=1; wishRank<=wishLimit; wishRank++){
         	long groupID = Long.valueOf(params.get("wish-"+ wishRank));
