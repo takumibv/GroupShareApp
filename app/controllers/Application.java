@@ -216,6 +216,16 @@ public class Application extends Controller {
 			Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
 			System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
+
+		//create Group
+		for(int i=0; i<group_num; i++){
+			String groupName = params.get("group-"+ i +"[name]");
+			int groupCapacity = Integer.valueOf(params.get("group-"+ i +"[capacity]"));
+			String groupDetail = params.get("group-"+ i +"[detail]");
+
+			Group.createGroup(groupName, groupDetail, groupCapacity, p.id);
+		}
+
         for(int i=0; i<user_num; i++){
             User addUser = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
 						UserProject.createUserProject(addUser.getId(), p.getId(),
