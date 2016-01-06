@@ -84,12 +84,14 @@ public class Application extends Controller {
             }
             mypage();
         }
-        
+
         //for debug
-		Group.createGroup("test", "test for registeration. projectID is "+ projectID, 3, projectID);
-        
+		Group.createGroup("test1", "test for registration. projectID is "+ projectID, 3, projectID);
+	    Group.createGroup("test2", "test for registration. projectID is "+ projectID, 4, projectID);
+	    //end
+
     	List<Group> groups = Group.getGroupListByProjectID(projectID);
-    	
+
      	int wishLimit = Project.getWishLimit(projectID);
      	
      	//1-origin
