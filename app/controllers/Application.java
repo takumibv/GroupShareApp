@@ -102,7 +102,7 @@ public class Application extends Controller {
      	
      	//1-origin
     	List<Integer> wishRank = new ArrayList<>(wishLimit);
-    	for(int i=0; i<wishRank.size(); i++){
+    	for(int i=0; i<wishLimit; i++){
     		wishRank.add(i+1);
     	}
     	
