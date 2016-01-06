@@ -1,14 +1,11 @@
 package models;
 
-import play.*;
 import play.db.jpa.*;
-import models.User;
-import models.Project;
-
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@Table(name="exp4_Group")
 public class Group extends Model {
   public String name;
   public String detail;
@@ -22,9 +19,13 @@ public class Group extends Model {
     this.project_id = project_id;
   }
 
-	public static boolean createGroup(String name, String detail, int capacity, long project_id){
+	public static Group createGroup(String name, String detail, int capacity, long project_id){
 		Group newGroup = new Group(name, detail, capacity, project_id);
 		newGroup.save();
-		return true;
+		return newGroup;
+	}
+	
+	public static List<Group> getGroupListByProjectID(long projectID){
+		return Group.find("project_id=?", projectID).fetch();
 	}
 }
