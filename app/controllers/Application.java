@@ -181,9 +181,11 @@ public class Application extends Controller {
 
 			User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-			Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
+		final long ownerID = owner.getId();
+			Project p = Project.makeProject(name, ownerID,  deadline, assign_system, wish_limit);
 			System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
+		final long projectID = p.id;
 
 		//create Group
 		for(int i=0; i<group_num; i++){
@@ -191,8 +193,13 @@ public class Application extends Controller {
 			int groupCapacity = Integer.valueOf(params.get("group-"+ i +"[capacity]"));
 			String groupDetail = params.get("group-"+ i +"[detail]");
 
-			Group.createGroup(groupName, groupDetail, groupCapacity, p.id);
+			Group group = Group.createGroup(groupName, groupDetail, groupCapacity, projectID);
+			//create UserGroup
+			UserGroup.createUserGroup(ownerID, group.id);
 		}
+
+		//create UserGroup
+
 
         for(int i=0; i<user_num; i++){
             User addUser = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
