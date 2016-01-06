@@ -26,6 +26,11 @@ public class Project extends Model {
 		this.wish_limit = wish_limit;
 	}
 
+	public static Project getProjectByID(long projectID){
+		Project p = Project.find("id = ?", projectID).first();
+		return p;
+	}
+
 	public static Project makeProject(String name, Long owner_id, Date deadline, int assign_system, int wish_limit){
 		Project newProject = new Project(name, owner_id, deadline, assign_system, wish_limit);
 		newProject.save();

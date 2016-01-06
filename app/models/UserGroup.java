@@ -27,5 +27,15 @@ public class UserGroup extends Model {
 		return userGroup;
 	}
 
+	public static List<User> getUsersByGroupID(Long groupID){
+		List<UserGroup> userGroups = UserGroup.find("group_id=?", groupID).fetch();
+
+		List<User> users = new ArrayList<>(userGroups.size());
+		for(UserGroup ug : userGroups){
+			users.add(User.getUserByID(ug.user_id));
+		}
+
+		return users;
+	}
 
 }
