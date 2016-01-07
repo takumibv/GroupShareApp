@@ -41,4 +41,10 @@ public class UserProject extends Model {
 		}
 		return ret;
 	}
+
+	public static void register(Long user_id, Long project_id){
+		UserProject userProject = UserProject.find("user_id = ? AND project_id", user_id, project_id).first();
+		userProject.registered = true;
+		userProject.save();
+	}
 }
