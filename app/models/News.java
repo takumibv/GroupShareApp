@@ -2,7 +2,6 @@ package models;
 
 import play.*;
 import play.db.jpa.*;
-import models.Group;
 import models.*;
 
 import javax.persistence.*;
@@ -34,6 +33,11 @@ public class News extends Model {
 		News news = News.find("ID = ?", news_id).first();
 		news.isRead = true;
 		news.save();
+	}
+
+	public static List<News> getNews(Long user_id, boolean isRead){
+		List<News> ret = News.find("user_id = ? AND isRead = ?", user_id, isRead).fetch();
+		return ret;
 	}
 
 }
