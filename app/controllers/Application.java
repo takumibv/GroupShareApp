@@ -273,6 +273,8 @@ public class Application extends Controller {
     	
     	long userID = User.getIDByName(session.get(SESSION_KEY_USER));
 
+	    UserProject.register(userID, projectID);
+
 	    Wish.resetWishByUserID(userID);
     	
         for(int wishRank=1; wishRank<=wishLimit; wishRank++){
