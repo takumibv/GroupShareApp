@@ -91,7 +91,7 @@
 			<tr>
 				<td class="column-1"><a href="@{project()}">グループ振り分け</a></td>
 				<td class="column-2">終了</td>
-				<td class="column-3"><a class="result-btn btn" href="@{result()}">結果を見る</a></td>
+				<td class="column-3"><a class="result-btn btn" href="@{result(ele.id)}">結果を見る</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -116,7 +116,7 @@
 			<tr>
 				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
 				<td class="column-2"></td>
-				<td class="column-3"><a class="result-btn btn" href="@{result()}">結果を見る</a></td>
+				<td class="column-3"><a class="result-btn btn" href="@{result(ele.id)}">結果を見る</a></td>
 			</tr>
 			#{/list}
 			<!-- 終了した登録完了 -->
@@ -124,7 +124,7 @@
 			<tr>
 				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
 				<td class="column-2"></td>
-				<td class="column-3"><a class="result-btn btn" href="@{result()}">結果を見る</a></td>
+				<td class="column-3"><a class="result-btn btn" href="@{result(ele.id)}">結果を見る</a></td>
 			</tr>
 			#{/list}
 		</tbody>
