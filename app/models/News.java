@@ -3,8 +3,7 @@ package models;
 import play.*;
 import play.db.jpa.*;
 import models.Group;
-import models.Project;
-import models.User;
+import models.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -12,12 +11,29 @@ import java.util.*;
 @Entity
 public class News extends Model {
 
-	public String name;
-
 	public Date date;
-
 	public Long user_id;
-
+	public Long project_id;
+	public int type;
 	public Boolean isRead;
+
+	public News(Date date, Long user_id, Long project_id, int type){
+		this.date = date;
+		this.user_id = user_id;
+		this.project_id = project_id;
+		this.type = type;
+		this.isRead = false;
+	}
+
+	public static void createNews(Date date, Long user_id, Long project_id, int type){
+		News news = new News(date, user_id, project_id, type);
+		news.save();
+	}
+
+	public static void readNews(Long news_id){
+		News news = News.find("ID = ?", news_id).first();
+		news.isRead = true;
+		news.save();
+	}
 
 }
