@@ -23,6 +23,12 @@ public class User extends Model {
 		this.password = createHashedPassword(password);
 		this.isDeleted = false;
 	}
+	
+	public static long getIDByName(String name){
+		User user = User.find("name=?", name).first();
+		
+		return user.id;
+	}
 
 	public static User getUserByID(Long id){
 		return User.find("id=?", id).first();
