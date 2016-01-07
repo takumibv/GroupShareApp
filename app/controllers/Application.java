@@ -79,6 +79,7 @@ public class Application extends Controller {
 
 	    List<Group> groups = Group.getGroupListByProjectID(projectID);
 
+	    renderArgs.put("projectID", projectID);
 	    renderArgs.put("projectName", project.name);
 	    renderArgs.put("projectDeadLine", project.deadline);
 	    renderArgs.put("groups", groups);
