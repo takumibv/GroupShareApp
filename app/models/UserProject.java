@@ -5,6 +5,7 @@ import play.db.jpa.*;
 import models.Group;
 import models.Project;
 import models.User;
+import sun.rmi.runtime.Log;
 
 import javax.persistence.*;
 import java.util.*;
@@ -31,6 +32,11 @@ public class UserProject extends Model {
 		newUsrPro.save();
 	}
 
+	public static UserProject getUserProject(Long project_id, Long user_id) {
+		UserProject userProject = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
+		return userProject;
+	}
+
 	public static ArrayList<Project> findProject(Long user_id, boolean registered,  boolean finished){
 		List<UserProject> list = UserProject.find("user_id = ? AND registered = ? AND finished = ?", user_id, registered, finished).fetch();
 		if(list.size() <= 0)return new ArrayList<Project>();
@@ -40,5 +46,49 @@ public class UserProject extends Model {
 			ret.add(addProject);
 		}
 		return ret;
+	}
+
+	public static List<User> unFinishedRegisteredUsers(Long project_id){
+		List<User> users = UserProject.find("project_id = ? AND registered = ? AND finished = ?", project_id, true, false).fetch();
+		return users;
+	}
+
+	public static int getUserScore(Long project_id, Long user_id){
+		UserProject userProject = getUserProject(project_id, user_id);
+		return userProject.score;
+	}
+
+	public static List<Project> getUnFinishedProjects(){
+		List<UserProject> userProjects = UserProject.find("finished=?", false).fetch();
+		return getProjects(userProjects);
+	}
+
+	public static List<Project> getProjects(List<UserProject> userProjects){
+		List<Long> projectIDList = new ArrayList<>();
+		List<Project> projectList = new ArrayList<>();
+
+		//create projectIDList
+		for(UserProject userProject : userProjects){
+			if(!projectIDList.contains(userProject.project_id)){
+				long id = userProject.project_id;
+				projectIDList.add(id);
+
+				//create projectList
+				projectList.add(Project.getProjectByID(id));
+			}
+		}
+		return projectList;
+	}
+
+	public static void finish(Long project_id, Long user_id){
+		UserProject userProject = getUserProject(project_id, user_id);
+		userProject.finished = true;
+		userProject.save();
+	}
+
+	public static void setRegistered(Long project_id, Long user_id, boolean registered){
+		UserProject userProject = getUserProject(project_id, user_id);
+		userProject.registered = registered;
+		userProject.save();
 	}
 }

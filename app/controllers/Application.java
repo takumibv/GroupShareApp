@@ -4,6 +4,7 @@ import models.*;
 import play.data.validation.Error;
 import play.mvc.Before;
 import play.mvc.Controller;
+import util.result.Result;
 
 import java.util.*;
 
@@ -33,6 +34,11 @@ public class Application extends Controller {
 		}
 	}
 
+	@Before(unless={"index", "signup", "makeAccount", "signin"})
+	public static void resultTrigger(){
+		Result result = new Result();
+		result.updateResult();
+	}
 
     // トップページ
     public static void index() {
@@ -124,8 +130,10 @@ public class Application extends Controller {
     }
 
     // 結果ページ
-    public static void result() {
-        render();
+    public static void result(long id) {
+	    List<Group> groups = Group.getGroupListByProjectID(id);
+	    renderArgs.put("groups", groups);
+	    render();
     }
 
     // アカウントを作成する
@@ -265,7 +273,7 @@ public class Application extends Controller {
     	
     	long userID = User.getIDByName(session.get(SESSION_KEY_USER));
 
-	    Wish.resettWishByUserID(userID);
+	    Wish.resetWishByUserID(userID);
     	
         for(int wishRank=1; wishRank<=wishLimit; wishRank++){
         	long groupID = Long.valueOf(params.get("wish-"+ wishRank));

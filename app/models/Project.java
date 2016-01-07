@@ -49,4 +49,17 @@ public class Project extends Model {
 		Project project = Project.find("id=?", id).first();
 		return project.wish_limit;
 	}
+
+	public static List<Project> overDeadLineProjects(List<Project> projects){
+		final Date now = new Date();
+
+		List<Project> overDeadLineProjects = new ArrayList<>();
+		for(Project project : projects){
+			if(now.after(project.deadline)){
+				overDeadLineProjects.add(project);
+			}
+		}
+
+		return overDeadLineProjects;
+	}
 }

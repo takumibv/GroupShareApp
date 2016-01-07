@@ -28,4 +28,9 @@ public class Group extends Model {
 	public static List<Group> getGroupListByProjectID(long projectID){
 		return Group.find("project_id=?", projectID).fetch();
 	}
+
+	public static Group getGroupById(Long id){
+		return Group.find("id=?", id).first();
+	}
+
 }
