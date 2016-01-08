@@ -50,7 +50,7 @@ public class Project extends Model {
 		return project.wish_limit;
 	}
 
-	public static List<Project> overDeadLineProjects(List<Project> projects){
+	public static List<Project> projectsOfOverDeadLine(List<Project> projects){
 		final Date now = new Date();
 
 		List<Project> overDeadLineProjects = new ArrayList<>();

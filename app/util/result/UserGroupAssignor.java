@@ -23,8 +23,6 @@ public class UserGroupAssignor {
 	public UserGroupAssignor(long projectID){
 		this.projectID = projectID;
 
-		//List<User> registeredUsers = UserProject.getRegisteredUsers(projectID);
-
 		groups = Group.getGroupListByProjectID(projectID);
 		assignBoard = new HashMap<>(groups.size());
 
@@ -57,8 +55,10 @@ public class UserGroupAssignor {
 		assignRestUsers(unFinishedRegisteredUsers);
 
 		for(GroupSheet groupSheet : assignBoard.values()){
-			groupSheet.save();
+			groupSheet.createUserGroup();
 		}
+
+		UserProject.finish(projectID);
 	}
 
 	void assignRestUsers(List<User> unLuckyUsers){

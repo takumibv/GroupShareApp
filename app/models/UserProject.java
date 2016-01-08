@@ -1,11 +1,6 @@
 package models;
 
-import play.*;
 import play.db.jpa.*;
-import models.Group;
-import models.Project;
-import models.User;
-import sun.rmi.runtime.Log;
 
 import javax.persistence.*;
 import java.util.*;
@@ -42,15 +37,15 @@ public class UserProject extends Model {
 		if(list.size() <= 0)return new ArrayList<Project>();
 		ArrayList<Project> ret = new ArrayList<Project>();
 		for(UserProject up : list){
-			Project addProject = Project.find("ID = ?", up.project_id).first();
+			Project addProject = Project.getProjectByID(up.project_id);
 			ret.add(addProject);
 		}
 		return ret;
 	}
 
 	public static List<User> unFinishedRegisteredUsers(Long project_id){
-		List<User> users = UserProject.find("project_id = ? AND registered = ? AND finished = ?", project_id, true, false).fetch();
-		return users;
+		List<UserProject> ups = UserProject.find("project_id = ? AND registered = ? AND finished = ?", project_id, true, false).fetch();
+		return getUsers(ups);
 	}
 
 	public static int getUserScore(Long project_id, Long user_id){
@@ -61,6 +56,23 @@ public class UserProject extends Model {
 	public static List<Project> getUnFinishedProjects(){
 		List<UserProject> userProjects = UserProject.find("finished=?", false).fetch();
 		return getProjects(userProjects);
+	}
+
+	public static List<User> getUsers(List<UserProject> userProjects){
+		List<Long> userIDList = new ArrayList<>();
+		List<User> userList = new ArrayList<>();
+
+		//create userIDList
+		for(UserProject userProject : userProjects){
+			if(!userIDList.contains(userProject.user_id)){
+				long id = userProject.user_id;
+				userIDList.add(id);
+
+				//create userList
+				userList.add(User.getUserByID(id));
+			}
+		}
+		return userList;
 	}
 
 	public static List<Project> getProjects(List<UserProject> userProjects){
@@ -86,8 +98,16 @@ public class UserProject extends Model {
 		userProject.save();
 	}
 
+	public static void finish(Long project_id){
+		List<User> users = UserProject.getUsers(UserProject.find("project_id=?", project_id).<UserProject>fetch());
+
+		for(User user : users){
+			finish(project_id, user.id);
+		}
+	}
+
 	public static void register(Long user_id, Long project_id){
-		UserProject userProject = UserProject.find("user_id = ? AND project_id", user_id, project_id).first();
+		UserProject userProject = getUserProject(project_id, user_id);
 		userProject.registered = true;
 		userProject.save();
 	}

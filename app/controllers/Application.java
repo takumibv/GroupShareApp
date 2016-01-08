@@ -16,7 +16,7 @@ public class Application extends Controller {
 	private final static String SESSION_LOGOUT = "logout";
 
 
-	@Before(unless={"index", "signup", "makeAccount", "signin"})
+	@Before(unless={"index", "signup", "makeAccount", "signin","resultTrigger"})
 	public static void loginedUserOnlyPage(){
 		boolean isLogin;
 		final String session_login_status = session.get(SESSION_KEY_LOGIN_STATUS);
@@ -34,7 +34,7 @@ public class Application extends Controller {
 		}
 	}
 
-	@Before(unless={"index", "signup", "makeAccount", "signin"})
+	@Before(unless={"index", "signup", "makeAccount", "signin", "loginedUserOnlyPage"})
 	public static void resultTrigger(){
 		Result result = new Result();
 		result.updateResult();
@@ -105,11 +105,6 @@ public class Application extends Controller {
         }
 
 	    final long projectID = id;
-
-        //for debug
-		Group.createGroup("test1", "test for registration. projectID is "+ projectID, 3, projectID);
-	    Group.createGroup("test2", "test for registration. projectID is "+ projectID, 4, projectID);
-	    //end
 
     	List<Group> groups = Group.getGroupListByProjectID(projectID);
 

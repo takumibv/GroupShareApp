@@ -30,7 +30,7 @@ public class GroupSheet {
 	//when not closed
 	void fillWithUsers(List<User> unFinishedRegisteredUsers, int rank){
 		if(isClosed()){
-			if(!isSaved)save();
+			if(!isSaved) createUserGroup();
 			return;
 		}
 
@@ -67,19 +67,22 @@ public class GroupSheet {
 	}
 
 	//when closed
-	void save(){
+	void createUserGroup(){
 		if(isSaved)return;
 
 		for(Long userID : lastUserIDList){
 			UserGroup.createUserGroup(userID,groupID);
-			UserProject.finish(projectID, userID);
 		}
 		isSaved = true;
+		isClosed = true;
 	}
 
 	//choose the arg num of users from the arg users.
 	//return chosen user IDs
 	List<Long> chooseUsers(List<Long> users, int num){
+		//for debug.
+		System.out.println("choosing users...");
+
 		List<Long> chosenUsers = new ArrayList<>(num);
 
 		Random random = new Random(System.currentTimeMillis());
