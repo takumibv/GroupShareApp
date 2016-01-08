@@ -43,9 +43,4 @@ public class Project extends Model {
 		p.invitation_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
 		p.save();
 	}
-
-	public static List<Project> getMakedProject(Long owner_id){
-		List<Project> ret = Project.find("owner_id = ?", owner_id).fetch();
-		return ret;
-	}
 }

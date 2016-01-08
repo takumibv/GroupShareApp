@@ -73,12 +73,20 @@ public class Application extends Controller {
     }
 
     // プロジェクト詳細ページ
-    public static void project() {
+    public static void project(Long id) {
+	    final long projectID = id;
+	    Project project = Project.getProjectByID(projectID);
+
+	    List<Group> groups = Group.getGroupListByProjectID(projectID);
+
+	    renderArgs.put("projectName", project.name);
+	    renderArgs.put("projectDeadLine", project.deadline);
+	    renderArgs.put("groups", groups);
         render();
     }
 
     // グループ登録ページ
-    public static void register() {
+    public static void register(Long id) {
 	    render();
     }
 
@@ -177,12 +185,25 @@ public class Application extends Controller {
 	    validation.required(name);
 	    validation.required(deadline);
 	    validation.required(assign_system);
-	    validation.required(wish_limit);
+		validation.required(wish_limit);
 
-			User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-			Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
-			System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
+		Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
+		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
+
+		final long projectID = p.id;
+		//create Group
+		for(int i=0; i<group_num; i++){
+			String groupName = params.get("group-"+ i +"[name]");
+			int groupCapacity = Integer.valueOf(params.get("group-"+ i +"[capacity]"));
+			String groupDetail = params.get("group-"+ i +"[detail]");
+
+			Group.createGroup(groupName, groupDetail, groupCapacity, projectID);
+		}
+
+		//create UserGroup
+
 
         for(int i=0; i<user_num; i++){
             User addUser = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
@@ -197,5 +218,12 @@ public class Application extends Controller {
     // 登録を保存する
     public static void saveRegistration(){
     	mypage();
+    }
+
+    // ユーザ名が存在するかを返す
+    public static void isExistsUser(String name){
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("isExists", User.isExists(name));
+        renderJSON(result);
     }
 }
