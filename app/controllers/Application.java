@@ -50,22 +50,25 @@ public class Application extends Controller {
 
     // マイページ
     public static void mypage() {
-				User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-				ArrayList<Project> Inviteted_notRegistered = UserProject.findProject(owner.getId(), false, false);
-				ArrayList<Project> Inviteted_Registered = UserProject.findProject(owner.getId(), true, false);
-				ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
-				ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
-                List<Project>      maked_project = Project.getMakedProject(owner.getId());
-				renderArgs.put("InR", Inviteted_notRegistered);
-				renderArgs.put("IR", Inviteted_Registered);
-				renderArgs.put("FnR", Finished_notRegistered);
-                renderArgs.put("FR", Finished_Registered);
-				renderArgs.put("MP", maked_project);
+		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		ArrayList<Project> Inviteted_notRegistered = UserProject.findProject(owner.getId(), false, false);
+		ArrayList<Project> Inviteted_Registered = UserProject.findProject(owner.getId(), true, false);
+		ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
+		ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
+        List<Project>      maked_project = Project.getMakedProject(owner.getId());
+		renderArgs.put("InR", Inviteted_notRegistered);
+		renderArgs.put("IR", Inviteted_Registered);
+		renderArgs.put("FnR", Finished_notRegistered);
+        renderArgs.put("FR", Finished_Registered);
+		renderArgs.put("MP", maked_project);
         render();
     }
 
     // プロジェクト作成ページ
     public static void makeProject() {
+        User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        List<Project> maked_project = Project.getMakedProject(owner.getId());
+        renderArgs.put("MP", maked_project);
         render();
     }
 
