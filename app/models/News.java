@@ -35,8 +35,13 @@ public class News extends Model {
 		news.save();
 	}
 
-	public static List<News> getNews(Long user_id, boolean isRead){
-		List<News> ret = News.find("user_id = ? AND isRead = ?", user_id, isRead).fetch();
+	public static List<News> getNotReadNews(Long user_id){
+		List<News> ret = News.find("user_id = ? AND isRead = ?", user_id, false).fetch();
+		return ret;
+	}
+
+	public static List<News> getAllNews(Long user_id){
+		List<News> ret = News.find("user_id = ?", user_id).fetch();
 		return ret;
 	}
 
