@@ -45,7 +45,7 @@ public class Project extends Model {
 	}
 
 	public static List<Project> getMakedProject(Long owner_id){
-		List<Project> ret = Project.find("owner_id = ?", owner_id);
+		List<Project> ret = Project.find("owner_id = ?", owner_id).fetch();
 		return ret;
 	}
 }
