@@ -45,4 +45,9 @@ public class Project extends Model {
 		p.invitation_code = random_code + suffix;
 		p.save();
 	}
+
+	public static List<Project> getMakedProject(Long owner_id){
+		List<Project> ret = Project.find("owner_id = ?", owner_id).fetch();
+		return ret;
+	}
 }
