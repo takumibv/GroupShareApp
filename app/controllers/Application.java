@@ -192,9 +192,16 @@ public class Application extends Controller {
 	    validation.required(assign_system);
 		validation.required(wish_limit);
 
+		//あとから消す
+		String detail = "";
+		int trash = 1;
+		int allocation_method = 1;
+		int public_user = 1;
+		int public_number = 1;
+
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-		Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
+		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_number);
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;
