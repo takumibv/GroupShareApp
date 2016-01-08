@@ -29,6 +29,7 @@ public class UserProject extends Model {
 	public static void createUserProject(Long user_id, Long project_id, int score){
 		UserProject newUsrPro = new UserProject(user_id, project_id, score);
 		newUsrPro.save();
+		News.createNews(new Date(), user_id, project_id, 1); 
 	}
 
 	public static ArrayList<Project> findProject(Long user_id, boolean registered,  boolean finished){
