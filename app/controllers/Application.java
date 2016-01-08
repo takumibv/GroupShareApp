@@ -55,10 +55,12 @@ public class Application extends Controller {
 				ArrayList<Project> Inviteted_Registered = UserProject.findProject(owner.getId(), true, false);
 				ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
 				ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
+                List<Project>      maked_project = Project.getMakedProject(owner.getId());
 				renderArgs.put("InR", Inviteted_notRegistered);
 				renderArgs.put("IR", Inviteted_Registered);
 				renderArgs.put("FnR", Finished_notRegistered);
-				renderArgs.put("FR", Finished_Registered);
+                renderArgs.put("FR", Finished_Registered);
+				renderArgs.put("MP", maked_project);
         render();
     }
 
@@ -68,7 +70,7 @@ public class Application extends Controller {
     }
 
     // プロジェクト編集ページ
-    public static void editProject() {
+    public static void editProject(Long id) {
         render();
     }
 
