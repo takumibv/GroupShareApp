@@ -40,7 +40,14 @@ public class Project extends Model {
 
 	public static void setInvitationCode(Long id){
 		Project p = Project.find("ID = ?", id).first();
-		p.invitation_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
+		String suffix = "@" + String.valueOf(p.id);
+		String random_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
+		p.invitation_code = random_code + suffix;
 		p.save();
+	}
+
+	public static List<Project> getMakedProject(Long owner_id){
+		List<Project> ret = Project.find("owner_id = ?", owner_id).fetch();
+		return ret;
 	}
 }

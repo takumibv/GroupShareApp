@@ -226,4 +226,10 @@ public class Application extends Controller {
         result.put("isExists", User.isExists(name));
         renderJSON(result);
     }
+
+    public static void news(){
+		User user = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		List<News> news = News.getAllNews(user.getId());
+    	render(news);
+    }
 }
