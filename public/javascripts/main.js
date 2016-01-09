@@ -197,12 +197,12 @@ $(document).ready(function(){
 			$("#validation-group").html("");
 		}
 		$("input[name=group-num]").val(group_num);
-		if(user_num < 2){
-			$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは2人以上追加してください。");
-			return false;
-		}else{
+		// if(user_num < 2){
+		// 	$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは2人以上追加してください。");
+		// 	return false;
+		// }else{
 			$("#validation-group").html("");
-		}
+		// }
 		$("input[name=user-num]").val(user_num);
 	});
 

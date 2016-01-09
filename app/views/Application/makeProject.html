@@ -2,6 +2,7 @@
 #{extends 'Application/header.html' /}
 <h2>プロジェクトを作成</h2>
 
+#{if MP.size()!=0}
 <div class="panel-body">
   <div class="panel-body-inner">
     <h3>以前作ったプロジェクトを使用する</h3>
@@ -9,22 +10,28 @@
       <span class="input-group-addon">プロジェクトを選択</span>
       <select class="form-control">
         <option>使用しない</option>
-        <option>プロジェクトA</option>
-        <option>プロジェクトB</option>
-        <option>プロジェクトC</option>
+        #{list items:MP, as : 'ele'}
+        <option>${ele.name}</option>
+        #{/list}
       </select>
     </div>
   </div>
 </div>
+#{/if}
 
 <form id="make-project" action="@{saveProject}">
 
 <div class="panel-body">
   <div class="panel-body-inner">
     <h3>基本情報</h3> 
+    <span class="note">プロジェクトの基本的な情報</span>
     <div class="input-group">
-      <span class="input-group-addon">名前</span>
+      <span class="input-group-addon">プロジェクト名</span>
       <input class="form-control" type="text" name="name" required>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">詳細</span>
+      <textarea class="form-control" type="text" name="detail" placeholder="プロジェクトの説明"></textarea>
     </div>
     <div class="input-group">
       <span class="input-group-addon">締め切り</span>
@@ -50,6 +57,28 @@
 <div class="panel-body panel-group">
   <div class="panel-body-inner">
     <h3>グループ</h3>
+    <span class="note">グループ情報</span>
+    <div class="input-group">
+      <span class="input-group-addon">参加ユーザが他の参加ユーザの名前を閲覧可能にする</span>
+      <select class="form-control form-number" name="">
+        <option value="1">はい</option>
+        <option value="2">いいえ</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">グループに誰が登録したのかを閲覧可能にする</span>
+      <select class="form-control form-number" name="">
+        <option value="1">はい</option>
+        <option value="2">いいえ</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">グループに何人登録したのかを閲覧可能にする設定</span>
+      <select class="form-control form-number" name="">
+        <option value="1">はい</option>
+        <option value="2">いいえ</option>
+      </select>
+    </div>
     <p id="validation-group"></p>
     <button type="button" class="btn" data-toggle="modal" data-target="#add-group-modal">＋グループを追加</button>
     <table class="table">
@@ -68,6 +97,7 @@
 <div class="panel-body panel-users">
   <div class="panel-body-inner">
     <h3>参加ユーザ</h3>
+    <span class="note">参加ユーザ情報(自分も参加可能)</span>
     <p id="validation-user"></p>
     <button type="button" class="btn" data-toggle="modal" data-target="#add-user-modal">＋ユーザを追加</button>
     <table class="table">

@@ -1,6 +1,6 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
-<h2>プロジェクトを作成</h2>
+<h2>「${project.name}」を編集</h2>
 
 <form id="make-project" action="@{saveProject}">
 
@@ -18,15 +18,15 @@
     <div class="input-group">
       <span class="input-group-addon">決定基準</span>
       <select class="form-control form-number" name="assign_system">
-        <option value="1" #{if project.assign_system=='1'}selected#{/if}>点数優先</option>
-        <option value="2" #{if project.assign_system=='2'}selected#{/if}>じゃんけん</option>
+        <option value="1" #{if project.assign_system==1}selected#{/if}>点数優先</option>
+        <option value="2" #{if project.assign_system==2}selected#{/if}>じゃんけん</option>
       </select>
     </div>
     <div class="input-group">
       <span class="input-group-addon">第n希望まで登録</span>
       <select class="form-control form-number" name="wish_limit">
-        <option value="1" #{if project.wish_limit=='1'}selected#{/if}>1</option>
-        <option value="2" #{if project.wish_limit=='2'}selected#{/if}>2</option>
+        <option value="1" #{if project.wish_limit==1}selected#{/if}>1</option>
+        <option value="2" #{if project.wish_limit==2}selected#{/if}>2</option>
       </select>
     </div>
   </div>
@@ -45,6 +45,14 @@
           <th>詳細</th>
           <th class="th-right">削除</th>
         </tr>
+        #{list items:groups, as : 'group'}
+        <tr id="group-${group.id}" class="group">
+          <td><span class="name">${group.name}</span></td>
+          <td><span class="capacity">${group.capacity}</span></td>
+          <td><span class="detail">${group.detail}</span></td>
+          <td><span class="delete">削除</span></td>
+        </tr>
+        #{/list}
       </tbody>
     </table>
   </div>

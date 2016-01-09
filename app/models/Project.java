@@ -17,13 +17,23 @@ public class Project extends Model {
 	public int assign_system;
 	public int wish_limit;
 	public String invitation_code;
+	public int trash;
+	public int allocation_method;
+	public int public_user;
+	public int public_number;
+	public String detail;
 
-	public Project(String name, Long owner_id, Date deadline, int assign_system, int wish_limit){
+	public Project(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_number){
 		this.name = name;
+		this.detail = detail;
 		this.owner_id = owner_id;
 		this.deadline = deadline;
 		this.assign_system = assign_system;
 		this.wish_limit = wish_limit;
+		this.trash = trash;
+		this.allocation_method = allocation_method;
+		this.public_user = public_user;
+		this.public_number = public_number;
 	}
 
 	public static Project getProjectByID(long projectID){
@@ -31,8 +41,8 @@ public class Project extends Model {
 		return p;
 	}
 
-	public static Project makeProject(String name, Long owner_id, Date deadline, int assign_system, int wish_limit){
-		Project newProject = new Project(name, owner_id, deadline, assign_system, wish_limit);
+	public static Project makeProject(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_number){
+		Project newProject = new Project(name, detail, owner_id, deadline, assign_system, wish_limit, trash, allocation_method, public_user, public_number);
 		newProject.save();
 		setInvitationCode(newProject.getId());
 		return newProject;
