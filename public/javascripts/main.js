@@ -58,14 +58,8 @@ $(document).ready(function(){
 			+ "<td><a class='delete'>削除</a></td>"
 			+ "</tr>");
 
-		$("#add-group-modal input[name=name]").val("");
-		$("#add-group-modal input[name=capacity]").val("");
-		$("#add-group-modal textarea[name=detail]").val("");
-
-		$("#validation-group-name").html("");
-		$("#validation-group-capacity").html("");
-		$("#add-group-btn").prop("disabled", true);
-		$("#add-group-modal .close").click();
+		resetModal();
+		checkTable();
 	});
 
 	// モーダル　参加ユーザ追加ボタンを有効、無効の切り替え
@@ -103,13 +97,8 @@ $(document).ready(function(){
 				+ "<td><a class='delete'>削除</a></td>"
 				+ "</tr>");
 
-			$("#add-user-modal input[name=name]").val("");
-			$("#add-user-modal input[name=score]").val("");
-
-			$("#validation-user-name").html("");
-			$("#validation-user-score").html("");
-			$("#add-user-btn").prop("disabled", true);
-			$("#add-user-modal .close").click();
+			resetModal();
+			checkTable();
 		}else{
 			return false;
 		}
@@ -120,6 +109,7 @@ $(document).ready(function(){
 		if(confirm("削除しますか？")){
 			$(this).parent().parent().fadeOut().queue(function() {
 				this.remove();
+				checkTable();
 			});
 		}
 	});
@@ -161,7 +151,9 @@ $(document).ready(function(){
 		}
 	});
 
+	// プロジェクトを保存ボタン
 	$("#make-project").on("submit", function(){
+		$(window).off('beforeunload');
 		var edit_form = $(document).find(".replace-input").size();
 		if(edit_form > 0){
 			$(".replace-input").addClass("error-form");
@@ -241,4 +233,42 @@ function isValidGroup(name){
         }
     });
     return valid_flg;
+}
+
+// モーダルを閉じる時にリセットする
+function resetModal(){
+	//グループ
+	$("#add-group-modal input[name=name]").val("");
+	$("#add-group-modal input[name=capacity]").val("");
+	$("#add-group-modal textarea[name=detail]").val("");
+	$("#validation-group-name").html("");
+	$("#validation-group-capacity").html("");
+	$("#add-group-btn").prop("disabled", true);
+	$("#add-group-modal .close").click();
+
+	//ユーザ
+	$("#add-user-modal input[name=name]").val("");
+	$("#add-user-modal input[name=score]").val("");
+	$("#validation-user-name").html("");
+	$("#validation-user-score").html("");
+	$("#add-user-btn").prop("disabled", true);
+	$("#add-user-modal .close").click();
+}
+
+// 表に参加ユーザとグループがあるかどうかをチェックする
+function checkTable(){
+	var users = $(document).find(".user");
+	var groups = $(document).find(".group");
+
+	if(users.size() == 0){
+		$("#users-field").addClass("no-element");
+	}else{
+		$("#users-field").removeClass("no-element");
+	}
+
+	if(groups.size() == 0){
+		$("#groups-field").addClass("no-element");
+	}else{
+		$("#groups-field").removeClass("no-element");
+	}
 }
