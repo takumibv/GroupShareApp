@@ -26,6 +26,11 @@ public class Project extends Model {
 		this.wish_limit = wish_limit;
 	}
 
+	public static Project getProjectByID(long projectID){
+		Project p = Project.find("id = ?", projectID).first();
+		return p;
+	}
+
 	public static Project makeProject(String name, Long owner_id, Date deadline, int assign_system, int wish_limit){
 		Project newProject = new Project(name, owner_id, deadline, assign_system, wish_limit);
 		newProject.save();
@@ -35,8 +40,14 @@ public class Project extends Model {
 
 	public static void setInvitationCode(Long id){
 		Project p = Project.find("ID = ?", id).first();
-		p.invitation_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
+		String suffix = "@" + String.valueOf(p.id);
+		String random_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
+		p.invitation_code = random_code + suffix;
 		p.save();
 	}
 
+	public static List<Project> getMakedProject(Long owner_id){
+		List<Project> ret = Project.find("owner_id = ?", owner_id).fetch();
+		return ret;
+	}
 }

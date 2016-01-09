@@ -2,6 +2,37 @@
 #{extends 'Application/header.html' /}
 <h2>プロジェクト詳細</h2>
 
+<h3>${projectName}</h3>
+
+<table>
+	<tr>
+		<td>グループ名</td>
+		<td>詳細</td>
+		<td>定員</td>
+		<td>登録人数</td>
+		<td>登録ユーザ名前</td>
+	</tr>
+
+	#{list items:groups, as:'group'}
+	<tr>
+		<td>${group.name}</td>
+		<td>${group.detail}</td>
+		<td>${group.capacity}</td>
+		%{
+			users = models.UserGroup.getUsersByGroupID(group.id);
+		}%
+		<td>${users.size()}</td>
+		<td>
+			#{list items:users, as:'user'}
+				${user.name},
+			#{/list}
+		</td>
+	</tr>
+	#{/list}
+
+</table>
+
+
 <form action="register">
 	<input type="submit" value="登録する">
 </form>
