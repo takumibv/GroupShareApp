@@ -24,6 +24,10 @@ public class User extends Model {
 		this.isDeleted = false;
 	}
 
+	public static User getUserByID(Long id){
+		return User.find("id=?", id).first();
+	}
+
 	public static boolean createUser(String name, String password){
 		if(isExists(name)){
 			return false;
