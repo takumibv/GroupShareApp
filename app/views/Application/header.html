@@ -17,9 +17,9 @@
 	<div class="container">
     <h1><a href="@{mypage()}"><img class="icon" src="/public/images/icon.png"></a></h1>
     <div class="right-nav clearfix">
-      <p class="user_name sans-serif">${session.username}</p>
+      <a href="@{logout()}" onclick="return confirm('ログアウトしますか？');"><p class="logout-btn">ログアウト</p></a>
       <a href="@{setting()}"><p class="setting-btn">設定</p></a>
-      <a href="@{logout()}"><p class="logout-btn">ログアウト</p></a>
+      <p class="user_name sans-serif">${session.username}</p>
     </div>
   </div>
 </div>
