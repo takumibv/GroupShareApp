@@ -3,6 +3,28 @@ $(document).ready(function(){
 	var today = new Date();
 	$(".input-group .form-date").attr({"min" : today.getFullYear() +"-"+ ('0'+(today.getMonth()+1)).slice( -2 ) +"-"+ ('0'+today.getDate()).slice( -2 )});
 /****
+ * サインアップページ
+ ****/
+ 	// ユーザー名の有効、無効の切り替え
+	$("#signup-form input[name=name]").keyup(function(){
+		var name 		= $("#signup-form input[name=name]").val();
+		console.log("name:"+(name=="")+" "+isValidUser(name));
+		if(name=="" || isValidUser(name)){
+			$("#signup-btn").prop("disabled", true);
+		}else{
+			$("#signup-btn").prop("disabled", false);
+		}
+		// ユーザが有効かどうかのチェック
+		if(isValidUser(name)){
+			$("#signup-form .alert-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>このアカウント名は既に存在しています。");
+		}else if(name==""){
+			$("#signup-form .alert-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>アカウント名を入力してください。");
+		}else{
+			$("#signup-form .alert-user").removeClass("ng").addClass("ok").html("<i class='fa fa-check-circle'></i>このアカウント名は有効です。");
+		}
+	});
+
+/****
  * マイページ
  ****/
  	// テーブルの表示・非表示の切り替え
@@ -231,7 +253,6 @@ function isValidUser(name){
     });
 
 	return valid_flg; 
-
 }
 
 // 引数のグループ名が有効かどうかを返す

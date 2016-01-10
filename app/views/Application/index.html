@@ -28,9 +28,10 @@
 		<div id="login-box" class="box">
 			<form action="signin">
 				<p>ユーザ名</p>
-				<input type="text" name="name">
+				<input type="text" name="name" required>
 				<p>パスワード</p>
-				<input type="password" name="password">
+				<input type="password" name="password" required>
+				<p class="alert"></p><!-- 入力したユーザ名とパスワードが一致しません。 -->
 				<input class="signin-btn btn" type="submit" value="ログイン">
 			</form>
 		</div>

@@ -5,6 +5,7 @@
  * 4.topページ
  * 5.footer
  * 6.modal
+ * 7.setting
  *********/
 
 
@@ -70,6 +71,12 @@ p {
 
 .error-form {
 	border: 3px solid #f00;
+}
+
+.alert {
+	color: #f00;
+	padding: 0;
+    margin-bottom: 0;
 }
 
 /*********
@@ -150,7 +157,7 @@ h3 {
     color: #FE8900;
 }
 
-.panel-body .btn {
+.panel-body .add-btn {
 	color: #333;
 	background-color: #fff;
 	border: 1px solid #ccc;
@@ -426,4 +433,11 @@ h3 {
 
 .modal-header .close {
     margin-top: 6px;
+}
+
+/*********
+ * 7.setting
+ *********/
+.signout-field h3 {
+	margin-bottom: 12px;
 }

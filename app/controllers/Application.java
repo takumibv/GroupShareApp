@@ -14,7 +14,7 @@ public class Application extends Controller {
 	private final static String SESSION_LOGOUT = "logout";
 
 
-	@Before(unless={"index", "signup", "makeAccount", "signin"})
+	@Before(unless={"index", "signup", "makeAccount", "signin", "isExistsUser"})
 	public static void loginedUserOnlyPage(){
 		boolean isLogin;
 		final String session_login_status = session.get(SESSION_KEY_LOGIN_STATUS);

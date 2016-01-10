@@ -2,25 +2,27 @@
 #{extends 'Application/header.html' /}
 <h2>ユーザ登録</h2>
 
-<form action="@{makeAccount}">
+<form id="signup-form" action="@{makeAccount}">
 <div class="panel-body">
   <div class="panel-body-inner">
     <h3>アカウント情報を入力してください</h3> 
     <div class="input-group">
       <span class="input-group-addon">ユーザ名</span>
-      <input class="form-control" type="text" name="name" placeholder="ユーザ名">
+      <input class="form-control" type="text" name="name" placeholder="ユーザ名" required>
     </div>
+    <p class="alert-user"></p>
     <div class="input-group">
       <span class="input-group-addon">パスワード</span>
-      <input class="form-control" type="password" name="password" placeholder="パスワード">
+      <input class="form-control" type="password" name="password" placeholder="パスワード" required>
     </div>
     <div class="input-group">
       <span class="input-group-addon">パスワード（確認）</span>
       <input class="form-control" type="password" name="password_conf" placeholder="パスワード（確認）">
     </div>
+    <p class="alert"></p><!-- 入力情報が正しくありません -->
+    <input id="signup-btn" class="register-btn btn" type="submit" value="アカウントを保存" disabled="true">
   </div>
 </div>
-<input class="register-btn btn" type="submit" value="アカウントを保存">
 </form>
 
 <form action="index">
