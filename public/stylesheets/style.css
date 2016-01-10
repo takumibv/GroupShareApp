@@ -19,7 +19,7 @@ html {
 body {
 	color: #555;
 	font-size: 12px;
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
 	height: 100%;
 }
 
@@ -29,7 +29,7 @@ body {
 
 a {
 	color: #555;
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
 }
 
 a:hover {
@@ -55,7 +55,7 @@ p {
 }
 
 .btn {
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -104,6 +104,7 @@ p {
 
 #header .right-nav {
     float: right;
+    width: 320px;
 }
 
 #header .right-nav p {
@@ -111,6 +112,14 @@ p {
 	float: left;
 	margin-top: 14px;
 	margin-left: 20px;
+}
+
+#header .user_name {
+	width: 120px;
+    text-align: center;
+    font-size: 26px !important;
+    line-height: 1;
+    margin-top: 12px !important;
 }
 
 #header .right-nav .login-btn {
@@ -405,7 +414,7 @@ h3 {
 
 .project-table .column-1 a {
 	color: #FF8240;
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
     font-size: 20px;
     font-weight: bold;
 }
