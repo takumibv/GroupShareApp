@@ -15,7 +15,6 @@ public class GroupSheet {
 	private final int capacity;
 
 	private boolean isClosed;
-	private boolean isSaved;
 
 	private List<Long> lastUserIDList = new ArrayList<>();
 	private List<Long> curRankUserIDList = new ArrayList<>();
@@ -30,12 +29,12 @@ public class GroupSheet {
 	//when not closed
 	void fillWithUsers(List<User> unFinishedRegisteredUsers, int rank){
 		if(isClosed()){
-			if(!isSaved) createUserGroup();
 			return;
 		}
 
 		//users of nth-rank wish
 		List<User> tmp = Wish.getUsers(groupID, rank);
+		//remove other rank users
 		unFinishedRegisteredUsers.retainAll(tmp);
 		List<User> users =unFinishedRegisteredUsers;
 
@@ -49,16 +48,25 @@ public class GroupSheet {
 		int tmpUserListSize = lastUserIDList.size() + curRankUserIDList.size();
 		if(tmpUserListSize == capacity){
 			lastUserIDList.addAll(curRankUserIDList);
+
+			createUserGroup();
+			finishUserProject();
+
 			isClosed = true;
 		}
 		else if(tmpUserListSize > capacity){
 			List<Long> chosenUsers = chooseUsers(curRankUserIDList, getSpace());
 			lastUserIDList.addAll(chosenUsers);
+
+			createUserGroup();
+			finishUserProject();
+
 			isClosed = true;
 		}
 		//not overflow
 		else{
 			lastUserIDList.addAll(curRankUserIDList);
+			finishUserProject();
 		}
 	}
 
@@ -68,13 +76,16 @@ public class GroupSheet {
 
 	//when closed
 	void createUserGroup(){
-		if(isSaved)return;
-
+		if(isClosed())return;
 		for(Long userID : lastUserIDList){
 			UserGroup.createUserGroup(userID,groupID);
 		}
-		isSaved = true;
-		isClosed = true;
+	}
+
+	void finishUserProject(){
+		for(Long userID : lastUserIDList) {
+			UserProject.finish(projectID, userID);
+		}
 	}
 
 	//choose the arg num of users from the arg users.
