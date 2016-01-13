@@ -36,6 +36,11 @@ public class Wish extends Model {
 	}
 
 	public static List<User> getUsers(Long group_id, int rank){
-		return Wish.find("group_id=? AND rank=?", group_id, rank).fetch();
+		List<Wish> wishes = Wish.find("group_id=? AND rank=?", group_id, rank).fetch();
+		List<User> users = new ArrayList<>(wishes.size());
+		for(Wish w : wishes){
+			users.add(User.getUserByID(w.user_id));
+		}
+		return users;
 	}
 }
