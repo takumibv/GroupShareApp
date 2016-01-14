@@ -22,8 +22,10 @@ public class Project extends Model {
 	public int public_user;
 	public int public_number;
 	public String detail;
+	public String deadline_ymd;
+	public String deadline_hm;
 
-	public Project(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_number){
+	public Project(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_number, String deadline_ymd, String deadline_hm){
 		this.name = name;
 		this.detail = detail;
 		this.owner_id = owner_id;
@@ -34,6 +36,8 @@ public class Project extends Model {
 		this.allocation_method = allocation_method;
 		this.public_user = public_user;
 		this.public_number = public_number;
+		this.deadline_ymd = deadline_ymd;
+		this.deadline_hm = deadline_hm;
 	}
 
 	public static Project getProjectByID(long projectID){
@@ -41,8 +45,8 @@ public class Project extends Model {
 		return p;
 	}
 
-	public static Project makeProject(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_number){
-		Project newProject = new Project(name, detail, owner_id, deadline, assign_system, wish_limit, trash, allocation_method, public_user, public_number);
+	public static Project makeProject(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_number, String deadline_ymd, String deadline_hm){
+		Project newProject = new Project(name, detail, owner_id, deadline, assign_system, wish_limit, trash, allocation_method, public_user, public_number, deadline_ymd, deadline_hm);
 		newProject.save();
 		setInvitationCode(newProject.getId());
 		return newProject;

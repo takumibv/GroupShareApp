@@ -5,6 +5,7 @@ import play.data.validation.Error;
 import play.mvc.Before;
 import play.mvc.Controller;
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 
 public class Application extends Controller {
@@ -222,7 +223,7 @@ public class Application extends Controller {
 
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_number);
+		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_number, params.get("deadline_ymd"), deadline_hm);
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;

@@ -13,7 +13,8 @@
     </div>
     <div class="input-group">
       <span class="input-group-addon">締め切り</span>
-      <input class="form-control form-date" type="date" name="deadline" value="${((String)project.deadline).substring(0,10)}" required>
+      <input class="form-control form-date" type="date" name="deadline_ymd" value="${(project.deadline_ymd)}" required>
+      <input class="form-control form-date" type="time" name="deadline_hm" value="${(project.deadline_hm)}" required>
     </div>
     <div class="input-group">
       <span class="input-group-addon">決定基準</span>
