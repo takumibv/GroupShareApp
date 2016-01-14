@@ -74,11 +74,21 @@ public class Application extends Controller {
 
     // プロジェクト編集ページ
     public static void editProject(Long id) {
+				User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+				Project p = Project.find("ID = ?", id).first();
+				if(p.owner_id != u.getId()){
+					mypage();
+				}
         render();
     }
 
     // プロジェクト詳細ページ
     public static void project(Long id) {
+			User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+			Project p = Project.find("ID = ?", id).first();
+			if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
+				mypage();
+			}
 	    final long projectID = id;
 	    Project project = Project.getProjectByID(projectID);
         User owner = User.find("id = ?",project.owner_id).first();
@@ -96,11 +106,21 @@ public class Application extends Controller {
 
     // グループ登録ページ
     public static void register(Long id) {
+			User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+			Project p = Project.find("ID = ?", id).first();
+			if(!UserProject.checkUserProject(u.getId(), id)){
+				mypage();
+			}
 	    render();
     }
 
     // 結果ページ
-    public static void result() {
+    public static void result(Long id) {
+			User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+			Project p = Project.find("ID = ?", id).first();
+			if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
+				mypage();
+			}
         render();
     }
 
