@@ -193,7 +193,7 @@ public class Application extends Controller {
     }
 
 	// プロジェクトを保存する
-	public static void saveProject(String name, Date deadline, int assign_system, int wish_limit){
+	public static void saveProject(String name, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit){
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
 
@@ -204,9 +204,14 @@ public class Application extends Controller {
         }
 
 	    validation.required(name);
-	    validation.required(deadline);
+	    validation.required(deadline_ymd);
+	    validation.required(deadline_hm);
 	    validation.required(assign_system);
 		validation.required(wish_limit);
+		long hm = (Long.valueOf(deadline_hm.split(":")[0]) * 60 * 60
+			+ Long.valueOf(deadline_hm.split(":")[1]) * 60) * 1000;
+						
+		Date deadline = new Date(deadline_ymd.getTime() + hm);
 
 		//あとから消す
 		String detail = "";
