@@ -88,11 +88,11 @@ public class UserGroupAssignor {
 	}
 
 	private void addRestUserToMinGroupSheet(List<GroupSheet> restGroupSheets, User user){
-		int maxSpace = Integer.MIN_VALUE;
+		int minUserNum = Integer.MAX_VALUE;
 		GroupSheet minGroupSheet = null;
 		for(GroupSheet groupSheet : restGroupSheets){
-			if(maxSpace < groupSheet.getSpace()){
-				maxSpace = groupSheet.getSpace();
+			if(minUserNum > groupSheet.getUserNum()){
+				minUserNum = groupSheet.getUserNum();
 				minGroupSheet = groupSheet;
 			}
 		}

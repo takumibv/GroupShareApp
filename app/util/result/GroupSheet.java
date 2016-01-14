@@ -47,6 +47,10 @@ public class GroupSheet {
 		return capacity - lastUserIDList.size();
 	}
 
+	public int getUserNum(){
+		return lastUserIDList.size();
+	}
+
 	public void addUser(long userID){
 		lastUserIDList.add(userID);
 		UserGroup.createUserGroup(userID,groupID);
