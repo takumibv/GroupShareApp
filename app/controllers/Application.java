@@ -98,6 +98,7 @@ public class Application extends Controller {
         System.out.println("あああ："+users.size());
 
         renderArgs.put("project", project);
+        renderArgs.put("u", u);
         renderArgs.put("owner_name", owner.name);
         renderArgs.put("groups", groups);
 	    renderArgs.put("joinUsers", users);
