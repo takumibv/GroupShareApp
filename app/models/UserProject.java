@@ -64,6 +64,7 @@ public class UserProject extends Model {
 		UserProject up = UserProject.find("user_id = ? AND project_id = ?", user_id, project_id).first();
 		if(up == null) return false;
 		return up.registered;
+	}
 
 	public static boolean checkUserProject(Long user_id, Long project_id){
 		List<UserProject> list = UserProject.find("project_id = ?", project_id).fetch();
