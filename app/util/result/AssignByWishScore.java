@@ -9,9 +9,9 @@ import java.util.Map;
 
 import models.UserProject;
 
-public class ScoreAssign extends GroupSheet {
+public class AssignByWishScore extends WishGroupSheet {
 
-	public ScoreAssign(long projectID, long groupID) {
+	public AssignByWishScore(long projectID, long groupID) {
 		super(projectID, groupID);
 	}
 

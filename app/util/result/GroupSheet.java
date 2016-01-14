@@ -9,15 +9,14 @@ import java.util.Random;
 /**
  * Created by 大貴 on 2016/01/08.
  */
-public abstract class GroupSheet {
+public class GroupSheet {
 	protected final long projectID;
 	protected final long groupID;
 	protected final int capacity;
 
-	private boolean isClosed;
+	protected boolean isClosed;
 
-	private List<Long> lastUserIDList = new ArrayList<>();
-	private List<Long> curRankUserIDList = new ArrayList<>();
+	protected List<Long> lastUserIDList = new ArrayList<>();
 
 
 	public GroupSheet(long projectID, long groupID){
@@ -26,77 +25,35 @@ public abstract class GroupSheet {
 		this.capacity = Group.getGroupById(groupID).capacity;
 	}
 
-	//when not closed
-	void fillWithUsers(List<User> unFinishedRegisteredUsers, int rank){
-		if(isClosed()){
-			return;
-		}
-
-		//users of nth-rank wish
-		List<User> tmp = Wish.getUsers(groupID, rank);
-		//remove other rank users
-		unFinishedRegisteredUsers.retainAll(tmp);
-		List<User> users =unFinishedRegisteredUsers;
-
-		//add current rank user IDs
-		curRankUserIDList.clear();
-		for(User user : users){
-			curRankUserIDList.add(user.id);
-		}
-
-		//close
-		int tmpUserListSize = lastUserIDList.size() + curRankUserIDList.size();
-		if(tmpUserListSize == capacity){
-			lastUserIDList.addAll(curRankUserIDList);
-
-			createUserGroup();
-			finishUserProject();
-
-			isClosed = true;
-		}
-		else if(tmpUserListSize > capacity){
-			List<Long> chosenUsers = chooseUsers(curRankUserIDList, getSpace());
-			lastUserIDList.addAll(chosenUsers);
-
-			createUserGroup();
-			finishUserProject();
-
-			isClosed = true;
-		}
-		//not overflow
-		else{
-			lastUserIDList.addAll(curRankUserIDList);
-			finishUserProject();
-		}
-	}
-
-	boolean isClosed(){
+	public boolean isClosed(){
 		return isClosed;
 	}
 
 	//when closed
-	void createUserGroup(){
+	public void createUserGroup(){
 		if(isClosed())return;
 		for(Long userID : lastUserIDList){
 			UserGroup.createUserGroup(userID,groupID);
 		}
 	}
 
-	private void finishUserProject(){
+	public void finishUserProject(){
 		for(Long userID : lastUserIDList) {
 			UserProject.finish(projectID, userID);
 		}
 	}
 
-	//choose the num of users from the users.(if users.size() > num).
-	//return chosen user IDs
-	protected abstract List<Long> chooseUsers(List<Long> users, int num);
-
-	int getSpace(){
+	public int getSpace(){
 		return capacity - lastUserIDList.size();
 	}
 
-	void addRestUser(long userID){
+	public void addUser(long userID){
 		lastUserIDList.add(userID);
+		UserGroup.createUserGroup(userID,groupID);
+		UserProject.finish(projectID, userID);
+
+		if(getSpace() == 0){
+			isClosed = true;
+		}
 	}
 }

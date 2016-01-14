@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class JankenAssign extends GroupSheet {
+public class AssignByWishJanken extends WishGroupSheet {
 
-	public JankenAssign(long projectID, long groupID) {
+	public AssignByWishJanken(long projectID, long groupID) {
 		super(projectID, groupID);
 	}
 

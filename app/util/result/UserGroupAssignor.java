@@ -1,14 +1,8 @@
 package util.result;
 
-import models.Group;
-import models.Project;
-import models.User;
-import models.UserProject;
+import models.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 大貴 on 2016/01/07.
@@ -17,7 +11,10 @@ public class UserGroupAssignor {
 	private final long projectID;
 	private final List<Group> groups;
 	private final Map<Long, GroupSheet> assignBoard;
+	private final AllocationMethod allocationMethod;
 
+	private final int wishLimit;
+	private final int trash;
 
 
 	public UserGroupAssignor(long projectID){
@@ -26,38 +23,48 @@ public class UserGroupAssignor {
 		groups = Group.getGroupListByProjectID(projectID);
 		assignBoard = new HashMap<>(groups.size());
 
-		//init assignBoard
 		Project project = Project.getProjectByID(projectID);
-		switch (project.assign_system){
-			case 1://score
-				for(Group group : groups){
-					assignBoard.put(group.id, new ScoreAssign(projectID, group.id));
-				}
-				break;
-			case 2://janken
-				for(Group group : groups){
-					assignBoard.put(group.id, new JankenAssign(projectID, group.id));
-				}
-				break;
+		wishLimit  = Project.getWishLimit(projectID);
+		trash = project.trash;
+
+
+		/*
+		 * init assignBoard
+		 */
+
+		//wish first
+		if(project.allocation_method == 1) {
+			allocationMethod = new WishFirstAssignor();
+
+			switch (project.assign_system) {
+				case 1://score
+					for (Group group : groups) {
+						assignBoard.put(group.id, new AssignByWishScore(projectID, group.id));
+					}
+					break;
+				case 2://janken
+					for (Group group : groups) {
+						assignBoard.put(group.id, new AssignByWishJanken(projectID, group.id));
+					}
+					break;
+			}
+		}
+		//score first
+		else{
+			allocationMethod = new ScoreFirstAssignor();
+			for (Group group : groups) {
+				assignBoard.put(group.id, new GroupSheet(projectID, group.id));
+			}
 		}
 	}
 
 
 	public void assign(){
-		int wishLimit = Project.getWishLimit(projectID);
-		List<User> unFinishedRegisteredUsers;
-		
-		//for users assigned by their wishes
-		for(int rank=1; rank<=wishLimit; rank++) {
-			unFinishedRegisteredUsers = UserProject.unFinishedRegisteredUsers(projectID);
-			fillGroupSheets(unFinishedRegisteredUsers, rank);
-		}
+		allocationMethod.assign();
 
 		//for unlucky users
-		Project project = Project.getProjectByID(projectID);
-		if(project.trash == 1) {
-			unFinishedRegisteredUsers = UserProject.unFinishedRegisteredUsers(projectID);
-			assignRestUsers(unFinishedRegisteredUsers);
+		if(trash == 1) {
+			assignRestUsers(UserProject.unFinishedRegisteredUsers(projectID));
 		}
 
 		//finish rest UserProjects
@@ -76,16 +83,11 @@ public class UserGroupAssignor {
 
 		//add rest users to proper group sheets. 
 		for(User user : unLuckyUsers){
-			addRestUser(restGroupSheets, user);
-		}
-		
-		//create rest UserGroups 
-		for(GroupSheet groupSheet : assignBoard.values()){
-			groupSheet.createUserGroup();
+			addRestUserToMinGroupSheet(restGroupSheets, user);
 		}
 	}
 
-	private void addRestUser(List<GroupSheet> restGroupSheets, User user){
+	private void addRestUserToMinGroupSheet(List<GroupSheet> restGroupSheets, User user){
 		int maxSpace = Integer.MIN_VALUE;
 		GroupSheet minGroupSheet = null;
 		for(GroupSheet groupSheet : restGroupSheets){
@@ -97,13 +99,65 @@ public class UserGroupAssignor {
 
 		assert minGroupSheet != null;
 
-		minGroupSheet.addRestUser(user.id);
+		minGroupSheet.addUser(user.id);
 	}
 
-	private void fillGroupSheets(List<User> unFinishedRegisteredUsers, int rank){
-		for(GroupSheet groupSheet : assignBoard.values()){
-			groupSheet.fillWithUsers(unFinishedRegisteredUsers, rank);
+
+	private interface AllocationMethod {
+		void assign();
+	}
+
+	private class WishFirstAssignor implements AllocationMethod{
+
+		public void assign(){
+			//for users assigned by their wishes
+			for(int rank=1; rank<=wishLimit; rank++) {
+				fillGroupSheets(UserProject.unFinishedRegisteredUsers(projectID), rank);
+			}
+		}
+
+		private void fillGroupSheets(List<User> unFinishedRegisteredUsers, int rank){
+			for(GroupSheet groupSheet : assignBoard.values()){
+				WishGroupSheet wishGroupSheet = (WishGroupSheet)groupSheet;
+				wishGroupSheet.fillWithUsers(unFinishedRegisteredUsers, rank);
+			}
 		}
 	}
 
+	private class ScoreFirstAssignor implements AllocationMethod{
+
+		public void assign(){
+			List<User> users = UserProject.unFinishedRegisteredUsers(projectID);
+
+			Collections.sort(users, new Comparator<User>() {
+				@Override
+				public int compare(User o1, User o2) {
+					int score1 = UserProject.getUserScore(projectID, o1.id);
+					int score2 = UserProject.getUserScore(projectID, o2.id);
+
+					if(score1 < score2) return -1;
+					else if(score1 > score2) return 1;
+					else return 0;
+				}
+			});
+
+			Collections.reverse(users);
+
+			for(User user : users){
+				List<Long> groupIDsSortedByRank = Wish.getGroupIDsSortedByRank(user.id);
+
+				//try to add user into all wish ranks of groupSheet
+				for(long id : groupIDsSortedByRank){
+					GroupSheet groupSheet = assignBoard.get(id);
+
+					if(!groupSheet.isClosed()){
+						groupSheet.addUser(user.id);
+						break;
+					}
+				}
+
+			}
+
+		}
+	}
 }
