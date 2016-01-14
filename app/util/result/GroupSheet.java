@@ -9,10 +9,10 @@ import java.util.Random;
 /**
  * Created by 大貴 on 2016/01/08.
  */
-public class GroupSheet {
-	private final long projectID;
-	private final long groupID;
-	private final int capacity;
+public abstract class GroupSheet {
+	protected final long projectID;
+	protected final long groupID;
+	protected final int capacity;
 
 	private boolean isClosed;
 
@@ -82,38 +82,15 @@ public class GroupSheet {
 		}
 	}
 
-	void finishUserProject(){
+	private void finishUserProject(){
 		for(Long userID : lastUserIDList) {
 			UserProject.finish(projectID, userID);
 		}
 	}
 
-	//choose the arg num of users from the arg users.
+	//choose the num of users from the users.(if users.size() > num).
 	//return chosen user IDs
-	List<Long> chooseUsers(List<Long> users, int num){
-		//for debug.
-		System.out.println("choosing users...");
-
-		List<Long> chosenUsers = new ArrayList<>(num);
-
-		Random random = new Random(System.currentTimeMillis());
-
-		//create random index of the list users
-		List<Integer> rndIndex = new ArrayList<>(num);
-		while(true){
-			int rnd = random.nextInt(users.size());
-			if(!rndIndex.contains(rnd)){
-				rndIndex.add(rnd);
-				if(rndIndex.size() == num)break;
-			}
-		}
-
-		for(int i : rndIndex){
-			chosenUsers.add(users.get(i));
-		}
-
-		return chosenUsers;
-	}
+	protected abstract List<Long> chooseUsers(List<Long> users, int num);
 
 	int getSpace(){
 		return capacity - lastUserIDList.size();

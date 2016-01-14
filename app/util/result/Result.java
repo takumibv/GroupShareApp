@@ -12,17 +12,6 @@ import java.util.List;
 public class Result {
 
 	public Result(){
-		//resetFinished();
-	}
-
-	//for debug
-	private void resetFinished(){
-		//reset finished field of UserProject specified by projectID
-		List<UserProject> userProjects = UserProject.find("project_id=?", 1L).fetch();
-		for(UserProject up : userProjects){
-			up.finished = false;
-			up.save();
-		}
 	}
 
 	public void updateResult(){

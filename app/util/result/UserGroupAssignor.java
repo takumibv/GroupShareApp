@@ -31,12 +31,12 @@ public class UserGroupAssignor {
 		switch (project.assign_system){
 			case 1://score
 				for(Group group : groups){
-					assignBoard.put(group.id, new GroupSheet(projectID, group.id));
+					assignBoard.put(group.id, new ScoreAssign(projectID, group.id));
 				}
 				break;
 			case 2://janken
 				for(Group group : groups){
-					assignBoard.put(group.id, new GroupSheet(projectID, group.id));
+					assignBoard.put(group.id, new JankenAssign(projectID, group.id));
 				}
 				break;
 		}
@@ -46,35 +46,43 @@ public class UserGroupAssignor {
 	public void assign(){
 		int wishLimit = Project.getWishLimit(projectID);
 		List<User> unFinishedRegisteredUsers;
+		
+		//for users assigned by their wishes
 		for(int rank=1; rank<=wishLimit; rank++) {
 			unFinishedRegisteredUsers = UserProject.unFinishedRegisteredUsers(projectID);
 			fillGroupSheets(unFinishedRegisteredUsers, rank);
 		}
 
+		//for unlucky users
 		unFinishedRegisteredUsers = UserProject.unFinishedRegisteredUsers(projectID);
 		assignRestUsers(unFinishedRegisteredUsers);
-
-		for(GroupSheet groupSheet : assignBoard.values()){
-			groupSheet.createUserGroup();
-		}
-
-		UserProject.finish(projectID);
 	}
 
-	void assignRestUsers(List<User> unLuckyUsers){
+	private void assignRestUsers(List<User> unLuckyUsers){
 		List<GroupSheet> restGroupSheets = new ArrayList<>();
+		
+		//get groupSheets which still have space
 		for(GroupSheet groupSheet : assignBoard.values()){
 			if(!groupSheet.isClosed()){
 				restGroupSheets.add(groupSheet);
 			}
 		}
 
+		//add rest users to proper group sheets. 
 		for(User user : unLuckyUsers){
 			addRestUser(restGroupSheets, user);
 		}
+		
+		//create rest UserGroups 
+		for(GroupSheet groupSheet : assignBoard.values()){
+			groupSheet.createUserGroup();
+		}
+
+		//finish rest UserProjects
+		UserProject.finish(projectID);
 	}
 
-	void addRestUser(List<GroupSheet> restGroupSheets, User user){
+	private void addRestUser(List<GroupSheet> restGroupSheets, User user){
 		int maxSpace = Integer.MIN_VALUE;
 		GroupSheet minGroupSheet = null;
 		for(GroupSheet groupSheet : restGroupSheets){
