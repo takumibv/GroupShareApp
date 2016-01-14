@@ -42,4 +42,12 @@ public class UserProject extends Model {
 		}
 		return ret;
 	}
+
+	public static boolean checkUserProject(Long user_id, Long project_id){
+		List<UserProject> list = UserProject.find("project_id = ?", project_id).fetch();
+		for(UserProject up : list){
+			if(up.user_id == user_id)return true;
+		}
+		return false;
+	}
 }
