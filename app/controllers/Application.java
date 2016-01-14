@@ -177,31 +177,18 @@ public class Application extends Controller {
     }
 
 	// プロジェクトを保存する
-	public static void saveProject(String name, Date deadline, int assign_system, int wish_limit){
+	public static void saveProject(String name, String detail, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
-
-        for(int i=0; i<group_num; i++){
-            System.out.println("グループ名：" + params.get("group-"+ i +"[name]"));
-            System.out.println("定員：" + params.get("group-"+ i +"[capacity]"));
-            System.out.println("詳細：" + params.get("group-"+ i +"[detail]"));
-        }
 
 	    validation.required(name);
 	    validation.required(deadline);
 	    validation.required(assign_system);
 		validation.required(wish_limit);
 
-		//あとから消す
-		String detail = "";
-		int trash = 1;
-		int allocation_method = 1;
-		int public_user = 1;
-		int public_number = 1;
-
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_number);
+		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number);
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;
