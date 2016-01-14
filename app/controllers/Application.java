@@ -16,7 +16,8 @@ public class Application extends Controller {
 	private final static String SESSION_LOGOUT = "logout";
 
 
-	@Before(unless={"index", "signup", "makeAccount", "signin","resultTrigger"})
+
+	@Before(unless={"index", "signup", "makeAccount", "signin", "isExistsUser", "resultTrigger"})
 	public static void loginedUserOnlyPage(){
 		boolean isLogin;
 		final String session_login_status = session.get(SESSION_KEY_LOGIN_STATUS);
@@ -57,25 +58,30 @@ public class Application extends Controller {
 
     // マイページ
     public static void mypage() {
-				User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-				ArrayList<Project> Inviteted_notRegistered = UserProject.findProject(owner.getId(), false, false);
-				ArrayList<Project> Inviteted_Registered = UserProject.findProject(owner.getId(), true, false);
-				ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
-				ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
-				renderArgs.put("InR", Inviteted_notRegistered);
-				renderArgs.put("IR", Inviteted_Registered);
-				renderArgs.put("FnR", Finished_notRegistered);
-				renderArgs.put("FR", Finished_Registered);
+		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		ArrayList<Project> Inviteted_notRegistered = UserProject.findProject(owner.getId(), false, false);
+		ArrayList<Project> Inviteted_Registered = UserProject.findProject(owner.getId(), true, false);
+		ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
+		ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
+        List<Project>      maked_project = Project.getMakedProject(owner.getId());
+		renderArgs.put("InR", Inviteted_notRegistered);
+		renderArgs.put("IR", Inviteted_Registered);
+		renderArgs.put("FnR", Finished_notRegistered);
+        renderArgs.put("FR", Finished_Registered);
+		renderArgs.put("MP", maked_project);
         render();
     }
 
     // プロジェクト作成ページ
     public static void makeProject() {
+        User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        List<Project> maked_project = Project.getMakedProject(owner.getId());
+        renderArgs.put("MP", maked_project);
         render();
     }
 
     // プロジェクト編集ページ
-    public static void editProject() {
+    public static void editProject(Long id) {
         render();
     }
 
@@ -208,15 +214,9 @@ public class Application extends Controller {
     }
 
 	// プロジェクトを保存する
-	public static void saveProject(String name, Date deadline, int assign_system, int wish_limit){
+	public static void saveProject(String name, String detail, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
-
-        for(int i=0; i<group_num; i++){
-            System.out.println("グループ名：" + params.get("group-"+ i +"[name]"));
-            System.out.println("定員：" + params.get("group-"+ i +"[capacity]"));
-            System.out.println("詳細：" + params.get("group-"+ i +"[detail]"));
-        }
 
 	    validation.required(name);
 	    validation.required(deadline);
@@ -225,7 +225,7 @@ public class Application extends Controller {
 
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-		Project p = Project.makeProject(name, owner.getId(),  deadline, assign_system, wish_limit);
+		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number);
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;
@@ -287,5 +287,11 @@ public class Application extends Controller {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("isExists", User.isExists(name));
         renderJSON(result);
+    }
+
+    public static void news(){
+		User user = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		List<News> news = News.getAllNews(user.getId());
+    	render(news);
     }
 }

@@ -2,16 +2,37 @@
 #{extends 'Application/header.html' /}
 <h2>設定</h2>
 
-<form action="changePass">
-	<input type="password" name="password" placeholder="パスワード">
-	<input type="password" name="password_conf" placeholder="パスワード（確認）">
-	<input type="submit" value="パスワードを変更">
+<form action="changePass" onSubmit="return confirm('パスワードを変更しますか？');">
+<div class="panel-body">
+	<div class="panel-body-inner">
+	    <h3>パスワードを変更する</h3> 
+	    <!-- <div class="input-group">
+	    	<span class="input-group-addon">現在のパスワード</span>
+	    	<input class="form-control" type="password" name="password" placeholder="現在のパスワード">
+	    </div> -->
+	    <div class="input-group">
+	    	<span class="input-group-addon">新しいパスワード</span>
+	    	<input class="form-control" type="password" name="password" placeholder="新しいパスワード">
+	    </div>
+	    <div class="input-group">
+	    	<span class="input-group-addon">新しいパスワード（確認）</span>
+	    	<input class="form-control" type="password" name="password_conf" placeholder="新しいパスワード（確認）">
+	    </div>
+	    <p class="alert"></p><!-- パスワードが一致しません -->
+	    <input class="register-btn btn" type="submit" value="パスワードを変更">
+	</div>
+</div>
 </form>
 
-<form action="signout">
-	<input type="submit" value="退会">
-</form>
+<div class="panel-body signout-field">
+	<div class="panel-body-inner">
+		<h3>退会する</h3>
+		<form action="signout" onSubmit="return confirm('本当に退会してよろしいですか？');">
+			<input class="register-btn btn" type="submit" value="退会する">
+		</form>
+	</div>
+</div>
 
 <form action="mypage">
-	<input type="submit" value="戻る">
+  <input class="back-btn btn" type="submit" value="マイページに戻る">
 </form>

@@ -1,8 +1,7 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
-<h2>プロジェクト詳細</h2>
 
-<h3>${projectName}</h3>
+<h2>${projectName}</h2>
 
 <table>
 	<tr>
@@ -32,17 +31,76 @@
 
 </table>
 
+<div id="project" class="panel-body-inner">
+	<div class="input-group">
+    	<span class="input-group-addon">作成者</span>
+      	<span class="form-control">作成者名</span>
+    </div>
+    <div class="input-group">
+      	<span class="input-group-addon">プロジェクト説明</span>
+      	<p class="form-control">プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。</p>
+    </div>
+    <div class="input-group">
+      	<span class="input-group-addon">締め切り</span>
+      	<span class="form-control">12/10</span>
+    </div>
+    <div class="input-group">
+      	<span class="input-group-addon">志望数</span>
+      	<span class="form-control">第３志望まで</span>
+    </div>
+    <div class="panel-body-inner">
+    	<h3>詳細情報</h3>
+	    <div class="input-group">
+	      	<span class="input-group-addon">振り分け方式</span>
+	      	<span class="form-control">第３志望まで</span>
+	    </div>
+	    <div class="input-group">
+	      	<span class="input-group-addon">すべての志望が通らなかった人</span>
+	      	<span class="form-control">ランダムに振り分ける</span>
+	    </div>
+	    <div class="input-group">
+	      	<span class="input-group-addon">志望を優先か点数を優先か</span>
+	      	<span class="form-control">志望</span>
+	    </div>
+	</div>
+	<table class="table">
+      <tbody id="users-field">
+        <tr>
+          <th class="th-left"><span>グループ名</span></th>
+          <th class="th-score">点数</th>
+          <th class="th-right">削除</th>
+        </tr>
+      </tbody>
+    </table>
+	<ul>
+		<li>プロジェクト説明</li>
+		<li>作成者</li>
+		<li>締め切り</li>
+		<li>詳細</li>
+		<li>　振り分け方式</li>
+		<li>　すべての志望が通らなかった人</li>
+		<li>　志望を優先か点数を優先か</li>
+		<li>第何志望まで</li>
+		<li>グループ一覧</li>
+		<li>参加ユーザ一覧</li>
+	</ul>
+</div>
+
 
 <form action="register">
 	<input type="hidden" name="id" value="${projectID}">
-	<input type="submit" value="登録する">
+	<input class="makeproject-btn btn" type="submit" value="登録する">
 </form>
 
 <form action="result">
 	<input type="hidden" name="id" value="${projectID}">
-	<input type="submit" value="結果を見る">
+	<input class="result-btn btn" type="submit" value="結果を見る">
+</form>
+
+<form action="edit">
+	<input class="edit-btn btn" type="submit" value="編集する">
 </form>
 
 <form action="mypage">
-	<input type="submit" value="マイページに戻る">
+	<input class="back-btn btn" type="submit" value="マイページに戻る">
 </form>
