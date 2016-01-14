@@ -80,6 +80,10 @@ p {
     margin-bottom: 0;
 }
 
+.border-none {
+	border: none !important;
+}
+
 /*********
  * 2.header 
  *********/
@@ -205,15 +209,15 @@ h3 {
 
 .panel-body .th-right {
 	border-radius: 0 6px 0 0 ;
-	width: 60px;
+	/*width: 60px;*/
 }
 
 .panel-body .th-left {
 	border-radius: 6px 0 0 0;
 }
 
-.panel-body .th-score, .panel-body .th-capacity {
-	width: 60px;
+.panel-body .th-num, .panel-body .th-score, .panel-body .th-capacity, .panel-body .th-delete {
+	width: 64px;
 }
 
 .panel-body .delete {

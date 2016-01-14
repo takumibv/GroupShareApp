@@ -1,9 +1,21 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
 
-<h2>${projectName}</h2>
+<h2>${project.name}</h2>
 
-<table>
+<form action="register">
+	<input class="makeproject-btn btn" type="submit" value="登録する">
+</form>
+
+<form action="edit">
+	<input class="edit-btn btn" type="submit" value="編集する">
+</form>
+
+<form action="result">
+	<input class="result-btn btn" type="submit" value="結果を見る">
+</form>
+
+<!-- <table>
 	<tr>
 		<td>グループ名</td>
 		<td>詳細</td>
@@ -29,61 +41,109 @@
 	</tr>
 	#{/list}
 
-</table>
+</table> -->
 
 <div id="project" class="panel-body-inner">
 	<div class="input-group">
     	<span class="input-group-addon">作成者</span>
-      	<span class="form-control">作成者名</span>
+      	<span class="form-control">${owner_name}</span>
     </div>
     <div class="input-group">
       	<span class="input-group-addon">プロジェクト説明</span>
-      	<p class="form-control">プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。プロジェクト説明がここに入ります。</p>
+      	<p class="form-control">${project.detail}</p>
     </div>
     <div class="input-group">
       	<span class="input-group-addon">締め切り</span>
-      	<span class="form-control">12/10</span>
+      	<span class="form-control">${project.deadline.getMonth()+1}/${project.deadline.getDate()}</span>
     </div>
     <div class="input-group">
       	<span class="input-group-addon">志望数</span>
-      	<span class="form-control">第３志望まで</span>
+      	<span class="form-control">第${project.wish_limit}志望まで</span>
     </div>
-    <div class="panel-body-inner">
+    <div class="panel-body panel-body-inner border-none">
     	<h3>詳細情報</h3>
 	    <div class="input-group">
 	      	<span class="input-group-addon">振り分け方式</span>
-	      	<span class="form-control">第３志望まで</span>
+	      	<span class="form-control">
+	      		#{if project.assign_system==1}
+	      			点数優先
+	      		#{/if}
+	      		#{elseif project.assign_system==2}
+	      			じゃんけん
+	      		#{/elseif}
+	      	</span>
 	    </div>
 	    <div class="input-group">
 	      	<span class="input-group-addon">すべての志望が通らなかった人</span>
-	      	<span class="form-control">ランダムに振り分ける</span>
+	      	<span class="form-control">
+	      		#{if project.trash==1}
+	      			ランダムで空いてるグループに振り分ける
+	      		#{/if}
+	      		#{elseif project.trash==2}
+	      			どこのグループにも所属しない
+	      		#{/elseif}
+	      	</span>
 	    </div>
 	    <div class="input-group">
 	      	<span class="input-group-addon">志望を優先か点数を優先か</span>
-	      	<span class="form-control">志望</span>
+	      	<span class="form-control">
+	      		#{if project.allocation_method==1}
+	      			志望を優先
+	      		#{/if}
+	      		#{elseif project.allocation_method==2}
+	      			点数を優先
+	      		#{/elseif}
+	      	</span>
 	    </div>
 	</div>
-	<table class="table">
-      <tbody id="users-field">
-        <tr>
-          <th class="th-left"><span>グループ名</span></th>
-          <th class="th-score">点数</th>
-          <th class="th-right">削除</th>
-        </tr>
-      </tbody>
-    </table>
-	<ul>
-		<li>プロジェクト説明</li>
-		<li>作成者</li>
-		<li>締め切り</li>
-		<li>詳細</li>
-		<li>　振り分け方式</li>
-		<li>　すべての志望が通らなかった人</li>
-		<li>　志望を優先か点数を優先か</li>
-		<li>第何志望まで</li>
-		<li>グループ一覧</li>
-		<li>参加ユーザ一覧</li>
-	</ul>
+	<div class="panel-body panel-body-inner border-none">
+		<h3>グループ</h3>
+		<table class="table">
+	      <tbody id="groups-field">
+	        <tr>
+	          <th class="th-left"><span>グループ名</span></th>
+	          <th class="th-capacity th-num">定員</th>
+	          <th class="th-right th-num">登録人数</th>
+	        </tr>
+	        #{list items:groups, as:'group'}
+	        	<tr class='group'>
+					<td>${group.name}</td>
+					<td>${group.capacity}</td>
+				%{
+					users = models.UserGroup.getUsersByGroupID(group.id);
+				}%
+					<td>${users.size()}</td>
+				</tr>
+	        #{/list}
+	      </tbody>
+	    </table>
+    </div>
+    <div class="panel-body panel-body-inner border-none">
+		<h3>参加ユーザ</h3>
+		<table class="table">
+	      <tbody id="users-field">
+	        <tr>
+	          <th class="th-left"><span>ユーザ名</span></th>
+	          <th class="th-capacity">点数</th>
+	          <th class="th-right">登録グループ</th>
+	        </tr>
+	        #{list items:joinUsers, as:'user'}
+	        	<tr class='user'>
+					<td>${user.name}</td>
+					<td>${models.UserProject.getScore(user.id, project.id)}</td>
+					<td>
+						#{if models.UserProject.getRegistered(user.id, project.id)}
+
+						#{/if}
+						#{else}
+							未登録
+						#{/else}
+					</td>
+				</tr>
+	        #{/list}
+	      </tbody>
+	    </table>
+    </div>
 </div>
 
 <form action="register">

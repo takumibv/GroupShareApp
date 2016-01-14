@@ -42,4 +42,27 @@ public class UserProject extends Model {
 		}
 		return ret;
 	}
+
+	public static ArrayList<User> getUsersByProjectID(Long project_id){
+		List<UserProject> list = UserProject.find("project_id = ?", project_id).fetch();
+		if(list.size() <= 0)return new ArrayList<User>();
+		ArrayList<User> ret = new ArrayList<User>();
+		for(UserProject up : list){
+			User addUser = User.find("ID = ?", up.user_id).first();
+			ret.add(addUser);
+		}
+		return ret;
+	}
+
+	public static int getScore(Long user_id, Long project_id){
+		UserProject up = UserProject.find("user_id = ? AND project_id = ?", user_id, project_id).first();
+		if(up == null) return 0;
+		return up.score;
+	}
+
+	public static Boolean getRegistered(Long user_id, Long project_id){
+		UserProject up = UserProject.find("user_id = ? AND project_id = ?", user_id, project_id).first();
+		if(up == null) return false;
+		return up.registered;
+	}
 }

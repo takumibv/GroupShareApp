@@ -81,12 +81,16 @@ public class Application extends Controller {
     public static void project(Long id) {
 	    final long projectID = id;
 	    Project project = Project.getProjectByID(projectID);
+        User owner = User.find("id = ?",project.owner_id).first();
 
 	    List<Group> groups = Group.getGroupListByProjectID(projectID);
+        List<User> users  = UserProject.getUsersByProjectID(projectID);
+        System.out.println("あああ："+users.size());
 
-	    renderArgs.put("projectName", project.name);
-	    renderArgs.put("projectDeadLine", project.deadline);
-	    renderArgs.put("groups", groups);
+        renderArgs.put("project", project);
+        renderArgs.put("owner_name", owner.name);
+        renderArgs.put("groups", groups);
+	    renderArgs.put("joinUsers", users);
         render();
     }
 
