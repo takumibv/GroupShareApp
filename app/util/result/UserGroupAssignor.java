@@ -54,8 +54,14 @@ public class UserGroupAssignor {
 		}
 
 		//for unlucky users
-		unFinishedRegisteredUsers = UserProject.unFinishedRegisteredUsers(projectID);
-		assignRestUsers(unFinishedRegisteredUsers);
+		Project project = Project.getProjectByID(projectID);
+		if(project.trash == 1) {
+			unFinishedRegisteredUsers = UserProject.unFinishedRegisteredUsers(projectID);
+			assignRestUsers(unFinishedRegisteredUsers);
+		}
+
+		//finish rest UserProjects
+		UserProject.finish(projectID);
 	}
 
 	private void assignRestUsers(List<User> unLuckyUsers){
@@ -77,9 +83,6 @@ public class UserGroupAssignor {
 		for(GroupSheet groupSheet : assignBoard.values()){
 			groupSheet.createUserGroup();
 		}
-
-		//finish rest UserProjects
-		UserProject.finish(projectID);
 	}
 
 	private void addRestUser(List<GroupSheet> restGroupSheets, User user){

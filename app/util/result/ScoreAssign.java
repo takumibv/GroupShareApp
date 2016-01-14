@@ -37,7 +37,8 @@ public class ScoreAssign extends GroupSheet {
 		List<Long> chosenUsers = new ArrayList<>(num);
 		
 		//choose user by score order 
-		for(int score : scores){
+		for(int i=0; i<scores.size(); i++){
+			int score = scores.get(i);
 			//add userIDs of the current score
 			for(long id : getUserIDsOfScore(userScores, score)){
 				chosenUsers.add(id);
