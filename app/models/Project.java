@@ -62,4 +62,9 @@ public class Project extends Model {
 		List<Project> ret = Project.find("owner_id = ?", owner_id).fetch();
 		return ret;
 	}
+
+	public static boolean isValidInvitationCode(String invitation_code){
+		if(Project.count("invitation_code = ?", invitation_code) > 0)return true;
+		return false;
+	}
 }
