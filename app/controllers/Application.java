@@ -4,6 +4,8 @@ import models.*;
 import play.data.validation.Error;
 import play.mvc.Before;
 import play.mvc.Controller;
+import util.result.Result;
+
 import java.util.*;
 
 
@@ -14,7 +16,8 @@ public class Application extends Controller {
 	private final static String SESSION_LOGOUT = "logout";
 
 
-	@Before(unless={"index", "signup", "makeAccount", "signin", "isExistsUser"})
+
+	@Before(unless={"index", "signup", "makeAccount", "signin", "isExistsUser", "resultTrigger"})
 	public static void loginedUserOnlyPage(){
 		boolean isLogin;
 		final String session_login_status = session.get(SESSION_KEY_LOGIN_STATUS);
@@ -32,6 +35,11 @@ public class Application extends Controller {
 		}
 	}
 
+	@Before(unless={"index", "signup", "makeAccount", "signin", "loginedUserOnlyPage"})
+	public static void resultTrigger(){
+		Result result = new Result();
+		result.updateResult();
+	}
 
     // トップページ
     public static void index() {
@@ -95,7 +103,6 @@ public class Application extends Controller {
 
 	    List<Group> groups = Group.getGroupListByProjectID(projectID);
         List<User> users  = UserProject.getUsersByProjectID(projectID);
-        System.out.println("あああ："+users.size());
 
         renderArgs.put("project", project);
         renderArgs.put("u", u);
@@ -107,22 +114,52 @@ public class Application extends Controller {
 
     // グループ登録ページ
     public static void register(Long id) {
-			User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-			Project p = Project.find("ID = ?", id).first();
-			if(!UserProject.checkUserProject(u.getId(), id)){
-				mypage();
-			}
+		User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		Project p = Project.find("ID = ?", id).first();
+		if(!UserProject.checkUserProject(u.getId(), id)){
+			mypage();
+		}
+
+     	validation.required(id);
+
+        if(validation.hasErrors()) {
+            for(Error error : validation.errors()) {
+                System.out.println(error.message());
+            }
+            mypage();
+        }
+
+	    final long projectID = id;
+
+    	List<Group> groups = Group.getGroupListByProjectID(projectID);
+
+     	int wishLimit = Project.getWishLimit(projectID);
+     	
+     	//1-origin
+    	List<Integer> wishRank = new ArrayList<>(wishLimit);
+    	for(int i=0; i<wishLimit; i++){
+    		wishRank.add(i+1);
+    	}
+    	
+    	renderArgs.put("projectID", projectID);
+    	renderArgs.put("groups", groups);
+    	renderArgs.put("wishLimit", wishLimit);
+    	renderArgs.put("wishRank", wishRank);
+
 	    render();
     }
 
     // 結果ページ
     public static void result(Long id) {
-			User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-			Project p = Project.find("ID = ?", id).first();
-			if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
-				mypage();
-			}
-        render();
+		User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		Project p = Project.find("ID = ?", id).first();
+		if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
+			mypage();
+		}
+        
+	    List<Group> groups = Group.getGroupListByProjectID(id);
+	    renderArgs.put("groups", groups);
+	    render();
     }
 
     // アカウントを作成する
@@ -240,7 +277,33 @@ public class Application extends Controller {
     }
 
     // 登録を保存する
-    public static void saveRegistration(){
+	//This creates new wishes.
+    //required HTML form params : projectID, wishLimit, wish-[rank]
+    public static void saveRegistration(long projectID, int wishLimit){
+    	validation.required(projectID);
+    	validation.required(wishLimit);
+    	validation.equals(wishLimit, Project.getWishLimit(projectID));
+    	
+        if(validation.hasErrors()) {
+            for(Error error : validation.errors()) {
+                System.out.println(error.message());
+            }
+            mypage();
+        }
+    	
+    	long userID = User.getIDByName(session.get(SESSION_KEY_USER));
+
+	    UserProject.register(userID, projectID);
+
+	    Wish.resetWishByUserID(userID);
+    	
+        for(int wishRank=1; wishRank<=wishLimit; wishRank++){
+        	long groupID = Long.valueOf(params.get("wish-"+ wishRank));
+            System.out.println("group ID of wish rank" + wishRank + " is "  + groupID);
+            
+            Wish.createWish(userID, groupID, wishRank);
+        }
+        	
     	mypage();
     }
 

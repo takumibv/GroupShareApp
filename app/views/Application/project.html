@@ -5,19 +5,13 @@
 
 <div class="btn-field center">
 	#{if project.owner_id == u.id}
-	<form action="@{editProject(project.id)}">
-		<input class="edit-btn btn" type="submit" value="編集する">
-	</form>
+	<a class="edit-btn btn" href="@{editProject(project.id)}">編集する</a>
 	#{/if}
 	#{elseif models.UserProject.checkUserProject(u.id, project.id)}
-	<form action="@{register(project.id)}">
-		<input class="makeproject-btn btn" type="submit" value="登録する">
-	</form>
+	<a class="makeproject-btn btn" href="@{register(project.id)}">登録する</a>
 	#{/elseif}
 	#{else}
-	<form action="@{result(project.id)}">
-		<input class="result-btn btn" type="submit" value="結果を見る">
-	</form>
+	<a class="result-btn btn" href="@{result(project.id)}">結果を見る</a>
 	#{/else}
 </div>
 
@@ -154,19 +148,13 @@
 
 <div class="center">
 	#{if project.owner_id == u.id}
-	<form action="@{editProject(project.id)}">
-		<input class="edit-btn btn" type="submit" value="編集する">
-	</form>
+	<a class="edit-btn btn" href="@{editProject(project.id)}">編集する</a>
 	#{/if}
 	#{elseif models.UserProject.checkUserProject(u.id, project.id)}
-	<form action="@{register(project.id)}">
-		<input class="makeproject-btn btn" type="submit" value="登録する">
-	</form>
+	<a class="makeproject-btn btn" href="@{register(project.id)}">登録する</a>
 	#{/elseif}
 	#{else}
-	<form action="@{result(project.id)}">
-		<input class="result-btn btn" type="submit" value="結果を見る">
-	</form>
+	<a class="result-btn btn" href="@{result(project.id)}">結果を見る</a>
 	#{/else}
 </div>
 

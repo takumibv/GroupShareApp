@@ -7,6 +7,7 @@ import models.User;
 import util.DigestGenerator;
 
 import javax.persistence.*;
+
 import java.util.*;
 
 @Entity
@@ -56,6 +57,24 @@ public class Project extends Model {
 		String random_code = DigestGenerator.getSHA256(id.toString()).substring(0,6);
 		p.invitation_code = random_code + suffix;
 		p.save();
+	}
+	
+	public static int getWishLimit(long id){
+		Project project = Project.find("id=?", id).first();
+		return project.wish_limit;
+	}
+
+	public static List<Project> projectsOfOverDeadLine(List<Project> projects){
+		final Date now = new Date();
+
+		List<Project> overDeadLineProjects = new ArrayList<>();
+		for(Project project : projects){
+			if(now.after(project.deadline)){
+				overDeadLineProjects.add(project);
+			}
+		}
+
+		return overDeadLineProjects;
 	}
 
 	public static List<Project> getMakedProject(Long owner_id){
