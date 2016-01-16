@@ -254,7 +254,8 @@ public class Application extends Controller {
 		// 招待コードが有効かを返し、有効ならばUserProjectを作成する
 		public static void isValidInvitationCode(String invitation_code){
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("isValid", Project.isValidInvitationCode(invitation_code));
+				User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        result.put("isValid", Project.isValidInvitationCode(invitation_code, u.getId()));
         renderJSON(result);
 		}
 

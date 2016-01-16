@@ -32,6 +32,12 @@ public class UserProject extends Model {
 		News.createNews(new Date(), user_id, project_id, 1); 
 	}
 
+	public static void createUserProjectByInvitationCode(Long user_id, Long project_id){
+		/*
+		未実装
+		*/
+	}
+
 	public static ArrayList<Project> findProject(Long user_id, boolean registered,  boolean finished){
 		List<UserProject> list = UserProject.find("user_id = ? AND registered = ? AND finished = ?", user_id, registered, finished).fetch();
 		if(list.size() <= 0)return new ArrayList<Project>();

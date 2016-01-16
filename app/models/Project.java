@@ -63,8 +63,16 @@ public class Project extends Model {
 		return ret;
 	}
 
-	public static boolean isValidInvitationCode(String invitation_code){
-		if(Project.count("invitation_code = ?", invitation_code) > 0)return true;
+	public static boolean isValidInvitationCode(String invitation_code, long user_id){
+		if(Project.count("invitation_code = ?", invitation_code) > 0){
+			Project p = Project.find("invitation_code = ?", invitation_code).first();
+			if(UserProject.count("user_id = ? AND project_id = ?", user_id, p.getId()) > 0)return false;
+			//if(〆切後)return false;
+			/*
+			ここでUserProject登録
+			*/
+			return true;
+		}
 		return false;
 	}
 }
