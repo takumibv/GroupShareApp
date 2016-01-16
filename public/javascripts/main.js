@@ -59,10 +59,10 @@ $(document).ready(function(){
 		var invitation_code = $("#input-invitation-code-modal input[name=invitation_code]").val();
 		if(isValidInvitationCode(invitation_code)){
 			var project = informationProject(invitation_code);
-			$("#by-invitation-code").append(
-				"<td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
+			$("#invitated-project-header").after(
+				"<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
 				+ "<td class='column-2'>" + project[2] + "</td>"
-				 + "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td>");
+				 + "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>");
 		}else{
 			alert("無効な招待コードです.");
 		}
@@ -313,6 +313,7 @@ function resetModal(){
 	//招待コード
   $("#input-invitation-code-modal input[name=invitation_code]").val("");
 	$("#input-invitation-code-btn").prop("disabled", true);
+	$("#input-invitation-code-modal .close").click();
 }
 
 // 表に参加ユーザとグループがあるかどうかをチェックする

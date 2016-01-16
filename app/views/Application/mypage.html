@@ -39,14 +39,12 @@
 	#{else}
 	<table class="table table-bordered project-table">
 		<tbody>
-			<tr>
+			<tr id="invitated-project-header">
 				<th>プロジェクト</th>
 				<th>締め切り</th>
 				<th>登録</th>
 			</tr>
 			<!-- 招待された登録新規 -->
-			<tr id="by-invitation-code">
-			</tr>
 			<!-- 招待された登録未完了 -->
 			#{list items:InR, as : 'ele'}
 			<tr>
