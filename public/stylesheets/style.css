@@ -88,6 +88,10 @@ p {
 	text-align: center;
 }
 
+.grey-back{
+	background-color: #fafafa;
+}
+
 /*********
  * 2.header 
  *********/
@@ -204,11 +208,13 @@ h3 {
 	text-align: center;
 	background-color: #ccc;
 	border-top: none !important;
+	vertical-align: middle !important;
 }
 
 .panel-body td {
 	text-align: center;
 	border: thin solid #ccc;
+	background-color: #fff;
 } 
 
 .panel-body .th-right {
@@ -270,6 +276,11 @@ h3 {
     display: inline-block;
     min-width: 100%;
     min-height: 16px;
+}
+
+.table .column-3 .note {
+	text-decoration: underline;
+	font-size: 10px;
 }
 
 .ng {
@@ -364,7 +375,7 @@ h3 {
 .makeproject-btn {
 	margin: 8px 0;
     background-color: #FF8240;
-    box-shadow: 0 0 3px #888;
+    /*box-shadow: 0 0 3px #888;*/
 }
 
 .register-btn {
@@ -491,6 +502,9 @@ h3 {
 	height: auto;
 	border: none;
     box-shadow: none;
+}
+.grey-back .form-control {
+	background-color: #fafafa;
 }
 .btn-field {
 	margin-bottom: 20px;

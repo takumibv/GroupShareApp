@@ -81,4 +81,13 @@ public class Project extends Model {
 		List<Project> ret = Project.find("owner_id = ?", owner_id).fetch();
 		return ret;
 	}
+
+	public String getDeadlineTime(){
+		return (deadline.getMonth()+1) +"/"+ deadline.getDate() +" "+ String.format("%1$02d", deadline.getHours()) +":"+ String.format("%1$02d", deadline.getMinutes());
+	}
+
+	public Boolean isFinished(){
+		Date now = new Date();
+		return now.after(deadline);
+	}
 }

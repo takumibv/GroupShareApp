@@ -65,4 +65,14 @@ public class Wish extends Model {
 
 		return ids;
 	}
+
+	public long getProjectId(){
+		Group g = Group.find("id = ?", group_id).first();
+		return g.project_id;
+	}
+
+	public String getGroupName(){
+		Group g = Group.find("id = ?", group_id).first();
+		return g.name;
+	}
 }
