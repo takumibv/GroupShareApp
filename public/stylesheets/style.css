@@ -503,6 +503,32 @@ h3 {
 	border: none;
     box-shadow: none;
 }
+
+#project .group-detail td {
+	padding: 0;
+}
+#project .group-detail td div {
+	background-color: #999;
+    color: #fff;
+    display: none;
+    padding: 12px;
+    padding-left: 65px;
+    text-align: left;
+    position: relative;
+}
+#project .group-detail td div:before {
+	content: "詳細";
+    top: 8px;
+    left: 16px;
+    position: absolute;
+    border: thin solid #fff;
+    border-radius: 5px;
+    padding: 2px 8px;
+    background-color: #fff;
+    color: #999;
+    font-weight: bold;
+}
+
 .grey-back .form-control {
 	background-color: #fafafa;
 }

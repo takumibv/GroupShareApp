@@ -163,6 +163,8 @@ public class Application extends Controller {
     		wishRank.add(i+1);
     	}
     	
+        renderArgs.put("project", p);
+        renderArgs.put("u", u);
     	renderArgs.put("projectID", projectID);
     	renderArgs.put("groups", groups);
     	renderArgs.put("wishLimit", wishLimit);

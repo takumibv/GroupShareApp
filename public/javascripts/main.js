@@ -40,6 +40,19 @@ $(document).ready(function(){
  	});
 
 /****
+ * プロジェクト詳細ページ
+ ****/
+ 	$("#project .table .group").on("click", function(){
+ 		var target = $(this).attr("target");
+ 		if($(target).css("display")=="none"){
+			$(target).slideDown();
+		}else{
+			$(target).slideUp();
+		}
+ 		
+ 	});
+
+/****
  * プロジェクト作成ページ
  ****/
 	$("#add-group").on("click",function(){
