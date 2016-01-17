@@ -1,32 +1,54 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
 <h2>結果</h2>
-<table>
+#{if project.isFinished()}
+#{if models.UserProject.checkUserProject(u.id, project.id)}
+<div id="project" class="panel-body panel-body-inner">
+#{if my_group!=null}
+	<h2 class="center">あなたは「<span class="group-name">${my_group.name}</span>」に配属されました</h2>
+#{/if}#{else}
+	<h2 class="center">あなたは配属されませんでした。</h2>
+#{/else}
+</div>
+#{/if}
+<div id="project" class="panel-body panel-body-inner border-none">
+<h3>その他の結果</h3>
+<table class="table">
 	<tr>
-		<td>グループ名</td>
-		<td>定員</td>
-		<td>人数</td>
-		<td>ユーザ名前</td>
+		<th>グループ名</th>
+		<th>定員</th>
+		<th>人数</th>
+		<th>ユーザ名前</th>
 	</tr>
 
 	#{list items:groups, as:'group'}
-	<tr>
-		<td>${group.name}</td>
-		<td>${group.capacity}</td>
-		%{
+	%{
 		users = models.UserGroup.getUsersByGroupID(group.id);
-		}%
-		<td>${users.size()}</td>
-		<td>
-			#{list items:users, as:'user'}
-			${user.name},
-			#{/list}
-		</td>
+	}%
+	<tr>
+		<td rowspan="${users.size()+1}">${group.name}</td>
+		<td rowspan="${users.size()+1}">${group.capacity}</td>
+		<td rowspan="${users.size()+1}">${users.size()}</td>
+		<td style="display:none"></td>
 	</tr>
+		#{list items:users, as:'user'}
+		<tr>
+			<td>${user.name}</td>
+		</tr>
+		#{/list}
 	#{/list}
 
 </table>
+</div>
 
+#{/if}
+#{else}
+<div id="project" class="panel-body panel-body-inner">
+	<h2 class="center">まだ振り分けされていません。</h2>
+</div>
+#{/else}
+
+<a class="makeproject-btn btn" href="@{project(project.id)}">詳細ページへ</a>
 <form action="mypage">
-	<input type="submit" value="マイページに戻る">
+	<input class="back-btn btn" type="submit" value="マイページに戻る">
 </form>

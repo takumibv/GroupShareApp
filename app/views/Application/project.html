@@ -113,7 +113,7 @@
 					<td>${group.name}</td>
 					<td>${group.capacity}</td>
 				%{
-					users = models.UserGroup.getUsersByGroupID(group.id);
+					users = models.Wish.getUsers(group.id, 1);
 				}%
 					<td>
 					#{if project.public_register_number==1} ${users.size()} #{/if}
@@ -146,7 +146,9 @@
 	        #{if models.UserProject.checkUserProject(u.id, project.id)}
 	        <tr class='user'>
 				<td>${u.name}(あなた)</td>
+				#{if project.assign_system==1}
 				<td>${models.UserProject.getScore(u.id, project.id)}</td>
+				#{/if}
 				<td>
 					#{if models.UserProject.getRegistered(u.id, project.id) && wishes_map.get(u.id)!=null}
 						${wishes_map.get(u.id).getGroupName()}

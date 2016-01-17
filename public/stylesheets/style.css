@@ -46,6 +46,12 @@ h2 {
 	font-size: 20px;
 }
 
+h2 .group-name {
+	margin: 0 12px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
 p {
 	font-size: 12px;
 }

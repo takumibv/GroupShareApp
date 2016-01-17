@@ -180,9 +180,13 @@ public class Application extends Controller {
 		if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
 			mypage();
 		}
+        Group my_group = UserGroup.getGroupByUserProjectId(u.id, p.id);
         
 	    List<Group> groups = Group.getGroupListByProjectID(id);
-	    renderArgs.put("groups", groups);
+        renderArgs.put("project", p);
+        renderArgs.put("u", u);
+        renderArgs.put("groups", groups);
+	    renderArgs.put("my_group", my_group);
 	    render();
     }
 
