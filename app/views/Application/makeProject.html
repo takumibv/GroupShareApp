@@ -8,10 +8,10 @@
     <h3>以前作ったプロジェクトを使用する</h3>
     <div class="input-group">
       <span class="input-group-addon">プロジェクトを選択</span>
-      <select class="form-control">
-        <option>使用しない</option>
+      <select id="use-past-project" class="form-control">
+        <option value="0">使用しない</option>
         #{list items:MP, as : 'ele'}
-        <option>${ele.name}</option>
+        <option value="${ele.id}"}>${ele.name}</option>
         #{/list}
       </select>
     </div>
@@ -35,7 +35,7 @@
     <div class="input-group">
       <span class="input-group-addon">締め切り</span>
       <input class="form-control form-date" type="date" name="deadline_ymd" min required>
-      <input class="form-control form-date" type="time" name="deadline_hm" min required>
+      <input class="form-control form-date" type="time" name="deadline_hm" value="00:00" required>
     </div>
     <div class="input-group">
       <span class="input-group-addon required">決定基準</span>

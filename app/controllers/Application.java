@@ -372,6 +372,30 @@ public class Application extends Controller {
         renderJSON(result);
     }
 
+    public static void getProjectById(Long id){
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        Project p = Project.find("ID = ?", id).first();
+
+        List<Group>         groups          = Group.getGroupListByProjectID(p.id);
+        List<UserProject>   user_projects   = UserProject.find("project_id = ?", p.id).fetch();
+        ArrayList<User>     users           = new ArrayList<User>();
+        HashMap<Long, Integer> user_score   = new HashMap<Long, Integer>();
+        for(UserProject usr : user_projects){
+            User user = User.find("id = ?", usr.user_id).first();
+            users.add(user);
+            user_score.put(usr.user_id, usr.score);
+        }
+
+        // ユーザ情報がすべてクライアントに送られるため、修正すべき
+        result.put("project", p);
+        result.put("users", users);
+        result.put("groups", groups);
+        result.put("user_score", user_score);
+        renderJSON(result);
+    }
+
     public static void news(){
 		User user = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 		List<News> news = News.getAllNews(user.getId());

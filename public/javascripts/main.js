@@ -264,6 +264,59 @@ $(document).ready(function(){
 		$("input[name=user-num]").val(user_num);
 	});
 
+	$("#use-past-project").on("change", function(){
+		var project_id = $(this).val();
+		if(project_id=="0"){
+			console.log("選択してない");
+		}else{
+			$("#users-field .user").remove();
+			$("#groups-field .group").remove();
+
+			var data 		= getProjectById(project_id);
+			var project 	= data.project;
+			var users 		= data.users;
+			var groups  	= data.groups;
+			var user_score	= data.user_score;
+
+			$("#make-project input[name=name]").val(project.name);
+			$("#make-project textarea[name=detail]").html(project.detail);
+			// $("#make-project input[name=deadline_ymd]").val(project.deadline_ymd);
+			// $("#make-project input[name=deadline_hm]").val(project.deadline_hm);
+			$("#make-project select[name=assign_system]").val(project.assign_system);
+			$("#make-project select[name=wish_limit]").val(project.wish_limit);
+			$("#make-project select[name=public_register_user]").val(project.public_register_user);
+			$("#make-project select[name=public_register_number]").val(project.public_register_number);
+			$("#make-project select[name=public_user]").val(project.public_user);
+			$("#make-project select[name=allocation_method]").val(project.allocation_method);
+			$("#make-project select[name=trash]").val(project.trash);
+
+			for (var i = users.length - 1; i >= 0; i--) {
+				var user = users[i];
+				$("#users-field").append(
+					  "<tr id='user-" + user.id + "' class='user'>"
+					+ "<td><span class='name'>" + user.name + "</span></td>"
+					+ "<td><span class='score'>" + user_score[user.id] + "</span></td>"
+					+ "<td><a class='delete'>削除</a></td>"
+					+ "</tr>");
+			}
+
+			for (var i = groups.length - 1; i >= 0; i--) {
+				var group = groups[i];
+				$("#groups-field").append(
+					  "<tr class='group'>"
+					+ "<td><span class='name'>" + group.name + "</span></td>"
+					+ "<td><span class='capacity'>" + group.capacity + "</span></td>"
+					+ "<td><span class='detail'>" + group.detail + "</span></td>"
+					+ "<td><a class='delete'>削除</a></td>"
+					+ "</tr>");
+			}
+
+			checkTable();
+		}
+	});
+/****
+ * プロジェクト編集ページ
+ ****/
 	// (編集ページ)プロジェクトの変更を保存ボタン
 	$("#update-project").on("submit", function(){
 		$(window).off('beforeunload');
@@ -338,7 +391,9 @@ $(document).ready(function(){
 	});
 
 });
-
+/****
+ * 関数
+ ****/
 // 引数のユーザ名が有効であればidを返す ajax
 function isValidUser(name){
 	var valid_flg = true;
@@ -366,6 +421,19 @@ function isValidUser(name){
     });
 
 	return valid_flg; 
+}
+
+// 引数のidのプロジェクト情報を返す
+function getProjectById(id){
+	var result = $.ajax({
+        type: 'GET',
+        url: '/getProjectById',
+        data: "id="+id,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+
+	return result; 
 }
 
 // 引数のグループ名が有効かどうかを返す
