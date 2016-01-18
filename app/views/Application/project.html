@@ -1,46 +1,218 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
-<h2>プロジェクト詳細</h2>
 
-<h3>${projectName}</h3>
+<h2 class="center">${project.name}</h2>
 
-<table>
-	<tr>
-		<td>グループ名</td>
-		<td>詳細</td>
-		<td>定員</td>
-		<td>登録人数</td>
-		<td>登録ユーザ名前</td>
-	</tr>
+#{if models.UserProject.checkUserProject(u.id, project.id) && project.isFinished()==false}
+<div id="project" class="panel-body panel-body-inner">
+	#{if models.UserProject.getRegistered(u.id, project.id)}
+	<p>既に登録済みです。締め切り内であれば、再登録ができます。</p>
+	#{/if}
+	#{else}
+	<h3 class="alert center">まだ登録していません。</h3>
+	#{/else}
+	#{if project.assign_system==1}
+	<div class="input-group">
+      	<span class="input-group-addon">あなたの点数</span>
+      	<span class="form-control">${models.UserProject.getScore(u.id, project.id)}</span>
+    </div>
+    #{/if}
+    #{if models.UserProject.getRegistered(u.id, project.id)}
+    #{list items:1..project.wish_limit, as:'i'}
+    <div class="input-group">
+      	<span class="input-group-addon">第${i}志望</span>
+      	<span class="form-control">${my_wishes_map.get(i).getGroupName()}</span>
+    </div>
+    #{/list}
+    #{/if}
+</div>
+#{/if}
 
-	#{list items:groups, as:'group'}
-	<tr>
-		<td>${group.name}</td>
-		<td>${group.detail}</td>
-		<td>${group.capacity}</td>
-		%{
-			users = models.UserGroup.getUsersByGroupID(group.id);
-		}%
-		<td>${users.size()}</td>
-		<td>
-			#{list items:users, as:'user'}
-				${user.name},
-			#{/list}
-		</td>
-	</tr>
-	#{/list}
+<div class="btn-field center">
+	#{if project.owner_id==u.id && project.isFinished()==false}
+	<a class="edit-btn btn" href="@{editProject(project.id)}">編集する</a>
+	#{/if}
+	#{if models.UserProject.checkUserProject(u.id, project.id) && project.isFinished()==false}
+	<a class="makeproject-btn btn" href="@{register(project.id)}">登録する</a>
+	#{/if}
+	#{if project.isFinished()==true}
+	<a class="result-btn btn" href="@{result(project.id)}">結果を見る</a>
+	#{/if}
+</div>
 
-</table>
+<div id="project" class="panel-body panel-body-inner grey-back">
+<div class="panel-body panel-body-inner border-none">
+	<h3>プロジェクトの詳細</h3>
+		<div class="input-group">
+	    	<span class="input-group-addon">作成者</span>
+	      	<span class="form-control">${owner_name}</span>
+	    </div>
+	    <div class="input-group">
+	      	<span class="input-group-addon">プロジェクト説明</span>
+	      	<p class="form-control">${project.detail}</p>
+	    </div>
+	    <div class="input-group">
+	      	<span class="input-group-addon">締め切り</span>
+	      	<span class="form-control">${project.deadline.getMonth()+1}/${project.deadline.getDate()}</span>
+	    </div>
+	    <div class="input-group">
+	      	<span class="input-group-addon">志望数</span>
+	      	<span class="form-control">第${project.wish_limit}志望まで</span>
+	    </div>
+    
+    	<p><br>さらに詳しい情報</p>
+	    <div class="input-group">
+	      	<span class="input-group-addon">振り分け方式</span>
+	      	<span class="form-control">
+	      		#{if project.assign_system==1}
+	      			点数優先
+	      		#{/if}
+	      		#{elseif project.assign_system==2}
+	      			じゃんけん
+	      		#{/elseif}
+	      	</span>
+	    </div>
+	    <div class="input-group">
+	      	<span class="input-group-addon">すべての志望が通らなかった人</span>
+	      	<span class="form-control">
+	      		#{if project.trash==1}
+	      			ランダムで空いてるグループに振り分ける
+	      		#{/if}
+	      		#{elseif project.trash==2}
+	      			どこのグループにも所属しない
+	      		#{/elseif}
+	      	</span>
+	    </div>
+	    <div class="input-group">
+	      	<span class="input-group-addon">志望を優先か点数を優先か</span>
+	      	<span class="form-control">
+	      		#{if project.allocation_method==1}
+	      			志望を優先
+	      		#{/if}
+	      		#{elseif project.allocation_method==2}
+	      			点数を優先
+	      		#{/elseif}
+	      	</span>
+	    </div>
+	    <p class="note">
+      ※志望を優先・・・点数の高い第２志望より点数の低い第１志望を優先します。<br>
+      　点数を優先・・・点数の低い第１志望より点数の高い第２志望を優先します。
+    </p>
+	</div>
+	<div class="panel-body panel-body-inner border-none">
+		<h3>グループ<span class="note">クリックで詳細が見れます。</span></h3>
+		<table class="table">
+	      <tbody id="groups-field">
+	        <tr>
+	          <th class="th-left"><span>グループ名</span></th>
+	          <th class="th-capacity th-num">定員</th>
+	          <th class="th-right th-num">登録人数</th>
+	        </tr>
+	        #{list items:groups, as:'group'}
+	        	<tr class='group' target="#detail-${group.id}">
+					<td>${group.name}</td>
+					<td>${group.capacity}</td>
+				%{
+					users = models.Wish.getUsers(group.id, 1);
+				}%
+					<td>
+					#{if project.public_register_number==1} ${users.size()} #{/if}
+					#{elseif project.owner_id==u.id} ${users.size()}<br>(非公開) #{/elseif}
+					#{else} 非公開 #{/else}
+					</td>
+				</tr>
+				<tr class="group-detail">
+					<td colspan=3>
+						<div id="detail-${group.id}">
+							${group.detail}
+						</div>
+					</td>
+				</tr>	
+	        #{/list}
+	      </tbody>
+	    </table>
+    <!-- </div>
+    <div class="panel-body panel-body-inner border-none"> -->
+		<h3>参加ユーザ<span class="note">(${joinUsers.size()}人)</span></h3>
+		<table class="table">
+	      <tbody id="users-field">
+	        <tr>
+	          <th class="th-left"><span>ユーザ名</span></th>
+	          #{if project.assign_system==1}
+	          <th class="th-capacity">点数</th>
+	          #{/if}
+	          <th class="th-right">登録グループ<br>(第１志望)</th>
+	        </tr>
+	        #{if models.UserProject.checkUserProject(u.id, project.id)}
+	        <tr class='user'>
+				<td>${u.name}(あなた)</td>
+				#{if project.assign_system==1}
+				<td>${models.UserProject.getScore(u.id, project.id)}</td>
+				#{/if}
+				<td>
+					#{if models.UserProject.getRegistered(u.id, project.id) && wishes_map.get(u.id)!=null}
+						${wishes_map.get(u.id).getGroupName()}
+					#{/if}
+					#{else}
+						未登録
+					#{/else}
+				</td>
+			</tr>
+			#{/if}
+	        #{list items:joinUsers, as:'user'}
+	        #{if user.id != u.id}
+	        	<tr class='user'>
+					<td>
+						#{if project.public_user==1} ${user.name} #{/if}
+						#{elseif project.owner_id==u.id} ${user.name}<br>(非公開) #{/elseif}
+						#{else} 非公開 #{/else}
+					</td>
+					#{if project.assign_system==1}
+					<td>
+						#{if project.public_user == 1} ${models.UserProject.getScore(user.id, project.id)} #{/if}
+						#{elseif project.owner_id==u.id} ${models.UserProject.getScore(user.id, project.id)}<br>(非公開) #{/elseif}
+						#{else} 非公開 #{/else}
+					</td>
+					#{/if}
+					<td>
+					#{if project.public_register_user == 1}
+						#{if models.UserProject.getRegistered(user.id, project.id) && wishes_map.get(user.id)!=null}
+							${wishes_map.get(user.id).getGroupName()}
+						#{/if}
+						#{else}
+							未登録
+						#{/else}
+					#{/if}
+					#{elseif project.owner_id==u.id}
+						#{if models.UserProject.getRegistered(user.id, project.id) && wishes_map.get(user.id)!=null}
+							${wishes_map.get(user.id).getGroupName()}<br>(非公開)
+						#{/if}
+						#{else}
+							未登録<br>(非公開)
+						#{/else}
+					#{/elseif}
+					#{else} 非公開 #{/else}
+					</td>
+				</tr>
+			#{/if}
+	        #{/list}
+	      </tbody>
+	    </table>
+    </div>
+</div>
 
-
-<form action="register">
-	<input type="submit" value="登録する">
-</form>
-
-<form action="result">
-	<input type="submit" value="結果を見る">
-</form>
+<div class="center">
+	#{if project.owner_id==u.id && project.isFinished()==false}
+	<a class="edit-btn btn" href="@{editProject(project.id)}">編集する</a>
+	#{/if}
+	#{if models.UserProject.checkUserProject(u.id, project.id) && project.isFinished()==false}
+	<a class="makeproject-btn btn" href="@{register(project.id)}">登録する</a>
+	#{/if}
+	#{if project.isFinished()==true}
+	<a class="result-btn btn" href="@{result(project.id)}">結果を見る</a>
+	#{/if}
+</div>
 
 <form action="mypage">
-	<input type="submit" value="マイページに戻る">
+	<input class="back-btn btn" type="submit" value="マイページに戻る">
 </form>

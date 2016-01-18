@@ -38,4 +38,9 @@ public class UserGroup extends Model {
 		return users;
 	}
 
+	public long getProjectId(){
+		Group g = Group.find("id = ?", group_id).first();
+		return g.project_id;
+	}
+
 }

@@ -5,6 +5,8 @@
  * 4.topページ
  * 5.footer
  * 6.modal
+ * 7.setting
+ * 8.project
  *********/
 
 
@@ -18,7 +20,7 @@ html {
 body {
 	color: #555;
 	font-size: 12px;
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
 	height: 100%;
 }
 
@@ -28,7 +30,7 @@ body {
 
 a {
 	color: #555;
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
 }
 
 a:hover {
@@ -44,6 +46,12 @@ h2 {
 	font-size: 20px;
 }
 
+h2 .group-name {
+	margin: 0 12px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
 p {
 	font-size: 12px;
 }
@@ -54,7 +62,7 @@ p {
 }
 
 .btn {
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -70,6 +78,24 @@ p {
 
 .error-form {
 	border: 3px solid #f00;
+}
+
+.alert {
+	color: #f00;
+	padding: 0;
+    margin-bottom: 0;
+}
+
+.border-none {
+	border: none !important;
+}
+
+.center {
+	text-align: center;
+}
+
+.grey-back{
+	background-color: #fafafa;
 }
 
 /*********
@@ -97,13 +123,23 @@ p {
 
 #header .right-nav {
     float: right;
+    width: 320px;
 }
 
 #header .right-nav p {
 	font-size: 16px;
-	float: left;
+	float: right;
 	margin-top: 14px;
 	margin-left: 20px;
+}
+
+#header .user_name {
+	width: 120px;
+    text-align: center;
+    font-size: 24px !important;
+    line-height: 1;
+    margin-top: 12px !important;
+    font-weight: bold;
 }
 
 #header .right-nav .login-btn {
@@ -150,6 +186,16 @@ h3 {
     color: #FE8900;
 }
 
+.panel-body h3 {
+	margin-bottom: 20px;
+}
+
+.panel-body .note {
+	font-size: 12px;
+    color: #888;
+    margin-left: 12px;
+}
+
 .panel-body .btn {
 	color: #333;
 	background-color: #fff;
@@ -160,32 +206,43 @@ h3 {
 .panel-body .table {
 }
 
+.panel-body .no-element {
+	display: none;
+}
+
 .panel-body th {
 	text-align: center;
 	background-color: #ccc;
 	border-top: none !important;
+	vertical-align: middle !important;
 }
 
 .panel-body td {
 	text-align: center;
 	border: thin solid #ccc;
+	background-color: #fff;
 } 
 
 .panel-body .th-right {
 	border-radius: 0 6px 0 0 ;
-	width: 60px;
+	/*width: 60px;*/
 }
 
 .panel-body .th-left {
 	border-radius: 6px 0 0 0;
 }
 
-.panel-body .th-score, .panel-body .th-capacity {
-	width: 60px;
+.panel-body .th-num, .panel-body .th-score, .panel-body .th-capacity, .panel-body .th-delete {
+	width: 64px;
 }
 
 .panel-body .delete {
 	cursor: pointer;
+}
+
+.panel-body .required:after {
+	content: "*";
+	color: red;
 }
 
 .input-group {
@@ -225,6 +282,11 @@ h3 {
     display: inline-block;
     min-width: 100%;
     min-height: 16px;
+}
+
+.table .column-3 .note {
+	text-decoration: underline;
+	font-size: 10px;
 }
 
 .ng {
@@ -319,7 +381,7 @@ h3 {
 .makeproject-btn {
 	margin: 8px 0;
     background-color: #FF8240;
-    box-shadow: 0 0 3px #888;
+    /*box-shadow: 0 0 3px #888;*/
 }
 
 .register-btn {
@@ -398,7 +460,7 @@ h3 {
 
 .project-table .column-1 a {
 	color: #FF8240;
-	font-family: 'TsukuARdGothic-Regular';
+	/*font-family: 'TsukuARdGothic-Regular';*/
     font-size: 20px;
     font-weight: bold;
 }
@@ -426,4 +488,56 @@ h3 {
 
 .modal-header .close {
     margin-top: 6px;
+}
+
+/*********
+ * 7.setting
+ *********/
+.signout-field h3 {
+	margin-bottom: 12px;
+}
+
+/*********
+ * 8.project
+ *********/
+#project .input-group .input-group-addon {
+	border-right: thin solid #ccc;
+}
+
+#project .form-control {
+	height: auto;
+	border: none;
+    box-shadow: none;
+}
+
+#project .group-detail td {
+	padding: 0;
+}
+#project .group-detail td div {
+	background-color: #999;
+    color: #fff;
+    display: none;
+    padding: 12px;
+    padding-left: 65px;
+    text-align: left;
+    position: relative;
+}
+#project .group-detail td div:before {
+	content: "詳細";
+    top: 8px;
+    left: 16px;
+    position: absolute;
+    border: thin solid #fff;
+    border-radius: 5px;
+    padding: 2px 8px;
+    background-color: #fff;
+    color: #999;
+    font-weight: bold;
+}
+
+.grey-back .form-control {
+	background-color: #fafafa;
+}
+.btn-field {
+	margin-bottom: 20px;
 }

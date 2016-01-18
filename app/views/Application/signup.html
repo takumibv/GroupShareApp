@@ -1,14 +1,61 @@
 *{<meta charset="utf-8">}*
-#{extends 'Application/header.html' /}
-<h2>ユーザ登録</h2>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja-JP" xml:lang="ja-JP">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/public/stylesheets/reset.css">
+  <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script src="@{'/public/javascripts/jquery-2.1.4.js'}" type="text/javascript" charset="utf-8"></script>
+  <script src="/public/javascripts/main.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <title>exp4main</title>
+</head>
+<body>
+<div id="header">
+	<div class="container">
+		<h1><img class="icon" src="/public/images/icon.png">グループ振り分けアプリ</h1>
+		<div class="right-nav clearfix">
+			<a href="@{index()}"><p class="login-btn">ログイン</p></a>
+			<a href="@{signup()}"><p class="signup-btn btn">会員登録</p></a>
+		</div>
+	</div>
+</div>
+<div id="main" class="container">
+	<h2>ユーザ登録</h2>
 
-<form action="@{makeAccount}">
-	<input type="text" name="name" placeholder="ユーザ名">
-	<input type="password" name="password" placeholder="パスワード">
-	<input type="password" name="password_conf" placeholder="パスワード（確認）">
-	<input type="submit" value="アカウントを保存">
-</form>
+	<form id="signup-form" action="@{makeAccount}">
+	<div class="panel-body">
+	  <div class="panel-body-inner">
+	    <h3>アカウント情報を入力してください</h3> 
+	    <div class="input-group">
+	      <span class="input-group-addon">ユーザ名</span>
+	      <input class="form-control" type="text" name="name" placeholder="ユーザ名" required>
+	    </div>
+	    <p class="alert-user"></p>
+	    <div class="input-group">
+	      <span class="input-group-addon">パスワード</span>
+	      <input class="form-control" type="password" name="password" placeholder="パスワード" required>
+	    </div>
+	    <div class="input-group">
+	      <span class="input-group-addon">パスワード（確認）</span>
+	      <input class="form-control" type="password" name="password_conf" placeholder="パスワード（確認）">
+	    </div>
+	    <p class="alert"></p><!-- 入力情報が正しくありません -->
+	    <input id="signup-btn" class="register-btn btn" type="submit" value="アカウントを保存" disabled="true">
+	  </div>
+	</div>
+	</form>
 
-<form action="@{index}">
-	<input type="submit" value="戻る">
-</form>
+	<form action="index">
+	  <input class="back-btn btn" type="submit" value="戻る">
+	</form>
+
+</div>
+
+<div id="footer">
+	<p class="team">Team: white_plum</p>
+</div>
+</body>
+</html>

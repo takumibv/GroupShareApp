@@ -1,23 +1,67 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
-<h2>登録</h2>
+<h2>「${project.name}」の志望を登録</h2>
 
-<form action="saveRegistration">
-	<p>第１志望</p>
-	<select name="group-1">
-		<option value="1">グループ１</option>
-		<option value="2">グループ２</option>
-		<option value="3">グループ３</option>
-	</select>
-	<p>第２志望</p>
-	<select name="group-2">
-		<option value="1">グループ１</option>
-		<option value="2">グループ２</option>
-		<option value="3">グループ３</option>
-	</select>
-	<input type="submit" value="登録する">
+<form action="@{saveRegistration}" onSubmit="return confirm('この内容で登録しますか？');">
+<input type="hidden" name="projectID" value="${projectID}" />
+<input type="hidden" name="wishLimit" value="${wishLimit}" />
+
+	<div class="panel-body">
+	  <div class="panel-body-inner">
+	    <h3>第${wishLimit}志望まで選んでください<span class="note"></span></h3>
+
+	    #{list items:wishRank, as:'rank'}
+		    <div class="input-group">
+		      <span class="input-group-addon">第${rank}志望</span>
+		      <select class="form-control" name="wish-${rank}">
+		        #{list items:groups, as:'group'}
+					<option value="${group.id}">${group.name}</option>
+				#{/list}
+		      </select>
+		    </div>
+		#{/list}
+	  </div>
+	
+	<div class="center">
+		<input class="register-btn btn" type="submit" value="登録する">
+	</div>
+	</div>
 </form>
 
+<div id="project" class="panel-body panel-body-inner border-none">
+	<h3>グループの情報<span class="note">クリックで詳細が見れます。</span></h3>
+	<table class="table">
+      <tbody id="groups-field">
+        <tr>
+          <th class="th-left"><span>グループ名</span></th>
+          <th class="th-capacity th-num">定員</th>
+          <th class="th-right th-num">登録人数</th>
+        </tr>
+        #{list items:groups, as:'group'}
+        	<tr class='group' target="#detail-${group.id}">
+				<td>${group.name}</td>
+				<td>${group.capacity}</td>
+			%{
+				users = models.UserGroup.getUsersByGroupID(group.id);
+			}%
+				<td>
+				#{if project.public_register_number==1} ${users.size()} #{/if}
+				#{elseif project.owner_id==u.id} ${users.size()}<br>(非公開) #{/elseif}
+				#{else} 非公開 #{/else}
+				</td>
+			</tr>
+			<tr class="group-detail">
+				<td colspan=3>
+					<div id="detail-${group.id}">
+						${group.detail}
+					</div>
+				</td>
+			</tr>	
+        #{/list}
+      </tbody>
+    </table>
+</div>
+<a class="makeproject-btn btn" href="@{project(project.id)}">詳細ページへ</a>
 <form action="mypage">
-	<input type="submit" value="マイページに戻る">
+	<input class="back-btn btn" type="submit" value="マイページに戻る">
 </form>

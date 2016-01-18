@@ -4,6 +4,8 @@ import models.*;
 import play.data.validation.Error;
 import play.mvc.Before;
 import play.mvc.Controller;
+import util.result.Result;
+
 import java.util.*;
 import java.text.SimpleDateFormat;
 
@@ -15,7 +17,8 @@ public class Application extends Controller {
 	private final static String SESSION_LOGOUT = "logout";
 
 
-	@Before(unless={"index", "signup", "makeAccount", "signin"})
+
+	@Before(unless={"index", "signup", "makeAccount", "signin", "isExistsUser", "resultTrigger"})
 	public static void loginedUserOnlyPage(){
 		boolean isLogin;
 		final String session_login_status = session.get(SESSION_KEY_LOGIN_STATUS);
@@ -33,6 +36,11 @@ public class Application extends Controller {
 		}
 	}
 
+	@Before(unless={"index", "signup", "makeAccount", "signin", "loginedUserOnlyPage"})
+	public static void resultTrigger(){
+		Result result = new Result();
+		result.updateResult();
+	}
 
     // トップページ
     public static void index() {
@@ -57,11 +65,21 @@ public class Application extends Controller {
 		ArrayList<Project> Finished_notRegistered = UserProject.findProject(owner.getId(), false, true);
 		ArrayList<Project> Finished_Registered = UserProject.findProject(owner.getId(), true, true);
         List<Project>      maked_project = Project.getMakedProject(owner.getId());
+
+        HashMap<Long, Group> ug_map = new HashMap<Long, Group>();
+        List<UserGroup> ug_list = UserGroup.find("user_id = ?", owner.id).fetch();
+        for(UserGroup ug : ug_list){
+            Group g = Group.find("id = ?", ug.group_id).first();
+            ug_map.put(ug.getProjectId(), g);
+        }
+
 		renderArgs.put("InR", Inviteted_notRegistered);
 		renderArgs.put("IR", Inviteted_Registered);
 		renderArgs.put("FnR", Finished_notRegistered);
         renderArgs.put("FR", Finished_Registered);
-		renderArgs.put("MP", maked_project);
+        renderArgs.put("MP", maked_project);
+		renderArgs.put("ug_map", ug_map);
+
         render();
     }
 
@@ -75,15 +93,21 @@ public class Application extends Controller {
 
     // プロジェクト編集ページ
     public static void editProject(Long id) {
+        User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        Project p = Project.find("ID = ?", id).first();
+        if(p.owner_id != u.getId()){
+            mypage();
+        }
+
         Project             project         = Project.find("id = ?", id).first();
         List<UserProject>   user_projects   = UserProject.find("project_id = ?", id).fetch();
         List<Group>         groups          = Group.getGroupListByProjectID(id);
         ArrayList<User>     users           = new ArrayList<User>();
         HashMap<Long, Integer> user_score   = new HashMap<Long, Integer>();
-        for(UserProject u : user_projects){
-            User user = User.find("id = ?", u.user_id).first();
+        for(UserProject usr : user_projects){
+            User user = User.find("id = ?", usr.user_id).first();
             users.add(user);
-            user_score.put(u.user_id, u.score);
+            user_score.put(usr.user_id, usr.score);
         }
         
         renderArgs.put("project", project);
@@ -96,25 +120,92 @@ public class Application extends Controller {
 
     // プロジェクト詳細ページ
     public static void project(Long id) {
-	    final long projectID = id;
-	    Project project = Project.getProjectByID(projectID);
-
+		User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		Project p = Project.find("ID = ?", id).first();
+		if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
+			mypage();
+		}
+	    final long projectID = p.id;
 	    List<Group> groups = Group.getGroupListByProjectID(projectID);
+        List<User> users  = UserProject.getUsersByProjectID(projectID);
+        HashMap<Long, Wish> wishes_map = new HashMap<Long, Wish>();
+        for(User usr : users){
+            List<Wish> w_list = Wish.find("user_id = ? AND rank = 1", usr.id).fetch();
+            for(Wish w : w_list){
+                if(w.getProjectId() == id) wishes_map.put(usr.id, w);
+            }
+        }
+        HashMap<Integer, Wish> my_wishes_map = new HashMap<Integer, Wish>();
+        List<Wish> my_w_list = Wish.find("user_id = ?", u.id).fetch();
+        for(Wish w : my_w_list){
+            if(w.getProjectId() == id) my_wishes_map.put(w.rank, w);
+        }
 
-	    renderArgs.put("projectName", project.name);
-	    renderArgs.put("projectDeadLine", project.deadline);
-	    renderArgs.put("groups", groups);
+        renderArgs.put("project", p);
+        renderArgs.put("u", u);
+        renderArgs.put("owner_name", u.name);
+        renderArgs.put("groups", groups);
+        renderArgs.put("joinUsers", users);
+        renderArgs.put("joinUsers", users);
+        renderArgs.put("wishes_map", wishes_map);
+	    renderArgs.put("my_wishes_map", my_wishes_map);
         render();
     }
 
     // グループ登録ページ
     public static void register(Long id) {
+		User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		Project p = Project.find("ID = ?", id).first();
+		if(!UserProject.checkUserProject(u.getId(), id)){
+			mypage();
+		}
+
+     	validation.required(id);
+
+        if(validation.hasErrors()) {
+            for(Error error : validation.errors()) {
+                System.out.println(error.message());
+            }
+            mypage();
+        }
+
+	    final long projectID = id;
+
+    	List<Group> groups = Group.getGroupListByProjectID(projectID);
+
+     	int wishLimit = Project.getWishLimit(projectID);
+     	
+     	//1-origin
+    	List<Integer> wishRank = new ArrayList<>(wishLimit);
+    	for(int i=0; i<wishLimit; i++){
+    		wishRank.add(i+1);
+    	}
+    	
+        renderArgs.put("project", p);
+        renderArgs.put("u", u);
+    	renderArgs.put("projectID", projectID);
+    	renderArgs.put("groups", groups);
+    	renderArgs.put("wishLimit", wishLimit);
+    	renderArgs.put("wishRank", wishRank);
+
 	    render();
     }
 
     // 結果ページ
-    public static void result() {
-        render();
+    public static void result(Long id) {
+		User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+		Project p = Project.find("ID = ?", id).first();
+		if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
+			mypage();
+		}
+        Group my_group = Group.getGroupByUserProjectId(u.id, p.id);
+        
+	    List<Group> groups = Group.getGroupListByProjectID(id);
+        renderArgs.put("project", p);
+        renderArgs.put("u", u);
+        renderArgs.put("groups", groups);
+	    renderArgs.put("my_group", my_group);
+	    render();
     }
 
     // アカウントを作成する
@@ -194,15 +285,9 @@ public class Application extends Controller {
     }
 
 	// プロジェクトを保存する
-	public static void saveProject(String name, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit){
+	public static void saveProject(String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
-
-        for(int i=0; i<group_num; i++){
-            System.out.println("グループ名：" + params.get("group-"+ i +"[name]"));
-            System.out.println("定員：" + params.get("group-"+ i +"[capacity]"));
-            System.out.println("詳細：" + params.get("group-"+ i +"[detail]"));
-        }
 
 	    validation.required(name);
 	    validation.required(deadline_ymd);
@@ -214,16 +299,9 @@ public class Application extends Controller {
 						
 		Date deadline = new Date(deadline_ymd.getTime() + hm);
 
-		//あとから消す
-		String detail = "";
-		int trash = 1;
-		int allocation_method = 1;
-		int public_user = 1;
-		int public_number = 1;
-
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_number, params.get("deadline_ymd"), deadline_hm);
+		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number, params.get("deadline_ymd"), deadline_hm);
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;
@@ -250,7 +328,33 @@ public class Application extends Controller {
     }
 
     // 登録を保存する
-    public static void saveRegistration(){
+	//This creates new wishes.
+    //required HTML form params : projectID, wishLimit, wish-[rank]
+    public static void saveRegistration(long projectID, int wishLimit){
+    	validation.required(projectID);
+    	validation.required(wishLimit);
+    	validation.equals(wishLimit, Project.getWishLimit(projectID));
+    	
+        if(validation.hasErrors()) {
+            for(Error error : validation.errors()) {
+                System.out.println(error.message());
+            }
+            mypage();
+        }
+    	
+    	long userID = User.getIDByName(session.get(SESSION_KEY_USER));
+
+	    UserProject.register(userID, projectID);
+
+	    Wish.resetWishByUserID(userID);
+    	
+        for(int wishRank=1; wishRank<=wishLimit; wishRank++){
+        	long groupID = Long.valueOf(params.get("wish-"+ wishRank));
+            System.out.println("group ID of wish rank" + wishRank + " is "  + groupID);
+            
+            Wish.createWish(userID, groupID, wishRank);
+        }
+        	
     	mypage();
     }
 
