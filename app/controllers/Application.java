@@ -327,6 +327,10 @@ public class Application extends Controller {
 			mypage();
     }
 
+    public static void updateProject(Long project_id, String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+        mypage();
+    }
+
     // 登録を保存する
 	//This creates new wishes.
     //required HTML form params : projectID, wishLimit, wish-[rank]
@@ -362,6 +366,9 @@ public class Application extends Controller {
     public static void isExistsUser(String name){
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("isExists", User.isExists(name));
+        if(User.isExists(name)){
+            result.put("id", User.getIDByName(name));
+        }
         renderJSON(result);
     }
 
