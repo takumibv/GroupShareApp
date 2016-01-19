@@ -45,4 +45,16 @@ public class News extends Model {
 		return ret;
 	}
 
+	public String getSentence(){
+		Project project = Project.findById(this.project_id);
+		switch (this.type){
+			case 1:
+				return "プロジェクト「" + project.name + "」に招待されました。";
+			case 2:
+			case 3:
+				return "プロジェクト「" + project.name + "」の結果が出ました。";
+			default:
+				return "";
+		}
+	}
 }

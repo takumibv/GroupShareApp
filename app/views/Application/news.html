@@ -8,16 +8,12 @@
 	<a class="seeMore" href="@{news()}">過去のお知らせを見る</a>
 	<table class="table table-bordered">
 		<tbody>
-			#{list items:news, as : 'news'}
+		#{list items:news, as : 'news'}
 			<tr>
 				<td>${news.date.getMonth()+1}/${news.date.getDate()}</td>
-				<td>プロジェクト「<a href="@{project()}">H26 情報工学科研究室振り分け</a>」に招待されました。</td>
+				<td><a href="">${news.getSentence()}</a></td>
 			</tr>
-			#{/list}
-			<tr>
-				<td>12/17</td>
-				<td>プロジェクト「<a href="@{project()}">H26 情報工学科研究室振り分け</a>」の結果が出ました。</td>
-			</tr>
+		#{/list}
 		</tbody>
 	</table>
 </div>
