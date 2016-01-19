@@ -410,7 +410,7 @@ public class Application extends Controller {
 				Map<String, Object> result = new HashMap<String, Object>();
 				result.put("project_id", p.getId());
 				result.put("project_name", p.name);
-				result.put("project_deadline", p.deadline);
+				result.put("project_deadline", p.getDeadlineTime());
 				renderJSON(result);
 		}
 

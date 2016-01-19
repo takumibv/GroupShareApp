@@ -88,7 +88,7 @@ public class Project extends Model {
 	}
 
 	public String getDeadlineTime(){
-		return (deadline.getMonth()+1) +"/"+ deadline.getDate() +" "+ String.format("%1$02d", deadline.getHours()) +":"+ String.format("%1$02d", deadline.getMinutes());
+		return deadline_ymd + " " + deadline_hm;
 	}
 
 	public Boolean isFinished(){
