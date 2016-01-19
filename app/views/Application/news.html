@@ -11,7 +11,7 @@
 		#{list items:news, as : 'news'}
 			<tr>
 				<td>${news.date.getMonth()+1}/${news.date.getDate()}</td>
-				<td><a href="">${news.getSentence()}</a></td>
+				<td><a href=${news.getLink()}>${news.getSentence()}</a></td>
 			</tr>
 		#{/list}
 		</tbody>

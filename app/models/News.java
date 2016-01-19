@@ -57,4 +57,17 @@ public class News extends Model {
 				return "";
 		}
 	}
+
+	public String getLink(){
+		Project project = Project.findById(this.project_id);
+		switch (this.type){
+			case 1:
+				return "projects/" + this.project_id;
+			case 2:
+			case 3:
+				return "result/" + this.project_id;
+			default:
+				return "";
+		}
+	}
 }

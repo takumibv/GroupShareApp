@@ -11,6 +11,8 @@ GET     /public/                                staticDir:public
 # exp4main
 GET     /                                       Application.index
 *       /{action}                               Application.{action}
+GET     /projects/{id}                          Application.project
+GET     /result/{id}                            Application.result
 
 # 上記以外のリクエストをすべて受け取る
 *       /{controller}/                          {controller}.index
