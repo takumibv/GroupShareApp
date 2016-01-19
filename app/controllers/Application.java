@@ -396,6 +396,24 @@ public class Application extends Controller {
         renderJSON(result);
     }
 
+		// 招待コードが有効かを返し、有効ならばUserProjectを作成する
+		public static void isValidInvitationCode(String invitation_code){
+        Map<String, Object> result = new HashMap<String, Object>();
+				User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        result.put("isValid", Project.isValidInvitationCode(invitation_code, u.getId()));
+        renderJSON(result);
+		}
+
+		// 招待コードに対応するProjectの情報を返す
+		public static void informationProject(String invitation_code){
+				Project p = Project.find("invitation_code = ?", invitation_code).first();
+				Map<String, Object> result = new HashMap<String, Object>();
+				result.put("project_id", p.getId());
+				result.put("project_name", p.name);
+				result.put("project_deadline", p.deadline);
+				renderJSON(result);
+		}
+
     public static void news(){
 		User user = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 		List<News> news = News.getAllNews(user.getId());
