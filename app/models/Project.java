@@ -107,4 +107,12 @@ public class Project extends Model {
 		}
 		return false;
 	}
+
+	public boolean hasUnFinishedUser(){
+		List<UserProject> list = UserProject.find("project_id = ?", this.getId()).fetch();
+		for(UserProject up : list){
+			if(!up.hasScore)return true;
+		}
+		return false;
+	}
 }
