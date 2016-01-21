@@ -217,6 +217,7 @@ $(document).ready(function(){
 		}
 	});
 
+
 	// プロジェクトを保存ボタン
 	$("#make-project").on("submit", function(){
 		$(window).off('beforeunload');
