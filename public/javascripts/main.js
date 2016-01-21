@@ -61,9 +61,9 @@ $(document).ready(function(){
 
 	// モーダル　グループ追加ボタンを有効、無効の切り替え
 	$("#add-group-modal .form").keyup(function(){
-		var name 		= $("#add-group-modal input[name=name]").val();
+		var name 		= escapeText($("#add-group-modal input[name=name]").val());
 		var capacity 	= $("#add-group-modal input[name=capacity]").val();
-		var detail 		= $("#add-group-modal textarea[name=detail]").val();
+		var detail 		= escapeText($("#add-group-modal textarea[name=detail]").val());
 		if(name=="" || capacity=="" || detail=="" || !isValidGroup(name) || !isFinite(capacity)){
 			$("#add-group-btn").prop("disabled", true);
 		}else{
@@ -85,9 +85,9 @@ $(document).ready(function(){
 
 	// グループ追加ボタン
 	$("#add-group-btn").on("click", function(){
-		var name 		= $("#add-group-modal input[name=name]").val();
+		var name 		= escapeText($("#add-group-modal input[name=name]").val());
 		var capacity 	= parseInt($("#add-group-modal input[name=capacity]").val());
-		var detail 		= $("#add-group-modal textarea[name=detail]").val();
+		var detail 		= escapeText($("#add-group-modal textarea[name=detail]").val());
 		$("#groups-field").append(
 			  "<tr class='group'>"
 			+ "<td><span class='name'>" + name + "</span></td>"
@@ -102,7 +102,7 @@ $(document).ready(function(){
 
 	// モーダル　参加ユーザ追加ボタンを有効、無効の切り替え
 	$("#add-user-modal .form").keyup(function(){
-		var name 		= $("#add-user-modal input[name=name]").val();
+		var name 		= escapeText($("#add-user-modal input[name=name]").val());
 		var score 		= $("#add-user-modal input[name=score]").val();
 		if(name=="" || score=="" || !isValidUser(name) || !isFinite(score)){
 			$("#add-user-btn").prop("disabled", true);
@@ -128,7 +128,7 @@ $(document).ready(function(){
 	// 参加ユーザ追加ボタン
 	$("#add-user-btn").on("click", function(){
 		var id 			= $("#add-user-modal input[name=id]").val();
-		var name 		= $("#add-user-modal input[name=name]").val();
+		var name 		= escapeText($("#add-user-modal input[name=name]").val());
 		var score 		= parseInt($("#add-user-modal input[name=score]").val());
 		if(isValidUser(name)){
 			$("#deleted-users-field #user-" + id).remove();
@@ -200,18 +200,18 @@ $(document).ready(function(){
 			if ( e.which == 13 ) {
 				if($(this).parent().parent().attr("class")=="group" && $(this).attr("name")=="name"){
 					if(isValidGroup($(this).val())){
-						$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ $(this).val() +"</span>");
+						$(this).replaceWith("<span class='"+ escapeText($(this).attr("name")) +"'>"+ escapeText($(this).val()) +"</span>");
 					}else{
 						alert("無効なグループ名です。");
 					}
 				}else if($(this).attr("name")=="score" || $(this).attr("name")=="capacity"){
 					if($(this).val()!="" && isFinite($(this).val())){
-						$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ parseInt($(this).val()) +"</span>");
+						$(this).replaceWith("<span class='"+ escapeText($(this).attr("name")) +"'>"+ parseInt($(this).val()) +"</span>");
 					}else{
 						alert("数値でありません。");
 					}
 				}else{
-					$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ $(this).val() +"</span>");
+					$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ escapeText($(this).val()) +"</span>");
 				}
 			}
 		}
@@ -489,4 +489,19 @@ function checkTable(){
 		$("#groups-field").removeClass("no-element");
 		$(".group-table-note").removeClass("no-element");
 	}
+}
+
+// XXS対策
+function escapeText(text){
+	var val = "";
+	for(var i=0; i<text.length; i++){
+		var word = text.substring(i, i+1);
+		if(word == "<") { val += "&lt"; }
+		else if(word == ">") { val += "&gt"; }
+		else if(word == "&") { val += "&amp"; }
+		else if(word == '"') { val += "&quot"; }
+		else if(word == '\n') { val += "<br>"; }
+		else { val += word; }
+	}
+	return val;
 }
