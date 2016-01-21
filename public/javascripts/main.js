@@ -135,12 +135,13 @@ $(document).ready(function(){
 			$("#users-field").append(
 				  "<tr id='user-" + id + "' class='user'>"
 				+ "<td><span class='name'>" + name + "</span></td>"
-				+ "<td><span class='score'>" + score + "</span></td>"
+				+ "<td class='td-score'><span class='score'>" + score + "</span></td>"
 				+ "<td><a class='delete'>削除</a></td>"
 				+ "</tr>");
 
 			resetModal();
 			checkTable();
+			checkAssignSystem();
 		}else{
 			return false;
 		}
@@ -215,6 +216,11 @@ $(document).ready(function(){
 				}
 			}
 		}
+	});
+	// 表の編集ここまで
+
+	$("select[name=assign_system]").on("change", function(){
+		checkAssignSystem();
 	});
 
 
@@ -296,7 +302,7 @@ $(document).ready(function(){
 				$("#users-field").append(
 					  "<tr id='user-" + user.id + "' class='user'>"
 					+ "<td><span class='name'>" + user.name + "</span></td>"
-					+ "<td><span class='score'>" + user_score[user.id] + "</span></td>"
+					+ "<td class='td-score'><span class='score'>" + user_score[user.id] + "</span></td>"
 					+ "<td><a class='delete'>削除</a></td>"
 					+ "</tr>");
 			}
@@ -313,11 +319,15 @@ $(document).ready(function(){
 			}
 
 			checkTable();
+			checkAssignSystem();
 		}
 	});
 /****
  * プロジェクト編集ページ
  ****/
+ 	// URL指定してないため、すべてのページで呼ばれるが、編集ページでのみ使用
+ 	checkAssignSystem();
+
 	// (編集ページ)プロジェクトの変更を保存ボタン
 	$("#update-project").on("submit", function(){
 		$(window).off('beforeunload');
@@ -497,6 +507,33 @@ function checkTable(){
 	}else{
 		$("#groups-field").removeClass("no-element");
 		$(".group-table-note").removeClass("no-element");
+	}
+}
+
+// 点数優先かじゃんけんかで、ユーザのスコアの表示・非表示を切り替える
+function checkAssignSystem(){
+
+	var select = $("select[name=assign_system]").val();
+	console.log("check:"+select);
+	var score_input = $("#add-user-modal input[name=score]");
+	if(select=="1"){
+		score_input.parent().removeClass("display-none");
+		score_input.val("");
+		score_input.prop("disabled", false);
+
+		$("#users-field .th-score").removeClass("display-none");
+		$("#users-field .td-score").removeClass("display-none");
+
+		$("#allocation-method-field").removeClass("display-none");
+	}else if(select=="2"){
+		score_input.parent().addClass("display-none");
+		score_input.val("0");
+		score_input.prop("disabled", true);
+
+		$("#users-field .th-score").addClass("display-none");
+		$("#users-field .td-score").addClass("display-none");
+
+		$("#allocation-method-field").addClass("display-none");
 	}
 }
 
