@@ -64,7 +64,7 @@ $(document).ready(function(){
 		var name 		= escapeText($("#add-group-modal input[name=name]").val());
 		var capacity 	= $("#add-group-modal input[name=capacity]").val();
 		var detail 		= escapeText($("#add-group-modal textarea[name=detail]").val());
-		if(name=="" || capacity=="" || detail=="" || !isValidGroup(name) || !isFinite(capacity)){
+		if(name=="" || capacity=="" || detail=="" || !isValidGroup(name) || !isValidNumber(capacity)){
 			$("#add-group-btn").prop("disabled", true);
 		}else{
 			$("#add-group-btn").prop("disabled", false);
@@ -76,8 +76,8 @@ $(document).ready(function(){
 			$("#validation-group-name").removeClass("ng").addClass("ok").html("<i class='fa fa-check-circle'></i>このグループ名は有効です。");
 		}
 		// 定員項目が数字かどうかのチェック
-		if(!isFinite(capacity)){
-			$("#validation-group-capacity").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>数値を入力してください。");
+		if(!isValidNumber(capacity)){
+			$("#validation-group-capacity").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>無効な入力です。");
 		}else{
 			$("#validation-group-capacity").removeClass("ng").addClass("ok").html("");
 		}
@@ -104,7 +104,7 @@ $(document).ready(function(){
 	$("#add-user-modal .form").keyup(function(){
 		var name 		= escapeText($("#add-user-modal input[name=name]").val());
 		var score 		= $("#add-user-modal input[name=score]").val();
-		if(name=="" || score=="" || !isValidUser(name) || !isFinite(score)){
+		if(name=="" || score=="" || !isValidUser(name) || !isValidNumber(score)){
 			$("#add-user-btn").prop("disabled", true);
 		}else{
 			$("#add-user-btn").prop("disabled", false);
@@ -118,8 +118,8 @@ $(document).ready(function(){
 			$("#add-user-modal input[name=id]").val(isValidUser(name)); // 有効であれば、idをフォームに追加
 		}
 		// 得点が数字かどうかのチェック
-		if(!isFinite(score)){
-			$("#validation-user-score").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>数値を入力してください。");
+		if(!isValidNumber(score)){
+			$("#validation-user-score").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>無効な入力です。");
 		}else{
 			$("#validation-user-score").removeClass("ng").addClass("ok").html("");
 		}
@@ -205,10 +205,10 @@ $(document).ready(function(){
 						alert("無効なグループ名です。");
 					}
 				}else if($(this).attr("name")=="score" || $(this).attr("name")=="capacity"){
-					if($(this).val()!="" && isFinite($(this).val())){
+					if($(this).val()!="" && isValidNumber($(this).val())){
 						$(this).replaceWith("<span class='"+ escapeText($(this).attr("name")) +"'>"+ parseInt($(this).val()) +"</span>");
 					}else{
-						alert("数値でありません。");
+						alert("無効な数値です。");
 					}
 				}else{
 					$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ escapeText($(this).val()) +"</span>");
@@ -446,6 +446,14 @@ function isValidGroup(name){
         }
     });
     return valid_flg;
+}
+
+function isValidNumber(num){
+	if(isFinite(num)){
+		return (parseInt(num) >= 0 && parseInt(num) <= 2147483647);
+	}else{
+		return false;
+	}
 }
 
 // モーダルを閉じる時にリセットする
