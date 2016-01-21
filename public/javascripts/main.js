@@ -476,13 +476,17 @@ function checkTable(){
 
 	if(users.size() == 0){
 		$("#users-field").addClass("no-element");
+		$(".user-table-note").addClass("no-element");
 	}else{
 		$("#users-field").removeClass("no-element");
+		$(".user-table-note").removeClass("no-element");
 	}
 
 	if(groups.size() == 0){
 		$("#groups-field").addClass("no-element");
+		$(".group-table-note").addClass("no-element");
 	}else{
 		$("#groups-field").removeClass("no-element");
+		$(".group-table-note").removeClass("no-element");
 	}
 }
