@@ -8,10 +8,10 @@
     <h3>以前作ったプロジェクトを使用する</h3>
     <div class="input-group">
       <span class="input-group-addon">プロジェクトを選択</span>
-      <select class="form-control">
-        <option>使用しない</option>
+      <select id="use-past-project" class="form-control">
+        <option value="0">使用しない</option>
         #{list items:MP, as : 'ele'}
-        <option>${ele.name}</option>
+        <option value="${ele.id}"}>${ele.name}</option>
         #{/list}
       </select>
     </div>
@@ -33,8 +33,9 @@
       <textarea class="form-control" type="text" name="detail" placeholder="プロジェクトの説明"></textarea>
     </div>
     <div class="input-group">
-      <span class="input-group-addon required">締め切り</span>
-      <input class="form-control form-date" type="date" name="deadline" min="2016-01-04" required>
+      <span class="input-group-addon">締め切り</span>
+      <input class="form-control form-date" type="date" name="deadline_ymd" min required>
+      <input class="form-control form-date" type="time" name="deadline_hm" value="00:00" required>
     </div>
     <div class="input-group">
       <span class="input-group-addon required">決定基準</span>
@@ -50,6 +51,9 @@
         <option></option>
         <option value="1">1</option>
         <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
       </select>
     </div>
   </div>
@@ -86,6 +90,7 @@
         </tr>
       </tbody>
     </table>
+    <p class="table-note note no-element">※要素をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
   </div>
 </div>
 
@@ -112,6 +117,7 @@
         </tr>
       </tbody>
     </table>
+    <p class="table-note note no-element">※点数をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
   </div>
 </div>
 
@@ -151,17 +157,6 @@
 <form action="mypage">
   <input class="back-btn btn" type="submit" value="戻る">
 </form>
-
-  <!-- <input type="text" name="project[name]">
-  <input type="date" name="project[deadline]">
-  <select name="project[assign_system]">
-    <option value="1">点数優劣</option>
-    <option value="2">ジャンケン</option>
-  </select>
-  <input type="number" name="wish_limit">
-  
-  <button type="button" class="btn" data-toggle="modal" data-target="#add-group-modal">グループを追加</button>
-  <div id="groups-field"></div> -->
 
 <!-- グループ追加 Modal -->
 <div class="modal fade" id="add-group-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -207,6 +202,7 @@
     <div class="input-group">
       <span class="input-group-addon">ユーザ名</span>
       <input class="form form-control" type="text" name="name">
+      <input type="hidden" name="id">
     </div>
     <p id="validation-user-name"></p>
     <div class="input-group">

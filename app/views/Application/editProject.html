@@ -1,11 +1,237 @@
 *{<meta charset="utf-8">}*
 #{extends 'Application/header.html' /}
-<h2>プロジェクトを編集する</h2>
+<h2>「${project.name}」を編集</h2>
 
-<form action="saveProject">
-	<input type="submit" value="保存">
+<form id="update-project" action="@{updateProject}">
+
+<div class="panel-body">
+  <div class="panel-body-inner">
+    <h3>基本情報<span class="note">プロジェクトの基本的な情報 ( </span><span class="required"></span><span class="note">は必須項目)</span></h3> 
+    <div class="input-group">
+      <span class="input-group-addon required">プロジェクト名</span>
+      <input class="form-control" type="text" name="name" value="${project.name}" required>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">詳細</span>
+      <textarea class="form-control" type="text" name="detail" placeholder="プロジェクトの説明">${project.detail}</textarea>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">締め切り</span>
+      <input class="form-control form-date" type="date" name="deadline_ymd" value="${(project.deadline_ymd)}" required>
+      <input class="form-control form-date" type="time" name="deadline_hm" value="${(project.deadline_hm)}" required>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon required">決定基準</span>
+      <select class="form-control form-number" name="assign_system">
+        <option value="1" #{if project.assign_system==1}selected#{/if}>点数優先</option>
+        <option value="2" #{if project.assign_system==2}selected#{/if}>じゃんけん</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon required">第n希望まで登録</span>
+      <select class="form-control form-number" name="wish_limit">
+        <option value="1" #{if project.wish_limit==1}selected#{/if}>1</option>
+        <option value="2" #{if project.wish_limit==2}selected#{/if}>2</option>
+        <option value="3" #{if project.wish_limit==3}selected#{/if}>3</option>
+        <option value="4" #{if project.wish_limit==4}selected#{/if}>4</option>
+        <option value="5" #{if project.wish_limit==5}selected#{/if}>5</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="panel-body panel-group">
+  <div class="panel-body-inner">
+    <h3>グループ<span class="note">グループ情報</span></h3>
+
+    <div class="input-group">
+      <span class="input-group-addon">グループに誰が登録したのかを閲覧可能にする</span>
+      <select class="form-control form-number" name="public_register_user">
+        <option value="1" #{if project.public_register_user==1}selected#{/if}>はい</option>
+        <option value="2" #{if project.public_register_user==2}selected#{/if}>いいえ</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">グループに何人登録したのかを閲覧可能にする</span>
+      <select class="form-control form-number" name="public_register_number">
+        <option value="1" #{if project.public_register_number==1}selected#{/if}>はい</option>
+        <option value="2" #{if project.public_register_number==2}selected#{/if}>いいえ</option>
+      </select>
+    </div>
+
+    <p id="validation-group"></p>
+    <button type="button" class="add-btn btn" data-toggle="modal" data-target="#add-group-modal">＋グループを追加</button>
+    <table class="table">
+      <tbody id="groups-field" class="#{if groups.size()==0}no-element#{/if}">
+        <tr>
+          <th class="th-left">グループ名</th>
+          <th class="th-capacity">定員</th>
+          <th>詳細</th>
+          <th class="th-right th-delete">削除</th>
+        </tr>
+        #{list items:groups, as : 'group'}
+        <tr id="group-${group.id}" class="group">
+          <td><span class="name">${group.name}</span></td>
+          <td><span class="capacity">${group.capacity}</span></td>
+          <td><span class="detail">${group.detail}</span></td>
+          <td><span class="delete-existing">削除</span></td>
+        </tr>
+        #{/list}
+      </tbody>
+    </table>
+    <p class="table-note note #{if groups.size()==0}no-element#{/if}">※要素をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
+    <table style="display:none">
+      <tbody id="deleted-groups-field">
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel-body panel-users">
+  <div class="panel-body-inner">
+    <h3>参加ユーザ<span class="note">参加ユーザ情報(自分も参加可能)</span></h3>
+
+    <div class="input-group">
+      <span class="input-group-addon">参加ユーザが他の参加ユーザの名前を閲覧可能にする</span>
+      <select class="form-control form-number" name="public_user">
+        <option value="1" #{if project.public_user==1}selected#{/if}>はい</option>
+        <option value="2" #{if project.public_user==2}selected#{/if}>いいえ</option>
+      </select>
+    </div>
+
+    <p id="validation-user"></p>
+    <button type="button" class="add-btn btn" data-toggle="modal" data-target="#add-user-modal">＋ユーザを追加</button>
+    <table class="table">
+      <tbody id="users-field" class="#{if users.size()==0}no-element#{/if}">
+        <tr>
+          <th class="th-left"><span>ユーザ名</span></th>
+          <th class="th-score">点数</th>
+          <th class="th-right th-delete">削除</th>
+        </tr>
+        #{list items:users, as : 'user'}
+        <tr id="user-${user.id}" class="user">
+        	<td><span class="name">${user.name}</span></td>
+        	<td><span class="score">${user_score.get(user.id)}</span></td>
+        	<td><span class="delete-existing">削除</span></td>
+        </tr>
+        #{/list}
+      </tbody>
+    </table>
+    <p class="table-note note #{if users.size()==0}no-element#{/if}">※点数をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
+    <table style="display:none">
+      <tbody id="deleted-users-field">
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel-body">
+  <div class="panel-body-inner">
+    <h3>詳細設定<span class="note">グループの振り分けに関する詳細設定など</span></h3>
+
+    <div class="input-group">
+      <span class="input-group-addon">振り分けの優先</span>
+      <select class="form-control form-number" name="allocation_method">
+        <option value="1" #{if project.allocation_method==1}selected#{/if}>志望を優先する</option>
+        <option value="2" #{if project.allocation_method==2}selected#{/if}>点数を優先する</option>
+      </select>
+    </div>
+    <p class="note">
+      ※志望を優先・・・点数の高い第２志望より点数の低い第１志望を優先します。<br>
+      　点数を優先・・・点数の低い第１志望より点数の高い第２志望を優先します。
+    </p>
+    <div class="input-group">
+      <span class="input-group-addon">すべての志望が通らなかった人をランダムで空いてるグループに振り分ける</span>
+      <select class="form-control form-number" name="trash">
+        <option value="1" #{if project.trash==1}selected#{/if}>はい</option>
+        <option value="2" #{if project.trash==2}selected#{/if}>いいえ</option>
+      </select>
+    </div>
+    <p class="note">※「いいえ」を選択した場合、参加ユーザがどこにも所属できない場合があります。</p>
+  </div>
+</div>
+
+  <input type="hidden" name="project_id" value="${project.id}">
+  <div id="input-groups-field"></div>
+  <input type="hidden" name="group-num" value="0">
+  <div id="input-deleted-groups-field"></div>
+  <input type="hidden" name="d-group-num" value="0">
+  <div id="input-users-field"></div>
+  <input type="hidden" name="user-num" value="0">
+  <div id="input-deleted-users-field"></div>
+  <input type="hidden" name="d-user-num" value="0">
+  <input class="register-btn btn" type="submit" value="プロジェクトを保存する">
 </form>
 
 <form action="mypage">
-	<input type="submit" value="戻る">
+  <input class="back-btn btn" type="submit" value="戻る">
 </form>
+
+<!-- グループ追加 Modal -->
+<div class="modal fade" id="add-group-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">グループを追加</h3>
+      </div>
+      <div class="modal-body">
+    <div class="input-group">
+      <span class="input-group-addon">グループ名</span>
+      <input class="form form-control" type="text" name="name">
+    </div>
+    <p id="validation-group-name"></p>
+    <div class="input-group">
+      <span class="input-group-addon">定員</span>
+      <input class="form form-control form-number" type="text" name="capacity">
+    </div>
+    <p id="validation-group-capacity"></p>
+    <div class="input-group">
+      <span class="input-group-addon">詳細</span>
+      <textarea class="form" name="detail"></textarea>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        <button id="add-group-btn" type="button" class="btn btn-primary" disabled data-dismiss="modal">追加する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 参加ユーザ追加 Modal -->
+<div class="modal fade" id="add-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">ユーザを追加</h3>
+      </div>
+      <div class="modal-body">
+    <div class="input-group">
+      <span class="input-group-addon">ユーザ名</span>
+      <input class="form form-control" type="text" name="name">
+      <input type="hidden" name="id">
+    </div>
+    <p id="validation-user-name"></p>
+    <div class="input-group">
+      <span class="input-group-addon">点数</span>
+      <input class="form form-control form-number" type="text" name="score">
+    </div>
+    <p id="validation-user-score"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        <button id="add-user-btn" type="button" class="btn btn-primary" data-dismiss="modal" disabled>追加する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(function(){
+    $(window).on('beforeunload', function() {
+        return "入力中のデータはまだ保存されていません。";
+    });
+});
+</script>

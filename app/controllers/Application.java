@@ -7,6 +7,7 @@ import play.mvc.Controller;
 import util.result.Result;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 
 public class Application extends Controller {
@@ -92,11 +93,28 @@ public class Application extends Controller {
 
     // プロジェクト編集ページ
     public static void editProject(Long id) {
-		User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-		Project p = Project.find("ID = ?", id).first();
-		if(p.owner_id != u.getId()){
-			mypage();
-		}
+        User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        Project p = Project.find("ID = ?", id).first();
+        if(p.owner_id != u.getId()){
+            mypage();
+        }
+
+        Project             project         = Project.find("id = ?", id).first();
+        List<UserProject>   user_projects   = UserProject.find("project_id = ?", id).fetch();
+        List<Group>         groups          = Group.getGroupListByProjectID(id);
+        ArrayList<User>     users           = new ArrayList<User>();
+        HashMap<Long, Integer> user_score   = new HashMap<Long, Integer>();
+        for(UserProject usr : user_projects){
+            User user = User.find("id = ?", usr.user_id).first();
+            users.add(user);
+            user_score.put(usr.user_id, usr.score);
+        }
+        
+        renderArgs.put("project", project);
+        renderArgs.put("users", users);
+        renderArgs.put("user_score", user_score);
+        renderArgs.put("groups", groups);
+
         render();
     }
 
@@ -180,7 +198,7 @@ public class Application extends Controller {
 		if(p.owner_id != u.getId() && !UserProject.checkUserProject(u.getId(), id)){
 			mypage();
 		}
-        Group my_group = UserGroup.getGroupByUserProjectId(u.id, p.id);
+        Group my_group = Group.getGroupByUserProjectId(u.id, p.id);
         
 	    List<Group> groups = Group.getGroupListByProjectID(id);
         renderArgs.put("project", p);
@@ -267,18 +285,23 @@ public class Application extends Controller {
     }
 
 	// プロジェクトを保存する
-	public static void saveProject(String name, String detail, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+	public static void saveProject(String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
 
 	    validation.required(name);
-	    validation.required(deadline);
+	    validation.required(deadline_ymd);
+	    validation.required(deadline_hm);
 	    validation.required(assign_system);
 		validation.required(wish_limit);
+		long hm = (Long.valueOf(deadline_hm.split(":")[0]) * 60 * 60
+			+ Long.valueOf(deadline_hm.split(":")[1]) * 60) * 1000;
+						
+		Date deadline = new Date(deadline_ymd.getTime() + hm);
 
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 
-		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number);
+		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number, params.get("deadline_ymd"), deadline_hm);
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;
@@ -302,6 +325,10 @@ public class Application extends Controller {
 	            Integer.parseInt(params.get("user-"+ i +"[score]")));
         }
 			mypage();
+    }
+
+    public static void updateProject(Long project_id, String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+        mypage();
     }
 
     // 登録を保存する
@@ -339,6 +366,33 @@ public class Application extends Controller {
     public static void isExistsUser(String name){
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("isExists", User.isExists(name));
+        if(User.isExists(name)){
+            result.put("id", User.getIDByName(name));
+        }
+        renderJSON(result);
+    }
+
+    public static void getProjectById(Long id){
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        Project p = Project.find("ID = ?", id).first();
+
+        List<Group>         groups          = Group.getGroupListByProjectID(p.id);
+        List<UserProject>   user_projects   = UserProject.find("project_id = ?", p.id).fetch();
+        ArrayList<User>     users           = new ArrayList<User>();
+        HashMap<Long, Integer> user_score   = new HashMap<Long, Integer>();
+        for(UserProject usr : user_projects){
+            User user = User.find("id = ?", usr.user_id).first();
+            users.add(user);
+            user_score.put(usr.user_id, usr.score);
+        }
+
+        // ユーザ情報がすべてクライアントに送られるため、修正すべき
+        result.put("project", p);
+        result.put("users", users);
+        result.put("groups", groups);
+        result.put("user_score", user_score);
         renderJSON(result);
     }
 

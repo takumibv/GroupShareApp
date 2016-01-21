@@ -3,14 +3,14 @@
 
 <h2 class="center">${project.name}</h2>
 
-#{if models.UserProject.checkUserProject(u.id, project.id) && project.isFinished()==false}
+#{if models.UserProject.checkUserProject(u.id, project.id)}
 <div id="project" class="panel-body panel-body-inner">
-	#{if models.UserProject.getRegistered(u.id, project.id)}
-	<p>既に登録済みです。締め切り内であれば、再登録ができます。</p>
-	#{/if}
-	#{else}
+	#{if !models.UserProject.getRegistered(u.id, project.id)}
 	<h3 class="alert center">まだ登録していません。</h3>
-	#{/else}
+	#{/if}
+	#{elseif project.isFinished()==false}
+	<p>既に登録済みです。締め切り内であれば、再登録ができます。</p>
+	#{/elseif}
 	#{if project.assign_system==1}
 	<div class="input-group">
       	<span class="input-group-addon">あなたの点数</span>
@@ -21,7 +21,7 @@
     #{list items:1..project.wish_limit, as:'i'}
     <div class="input-group">
       	<span class="input-group-addon">第${i}志望</span>
-      	<span class="form-control">${my_wishes_map.get(i).getGroupName()}</span>
+      	<span class="form-control">${my_wishes_map.get(i)?.getGroupName()}</span>
     </div>
     #{/list}
     #{/if}

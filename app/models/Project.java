@@ -24,8 +24,11 @@ public class Project extends Model {
 	public int public_register_user;	// 1:グループに誰が登録したのかを閲覧可能、2:閲覧不可
 	public int public_register_number;	// 1:グループに何人登録したのかを閲覧可能、2:閲覧不可
 	public String detail;
+	public String deadline_ymd;
+	public String deadline_hm;
 
-	public Project(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+
+	public Project(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number, String deadline_ymd, String deadline_hm){
 		this.name = name;
 		this.detail = detail;
 		this.owner_id = owner_id;
@@ -37,6 +40,8 @@ public class Project extends Model {
 		this.public_user = public_user;
 		this.public_register_user = public_register_user;
 		this.public_register_number = public_register_number;
+		this.deadline_ymd = deadline_ymd;
+		this.deadline_hm = deadline_hm;
 	}
 
 	public static Project getProjectByID(long projectID){
@@ -44,8 +49,8 @@ public class Project extends Model {
 		return p;
 	}
 
-	public static Project makeProject(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
-		Project newProject = new Project(name, detail, owner_id, deadline, assign_system, wish_limit, trash, allocation_method, public_user, public_register_user, public_register_number);
+	public static Project makeProject(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number, String deadline_ymd, String deadline_hm){
+		Project newProject = new Project(name, detail, owner_id, deadline, assign_system, wish_limit, trash, allocation_method, public_user, public_register_user, public_register_number, deadline_ymd, deadline_hm);
 		newProject.save();
 		setInvitationCode(newProject.getId());
 		return newProject;

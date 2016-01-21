@@ -236,7 +236,8 @@ h3 {
 	width: 64px;
 }
 
-.panel-body .delete {
+.panel-body .delete,
+.panel-body .delete-existing {
 	cursor: pointer;
 }
 

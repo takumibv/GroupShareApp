@@ -38,15 +38,6 @@ public class UserGroup extends Model {
 		return users;
 	}
 
-	public static Group getGroupByUserProjectId(Long user_id, Long project_id){
-		List<UserGroup> ug_list = UserGroup.find("user_id = ?", user_id).fetch();
-		Group result = null;
-		for(UserGroup ug : ug_list){
-			if(project_id == ug.getProjectId()) result = Group.find("id = ?", ug.user_id).first();
-		}
-		return result;
-	}
-
 	public long getProjectId(){
 		Group g = Group.find("id = ?", group_id).first();
 		return g.project_id;

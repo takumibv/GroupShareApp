@@ -33,4 +33,13 @@ public class Group extends Model {
 		return Group.find("id=?", id).first();
 	}
 
+	public static Group getGroupByUserProjectId(Long user_id, Long project_id){
+		List<UserGroup> ug_list = UserGroup.find("user_id = ?", user_id).fetch();
+		Group result = null;
+		for(UserGroup ug : ug_list){
+			if(project_id == ug.getProjectId()) result = Group.find("id = ?", ug.group_id).first();
+		}
+		return result;
+	}
+
 }

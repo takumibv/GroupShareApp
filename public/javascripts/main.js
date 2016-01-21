@@ -112,8 +112,10 @@ $(document).ready(function(){
 		// ユーザが有効かどうかのチェック
 		if(!isValidUser(name)){
 			$("#validation-user-name").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>このアカウント名は存在しないか、既に追加しています。");
+			$("#add-user-modal input[name=id]").val("");
 		}else{
 			$("#validation-user-name").removeClass("ng").addClass("ok").html("<i class='fa fa-check-circle'></i>このアカウント名は有効です。");
+			$("#add-user-modal input[name=id]").val(isValidUser(name)); // 有効であれば、idをフォームに追加
 		}
 		// 得点が数字かどうかのチェック
 		if(!isFinite(score)){
@@ -125,11 +127,13 @@ $(document).ready(function(){
 
 	// 参加ユーザ追加ボタン
 	$("#add-user-btn").on("click", function(){
+		var id 			= $("#add-user-modal input[name=id]").val();
 		var name 		= $("#add-user-modal input[name=name]").val();
 		var score 		= parseInt($("#add-user-modal input[name=score]").val());
 		if(isValidUser(name)){
+			$("#deleted-users-field #user-" + id).remove();
 			$("#users-field").append(
-				  "<tr class='user'>"
+				  "<tr id='user-" + id + "' class='user'>"
 				+ "<td><span class='name'>" + name + "</span></td>"
 				+ "<td><span class='score'>" + score + "</span></td>"
 				+ "<td><a class='delete'>削除</a></td>"
@@ -149,6 +153,30 @@ $(document).ready(function(){
 				this.remove();
 				checkTable();
 			});
+		}
+	});
+
+	// 表の削除ボタン
+	$(document).on("click", ".table .delete-existing", function(){
+		if(confirm("グループ登録されていた情報が失われてしまいます。削除しますか？")){
+			var del_table = $(this).parent().parent(); 
+			$(this).parent().parent().fadeOut().queue(function() {
+				this.remove();
+				checkTable();
+			});
+			console.log(del_table.attr("class"));
+			if(del_table.attr("class") == "user"){
+				$("#deleted-users-field").append(
+					"<tr id='" + del_table.attr("id") + "' class='user'>"
+					+ del_table.html()
+					+ "</tr>");
+			}
+			if(del_table.attr("class") == "group"){
+				$("#deleted-groups-field").append(
+					"<tr id='" + del_table.attr("id") + "' class='group'>"
+					+ del_table.html()
+					+ "</tr>");
+			}
 		}
 	});
 
@@ -195,6 +223,8 @@ $(document).ready(function(){
 		var edit_form = $(document).find(".replace-input").size();
 		if(edit_form > 0){
 			$(".replace-input").addClass("error-form");
+        	var p = $(".error-form").eq(0).offset().top;
+        	$('html,body').animate({ scrollTop: p }, 'fast');
 			return false;
 		}
 
@@ -212,7 +242,8 @@ $(document).ready(function(){
 		$("#input-users-field").html("");
 		$('#users-field .user').each(function(){
 			$("#input-users-field").append(
-				  "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
+				  "<input type='text' name='user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
+				+ "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
 			user_num++;
 		});
@@ -233,9 +264,137 @@ $(document).ready(function(){
 		$("input[name=user-num]").val(user_num);
 	});
 
-});
+	$("#use-past-project").on("change", function(){
+		var project_id = $(this).val();
+		if(project_id=="0"){
+			console.log("選択してない");
+		}else{
+			$("#users-field .user").remove();
+			$("#groups-field .group").remove();
 
-// 引数のユーザ名が有効かどうかを返す ajax
+			var data 		= getProjectById(project_id);
+			var project 	= data.project;
+			var users 		= data.users;
+			var groups  	= data.groups;
+			var user_score	= data.user_score;
+
+			$("#make-project input[name=name]").val(project.name);
+			$("#make-project textarea[name=detail]").html(project.detail);
+			// $("#make-project input[name=deadline_ymd]").val(project.deadline_ymd);
+			// $("#make-project input[name=deadline_hm]").val(project.deadline_hm);
+			$("#make-project select[name=assign_system]").val(project.assign_system);
+			$("#make-project select[name=wish_limit]").val(project.wish_limit);
+			$("#make-project select[name=public_register_user]").val(project.public_register_user);
+			$("#make-project select[name=public_register_number]").val(project.public_register_number);
+			$("#make-project select[name=public_user]").val(project.public_user);
+			$("#make-project select[name=allocation_method]").val(project.allocation_method);
+			$("#make-project select[name=trash]").val(project.trash);
+
+			for (var i = users.length - 1; i >= 0; i--) {
+				var user = users[i];
+				$("#users-field").append(
+					  "<tr id='user-" + user.id + "' class='user'>"
+					+ "<td><span class='name'>" + user.name + "</span></td>"
+					+ "<td><span class='score'>" + user_score[user.id] + "</span></td>"
+					+ "<td><a class='delete'>削除</a></td>"
+					+ "</tr>");
+			}
+
+			for (var i = groups.length - 1; i >= 0; i--) {
+				var group = groups[i];
+				$("#groups-field").append(
+					  "<tr class='group'>"
+					+ "<td><span class='name'>" + group.name + "</span></td>"
+					+ "<td><span class='capacity'>" + group.capacity + "</span></td>"
+					+ "<td><span class='detail'>" + group.detail + "</span></td>"
+					+ "<td><a class='delete'>削除</a></td>"
+					+ "</tr>");
+			}
+
+			checkTable();
+		}
+	});
+/****
+ * プロジェクト編集ページ
+ ****/
+	// (編集ページ)プロジェクトの変更を保存ボタン
+	$("#update-project").on("submit", function(){
+		$(window).off('beforeunload');
+		var edit_form = $(document).find(".replace-input").size();
+		if(edit_form > 0){
+			$(".replace-input").addClass("error-form");
+			var p = $(".error-form").eq(0).offset().top;
+        	$('html,body').animate({ scrollTop: p }, 'fast');
+			return false;
+		}
+
+		var group_num = 0;
+		$("#input-groups-field").html("");
+		$('#groups-field .group').each(function(){
+			$("#input-groups-field").append(
+				 "<input type='text' name='group-"+group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
+				+"<input type='text' name='group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
+				+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
+				+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
+			group_num++;
+		});
+
+		var deleted_group_num = 0;
+		$("#input-deleted-groups-field").html("");
+		$('#deleted-groups-field .group').each(function(){
+			$("#input-deleted-groups-field").append(
+				 "<input type='text' name='d-group-"+group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
+				// +"<input type='text' name='d-group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
+				// +"<input type='text' name='d-group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
+				// +"<input type='text' name='d-group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>"
+				);
+			deleted_group_num++;
+		});
+
+		var user_num = 0;
+		$("#input-users-field").html("");
+		$('#users-field .user').each(function(){
+			$("#input-users-field").append(
+				  "<input type='text' name='user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
+				+ "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
+				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
+			user_num++;
+		});
+
+		var deleted_user_num = 0;
+		$("#input-deleted-users-field").html("");
+		$('#deleted-users-field .user').each(function(){
+			$("#input-deleted-users-field").append(
+				  "<input type='text' name='d-user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
+				// + "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
+				// + "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>"
+				);
+			deleted_user_num++;
+		});
+
+		if(group_num < 2){
+			$("#validation-group").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>グループは2つ以上追加してください。");
+			return false;
+		}else{
+			$("#validation-group").html("");
+		}
+		$("input[name=group-num]").val(group_num);
+		$("input[name=d-group-num]").val(deleted_group_num);
+		// if(user_num < 2){
+		// 	$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは2人以上追加してください。");
+		// 	return false;
+		// }else{
+			$("#validation-group").html("");
+		// }
+		$("input[name=user-num]").val(user_num);
+		$("input[name=d-user-num]").val(deleted_user_num);
+	});
+
+});
+/****
+ * 関数
+ ****/
+// 引数のユーザ名が有効であればidを返す ajax
 function isValidUser(name){
 	var valid_flg = true;
 
@@ -248,7 +407,11 @@ function isValidUser(name){
     }).responseJSON;
 
 	var isExists = result.isExists;
-	valid_flg = isExists; // 存在するユーザ名ならば、有効
+	if(isExists){
+		valid_flg = result.id; // 存在するユーザ名ならば、有効
+	}else{
+		valid_flg = false;
+	}
 
 	// リストに既に存在する名前であるかどうか
 	$('#users-field .user .name').each(function(){
@@ -258,6 +421,19 @@ function isValidUser(name){
     });
 
 	return valid_flg; 
+}
+
+// 引数のidのプロジェクト情報を返す
+function getProjectById(id){
+	var result = $.ajax({
+        type: 'GET',
+        url: '/getProjectById',
+        data: "id="+id,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+
+	return result; 
 }
 
 // 引数のグループ名が有効かどうかを返す
@@ -284,6 +460,7 @@ function resetModal(){
 	$("#add-group-modal .close").click();
 
 	//ユーザ
+	$("#add-user-modal input[name=id]").val("");
 	$("#add-user-modal input[name=name]").val("");
 	$("#add-user-modal input[name=score]").val("");
 	$("#validation-user-name").html("");
