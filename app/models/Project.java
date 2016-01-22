@@ -95,4 +95,12 @@ public class Project extends Model {
 		Date now = new Date();
 		return now.after(deadline);
 	}
+
+	public void createNewsType2and3(){
+		News.createNews(new Date(), this.owner_id, this.getId(), 3);
+		List<User> list = UserProject.getUsersByProjectID(this.getId());
+		for(User u : list){
+			News.createNews(new Date(), u.getId(), this.getId(), 2);
+		}
+	}
 }

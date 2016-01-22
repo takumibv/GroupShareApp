@@ -23,6 +23,7 @@ public class Result {
 			System.out.println("starting result calculation of project : " + project.name);
 			UserGroupAssignor uga = new UserGroupAssignor(project.id);
 			uga.assign();
+			project.createNewsType2and3();
 		}
 	}
 
