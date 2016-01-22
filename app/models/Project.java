@@ -107,7 +107,7 @@ public class Project extends Model {
 	}
 
 	public static List<Project> getNotValidProjects(){
-		List<Project> p_list = Project.find("").fetch();
+		List<Project> p_list = Project.find("valid = ?", true).fetch();
 		List<Project> ret = new ArrayList<Project>();
 		List<UserProject> up_list;
 		for(Project p : p_list){
@@ -116,6 +116,7 @@ public class Project extends Model {
 				if(up_list.isEmpty()){
 					ret.add(p);
 					p.valid = false;
+					p.save();
 				}
 			}
 		}
