@@ -342,7 +342,7 @@ $(document).ready(function(){
 		$("#input-deleted-groups-field").html("");
 		$('#deleted-groups-field .group').each(function(){
 			$("#input-deleted-groups-field").append(
-				 "<input type='text' name='d-group-"+group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
+				 "<input type='text' name='d-group-"+deleted_group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
 				// +"<input type='text' name='d-group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				// +"<input type='text' name='d-group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
 				// +"<input type='text' name='d-group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>"
@@ -364,7 +364,7 @@ $(document).ready(function(){
 		$("#input-deleted-users-field").html("");
 		$('#deleted-users-field .user').each(function(){
 			$("#input-deleted-users-field").append(
-				  "<input type='text' name='d-user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
+				  "<input type='text' name='d-user-"+deleted_user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				// + "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				// + "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>"
 				);
