@@ -8,6 +8,7 @@
  * 7.setting
  * 8.project
  * 9.register
+ * 10.makeproject/editproject
  *********/
 
 
@@ -598,4 +599,21 @@ h3 {
 	background-color: #FF8240;
 	color: #fff;
 	border: none;
+}
+
+/*********
+ * 10.makeproject/editproject
+ *********/
+
+#input-groups-field {
+	display: none;
+}
+#input-deleted-groups-field {
+	display: none;
+}
+#input-users-field {
+	display: none;
+}
+#input-deleted-users-field {
+	display: none;
 }
