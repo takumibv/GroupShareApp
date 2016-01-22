@@ -42,4 +42,9 @@ public class Group extends Model {
 		return result;
 	}
 
+	public void setAttributes(String name, String detail, int capacity){
+		this.name = name;
+		this.detail = detail;
+		this.capacity = capacity;
+	}
 }
