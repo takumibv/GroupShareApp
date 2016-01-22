@@ -27,10 +27,11 @@ public class Wish extends Model {
 		new Wish(user_id, group_id, rank).save();
 	}
 
-	public static void resetWishByUserID(long user_id){
+	public static void resetWishByUserID(long user_id, long project_id){
 		List<Wish> wishes = Wish.find("user_id=?", user_id).fetch();
 		for(Wish w : wishes){
-			w.delete();
+			Group g = Group.find("ID=?", w.group_id).first();
+			if(g.project_id == project_id)w.delete();
 		}
 	}
 

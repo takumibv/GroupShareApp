@@ -350,7 +350,7 @@ public class Application extends Controller {
 
 	    UserProject.register(userID, projectID);
 
-	    Wish.resetWishByUserID(userID);
+	    Wish.resetWishByUserID(userID, projectID);
     	
         for(int wishRank=1; wishRank<=wishLimit; wishRank++){
         	long groupID = Long.valueOf(params.get("wish-"+ wishRank));
