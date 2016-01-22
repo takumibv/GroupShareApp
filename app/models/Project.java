@@ -111,6 +111,8 @@ public class Project extends Model {
 	}
 
 	public boolean hasUnFinishedUser(){
+		if(this.assign_system == 2)return false;
+
 		List<UserProject> list = UserProject.find("project_id = ?", this.getId()).fetch();
 		for(UserProject up : list){
 			if(!up.hasScore)return true;
