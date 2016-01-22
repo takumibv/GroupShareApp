@@ -20,10 +20,12 @@ public class Result {
 		List<Project> projects = projectsOfOverDeadLine();
 
 		for(Project project : projects){
-			System.out.println("starting result calculation of project : " + project.name);
-			UserGroupAssignor uga = new UserGroupAssignor(project.id);
-			uga.assign();
-			project.createNewsType2and3();
+			if(!project.hasUnFinishedUser()){
+				System.out.println("starting result calculation of project : " + project.name);
+				UserGroupAssignor uga = new UserGroupAssignor(project.id);
+				uga.assign();
+				project.createNewsType2and3();
+			}
 		}
 		List<Project> p_list = Project.getNotValidProjects();
 		for(Project p : p_list)p.createNewsType2and3();
