@@ -514,6 +514,33 @@ h3 {
 	width: 20%;
 }
 
+.new-project {
+	position: relative;
+}
+.new-project:before {
+	content: "NEW!";
+    position: absolute;
+    left: -70px;
+    font-size: 16px;
+    line-height: 30px;
+    top: 50%;
+    margin-top: -15px;
+    background: #333;
+    border-radius: 4px;
+    width: 60px;
+    color: #fff;
+    box-shadow: 2px 2px 4px #aaa;
+}
+.new-project:after {
+	content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    margin-top: -8px;
+    border: 8px solid transparent;
+    border-left: 10px solid #333;
+}
+
 /*********
  * 6.modal 
  *********/
