@@ -44,7 +44,7 @@ public class Wish extends Model {
 		return users;
 	}
 
-	public static List<Long> getGroupIDsSortedByRank(Long user_id){
+	public static List<Long> getGroupIDsSortedByRank(Long user_id, Long project_id){
 		List<Wish> wishes = Wish.find("user_id=?", user_id).fetch();
 
 		Collections.sort(wishes, new Comparator<Wish>() {
@@ -61,7 +61,8 @@ public class Wish extends Model {
 
 		List<Long> ids = new ArrayList<>(wishes.size());
 		for(Wish wish : wishes){
-			ids.add(wish.group_id);
+			Group g = Group.getGroupById(wish.group_id);
+			if(g.project_id == project_id)ids.add(wish.group_id);
 		}
 
 		return ids;
