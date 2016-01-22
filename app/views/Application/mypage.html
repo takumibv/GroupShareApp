@@ -20,9 +20,11 @@
 	</table>
 </div>
 
-<form action="makeProject">
+<form action="makeProject" style="display:inline">
 	<input class="makeproject-btn btn" type="submit" value="プロジェクト作成">
 </form>
+
+<button type="button" class="inputinvitationcode-btn btn" data-toggle="modal" data-target="#input-invitation-code-modal">招待コード入力</button>
 
 <div id="invited-projects-block" class="projects-block">
 	<div class="view-toggle"><i class="fa fa-caret-up"></i></div>
@@ -33,11 +35,12 @@
 	#{else}
 	<table class="table table-bordered project-table">
 		<tbody>
-			<tr>
+			<tr id="invitated-project-header">
 				<th>プロジェクト</th>
 				<th>締め切り</th>
 				<th>登録</th>
 			</tr>
+			<!-- 招待された登録新規 -->
 			<!-- 招待された登録未完了 -->
 			#{list items:InR, as : 'ele'}
 			<tr>
@@ -146,4 +149,26 @@
 	</table>
 	#{/else}
 
+</div>
+
+<!-- 招待コード入力 Modal -->
+<div class="modal fade" id="input-invitation-code-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">招待コード入力</h3>
+      </div>
+      <div class="modal-body">
+    <div class="input-group">
+      <span class="input-group-addon">招待コード</span>
+      <input class="form form-control" type="text" name="invitation_code">
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        <button id="input-invitation-code-btn" type="button" class="btn btn-primary" disabled data-dismiss="modal">送信する</button>
+      </div>
+    </div>
+  </div>
 </div>

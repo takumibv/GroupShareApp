@@ -88,11 +88,31 @@ public class Project extends Model {
 	}
 
 	public String getDeadlineTime(){
-		return (deadline.getMonth()+1) +"/"+ deadline.getDate() +" "+ String.format("%1$02d", deadline.getHours()) +":"+ String.format("%1$02d", deadline.getMinutes());
+		return deadline_ymd + " " + deadline_hm;
 	}
 
 	public Boolean isFinished(){
 		Date now = new Date();
 		return now.after(deadline);
+	}
+
+	public static boolean isValidInvitationCode(String invitation_code, long user_id){
+		if(Project.count("invitation_code = ?", invitation_code) > 0){
+			Project p = Project.find("invitation_code = ?", invitation_code).first();
+			if(UserProject.count("user_id = ? AND project_id = ?", user_id, p.getId()) > 0)return false;
+			if(p.isFinished())return false;
+
+			UserProject.createUserProjectByInvitationCode(user_id, p.getId());
+			return true;
+		}
+		return false;
+	}
+
+	public boolean hasUnFinishedUser(){
+		List<UserProject> list = UserProject.find("project_id = ?", this.getId()).fetch();
+		for(UserProject up : list){
+			if(!up.hasScore)return true;
+		}
+		return false;
 	}
 }

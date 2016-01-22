@@ -39,6 +39,38 @@ $(document).ready(function(){
 		}
  	});
 
+	$("#input-invitation-code").on("click",function(){
+		return false;
+	});
+
+	// モーダル　招待コード入力
+	$("#input-invitation-code-modal .form").keyup(function(){
+		var invitation_code = $("#input-invitation-code-modal input[name=invitation_code]").val();
+		// 入力がない場合ボタンを無効にする
+		if(invitation_code==""){
+			$("#input-invitation-code-btn").prop("disabled", true);
+		}else{
+			$("#input-invitation-code-btn").prop("disabled", false);
+		}
+	});
+
+	// 招待コード送信ボタン
+	$("#input-invitation-code-btn").on("click", function(){
+		var invitation_code = $("#input-invitation-code-modal input[name=invitation_code]").val();
+		if(isValidInvitationCode(invitation_code)){
+			var project = informationProject(invitation_code);
+			$("#invitated-project-header").after(
+				"<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
+				+ "<td class='column-2'>" + project[2] + "</td>"
+				 + "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>");
+		}else{
+			alert("無効な招待コードです.");
+		}
+
+		resetModal();
+	});
+
+/*
 /****
  * プロジェクト詳細ページ
  ****/
@@ -467,6 +499,11 @@ function resetModal(){
 	$("#validation-user-score").html("");
 	$("#add-user-btn").prop("disabled", true);
 	$("#add-user-modal .close").click();
+
+	//招待コード
+  $("#input-invitation-code-modal input[name=invitation_code]").val("");
+	$("#input-invitation-code-btn").prop("disabled", true);
+	$("#input-invitation-code-modal .close").click();
 }
 
 // 表に参加ユーザとグループがあるかどうかをチェックする
@@ -485,4 +522,35 @@ function checkTable(){
 	}else{
 		$("#groups-field").removeClass("no-element");
 	}
+}
+
+// 引数の招待コードが有効かどうかを返す ajax
+function isValidInvitationCode(invitation_code){
+	var valid_flg = true;
+
+	var result = $.ajax({
+        type: 'GET',
+        url: '/isValidInvitationCode',
+        data: "invitation_code="+invitation_code,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+
+	var isValid = result.isValid;
+	valid_flg = isValid;
+
+	return valid_flg; 
+}
+
+// 引数の招待コードが指すProjectの情報を返す ajax
+function informationProject(invitation_code){
+	var result = $.ajax({
+        type: 'GET',
+        url: '/informationProject',
+        data: "invitation_code="+invitation_code,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+
+	return new Array(result.project_id, result.project_name, result.project_deadline);
 }
