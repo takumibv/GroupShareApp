@@ -9,9 +9,12 @@ import util.DigestGenerator;
 import javax.persistence.*;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 @Entity
 public class Project extends Model {
+	static public final String DATE_FORMAT ="yyyy-MM-dd";
+
 	public String name;
 	public Long owner_id;
 	public Date deadline;
@@ -121,5 +124,26 @@ public class Project extends Model {
 			}
 		}
 		return ret;
+	}
+
+	public void setAttributes(String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+		this.name = name;
+		this.detail = detail;
+		this.assign_system = assign_system;
+		this.wish_limit = wish_limit;
+		this.trash = trash;
+		this.allocation_method = allocation_method;
+		this.public_user = public_user;
+		this.public_register_user = public_register_user;
+		this.public_register_number = public_register_number;
+		this.deadline_ymd = new SimpleDateFormat(DATE_FORMAT).format(deadline_ymd); // deadline_ymd must be String!
+		this.deadline_hm = deadline_hm;
+		this.deadline = createDeadline(deadline_ymd, deadline_hm);
+	}
+
+	public static Date createDeadline(Date deadline_ymd, String deadline_hm){
+		long hm = (Long.valueOf(deadline_hm.split(":")[0]) * 60 * 60
+				+ Long.valueOf(deadline_hm.split(":")[1]) * 60) * 1000;
+		return new Date(deadline_ymd.getTime() + hm);
 	}
 }
