@@ -26,6 +26,7 @@ public class Project extends Model {
 	public String detail;
 	public String deadline_ymd;
 	public String deadline_hm;
+	public boolean valid;
 
 
 	public Project(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number, String deadline_ymd, String deadline_hm){
@@ -42,6 +43,7 @@ public class Project extends Model {
 		this.public_register_number = public_register_number;
 		this.deadline_ymd = deadline_ymd;
 		this.deadline_hm = deadline_hm;
+		this.valid = true;
 	}
 
 	public static Project getProjectByID(long projectID){
@@ -114,5 +116,30 @@ public class Project extends Model {
 			if(!up.hasScore)return true;
 		}
 		return false;
+	}
+
+	public void createNewsType2and3(){
+		News.createNews(new Date(), this.owner_id, this.getId(), 3);
+		List<User> list = UserProject.getUsersByProjectID(this.getId());
+		for(User u : list){
+			News.createNews(new Date(), u.getId(), this.getId(), 2);
+		}
+	}
+
+	public static List<Project> getNotValidProjects(){
+		List<Project> p_list = Project.find("valid = ?", true).fetch();
+		List<Project> ret = new ArrayList<Project>();
+		List<UserProject> up_list;
+		for(Project p : p_list){
+			if(p.isFinished()){
+				up_list = UserProject.find("project_id = ?", p.getId()).fetch();
+				if(up_list.isEmpty()){
+					ret.add(p);
+					p.valid = false;
+					p.save();
+				}
+			}
+		}
+		return ret;
 	}
 }
