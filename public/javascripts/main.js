@@ -89,7 +89,7 @@ $(document).ready(function(){
 		var capacity 	= parseInt($("#add-group-modal input[name=capacity]").val());
 		var detail 		= $("#add-group-modal textarea[name=detail]").val();
 		$("#groups-field").append(
-			  "<tr class='group'>"
+			  "<tr id='group-new' class='group'>"
 			+ "<td><span class='name'>" + name + "</span></td>"
 			+ "<td><span class='capacity'>" + capacity + "</span></td>"
 			+ "<td><span class='detail'>" + detail + "</span></td>"
@@ -131,9 +131,8 @@ $(document).ready(function(){
 		var name 		= $("#add-user-modal input[name=name]").val();
 		var score 		= parseInt($("#add-user-modal input[name=score]").val());
 		if(isValidUser(name)){
-			$("#deleted-users-field #user-" + id).remove();
 			$("#users-field").append(
-				  "<tr id='user-" + id + "' class='user'>"
+				  "<tr id='user-new' class='user'>"
 				+ "<td><span class='name'>" + name + "</span></td>"
 				+ "<td><span class='score'>" + score + "</span></td>"
 				+ "<td><a class='delete'>削除</a></td>"
@@ -388,6 +387,7 @@ $(document).ready(function(){
 		// }
 		$("input[name=user-num]").val(user_num);
 		$("input[name=d-user-num]").val(deleted_user_num);
+
 	});
 
 });
