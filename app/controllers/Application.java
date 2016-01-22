@@ -423,10 +423,11 @@ public class Application extends Controller {
     public static void getInvitationCode(Long project_id, Boolean is_valid){
         Map<String, Object> result = new HashMap<String, Object>();
         Project p = Project.find("id=?", project_id).first();
-        p.valid_invitation = is_valid;
-        p.save();
         String code = null;
-        ig
+        if(p.setValidInvitation(is_valid) && is_valid){
+            code = p.invitation_code;
+        }
+        result.put("code", code);
         renderJSON(result);
     }
 }

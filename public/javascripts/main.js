@@ -63,6 +63,7 @@ $(document).ready(function(){
 				"<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
 				+ "<td class='column-2'>" + project[2] + "</td>"
 				 + "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>");
+			alert("プロジェクト「" + project[1] + "」に参加しました。");
 		}else{
 			alert("無効な招待コードです.");
 		}
@@ -72,17 +73,25 @@ $(document).ready(function(){
 
 	// 招待コードの有効・無効の切り替え	
 	$(".select-valid-invitation").on("change", function(){
-		var is_valid = false;
+		var is_valid;
 		if($(this).val()=="1"){
 			is_valid = true;
 		}else{
 			is_valid = false;
 		}
-
 		var project_id = $(this).attr("id").substring(20);
 		var code = getInvitationCode(project_id, is_valid);
 
-		$("#invitation-code-modal-"+project_id+" p.invitation-code").html(code);
+		is_valid = (code != null);
+		if(is_valid){
+			$("#invitation-code-modal-"+project_id+" p.invitation-code").html(code);
+			$("#is-valid-invitation-"+project_id).val("1");
+			$("a[data-target=#invitation-code-modal-"+project_id+"]").addClass("share--active");
+		}else{
+			$("#invitation-code-modal-"+project_id+" p.invitation-code").html("招待コードを有効にしてください");
+			$("#is-valid-invitation-"+project_id).val("2");
+			$("a[data-target=#invitation-code-modal-"+project_id+"]").removeClass("share--active");
+		}
 	});
 
 /*
@@ -573,18 +582,15 @@ function informationProject(invitation_code){
 }
 
 function getInvitationCode(project_id, is_valid) {
-
 	var result = $.ajax({
         type: 'GET',
         url: '/getInvitationCode',
-        data: "project_id="+project_id+",is_valid="+is_valid,
+        data: { project_id: project_id , is_valid: is_valid },
         dataType: "json",
         async: false // 同期的
     }).responseJSON;
     if(result.code != null){
     	return result.code;
     }
-
-	return "招待コードを有効にしてください";
-	
+	return null;
 }

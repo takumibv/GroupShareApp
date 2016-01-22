@@ -79,7 +79,10 @@
 			<!-- 作成したプロジェクト -->
 			#{list items:MP, as : 'ele'}
 			<tr>
-				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a> <a class="share" data-toggle="modal" data-target="#invitation-code-modal-${ele.id}"><i class="fa fa-share-alt"></i></a></td>
+				<td class="column-1">
+					<a href="@{project(ele.id)}">${ele.name}</a> 
+					<a class="share #{if ele.valid_invitation}share--active#{/if} #{if ele.isFinished()}share--disabled#{/if}" data-toggle="modal" data-target="#invitation-code-modal-${ele.id}"><i class="fa fa-share-alt"></i></a>
+				</td>
 				<td class="column-2">${ele.getDeadlineTime()}</td>
 				<td class="column-3">
 				#{if !ele.isFinished()}
@@ -174,6 +177,7 @@
 </div>
 
 #{list items:MP, as : 'ele'}
+	#{if !ele.isFinished()}
 	<div class="modal fade invitation-code-modal" id="invitation-code-modal-${ele.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
@@ -208,4 +212,5 @@
 	    </div>
 	  </div>
 	</div>
+	#{/if}
 #{/list}

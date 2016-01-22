@@ -146,5 +146,15 @@ public class Project extends Model {
 		}
 		return ret;
 	}
+
+	public Boolean setValidInvitation(Boolean is_valid){
+		if(!is_valid || !this.isFinished()){
+			this.valid_invitation = is_valid;
+			save();
+			return true;
+		}else{
+			return false;
+		}
+	}
 	
 }
