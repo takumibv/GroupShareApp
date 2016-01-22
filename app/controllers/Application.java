@@ -419,4 +419,14 @@ public class Application extends Controller {
 		List<News> news = News.getAllNews(user.getId());
     	render(news);
     }
+
+    public static void getInvitationCode(Long project_id, Boolean is_valid){
+        Map<String, Object> result = new HashMap<String, Object>();
+        Project p = Project.find("id=?", project_id).first();
+        p.valid_invitation = is_valid;
+        p.save();
+        String code = null;
+        ig
+        renderJSON(result);
+    }
 }

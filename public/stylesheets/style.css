@@ -90,6 +90,11 @@ p {
 	border: none !important;
 }
 
+.no-deco-form {
+	box-shadow: none;
+	border: none
+}
+
 .center {
 	text-align: center;
 }

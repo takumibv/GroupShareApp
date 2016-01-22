@@ -70,6 +70,21 @@ $(document).ready(function(){
 		resetModal();
 	});
 
+	// 招待コードの有効・無効の切り替え	
+	$(".select-valid-invitation").on("change", function(){
+		var is_valid = false;
+		if($(this).val()=="1"){
+			is_valid = true;
+		}else{
+			is_valid = false;
+		}
+
+		var project_id = $(this).attr("id").substring(20);
+		var code = getInvitationCode(project_id, is_valid);
+
+		$("#invitation-code-modal-"+project_id+" p.invitation-code").html(code);
+	});
+
 /*
 /****
  * プロジェクト詳細ページ
@@ -420,6 +435,8 @@ $(document).ready(function(){
 		// }
 		$("input[name=user-num]").val(user_num);
 		$("input[name=d-user-num]").val(deleted_user_num);
+
+		return false;
 	});
 
 });
@@ -553,4 +570,21 @@ function informationProject(invitation_code){
     }).responseJSON;
 
 	return new Array(result.project_id, result.project_name, result.project_deadline);
+}
+
+function getInvitationCode(project_id, is_valid) {
+
+	var result = $.ajax({
+        type: 'GET',
+        url: '/getInvitationCode',
+        data: "project_id="+project_id+",is_valid="+is_valid,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+    if(result.code != null){
+    	return result.code;
+    }
+
+	return "招待コードを有効にしてください";
+	
 }
