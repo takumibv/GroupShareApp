@@ -59,10 +59,22 @@ $(document).ready(function(){
 		var invitation_code = $("#input-invitation-code-modal input[name=invitation_code]").val();
 		if(isValidInvitationCode(invitation_code)){
 			var project = informationProject(invitation_code);
-			$("#invitated-project-header").after(
-				"<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
-				+ "<td class='column-2'>" + project[2] + "</td>"
-				 + "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>");
+			if($("#nothing-project").length){
+				$("#nothing-project").after(
+					"<table class='table table-bordered project-table'>"
+					+ "<tbody><tr id='invitated-project-header'>"
+					+ "<th>プロジェクト</th><th>締め切り</th><th>登録</th></tr>"
+					+ "<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
+					+ "<td class='column-2'>" + project[2] + "</td>"
+				 	+ "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>"
+					+ "</tbody></table>");
+				$("#nothing-project").remove();
+			}else{
+				$("#invitated-project-header").after(
+					"<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
+					+ "<td class='column-2'>" + project[2] + "</td>"
+				 	+ "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>");
+			}
 			alert("プロジェクト「" + project[1] + "」に参加しました。");
 		}else{
 			alert("無効な招待コードです.");
