@@ -328,82 +328,65 @@ public class Application extends Controller {
     }
 
     public static void updateProject(long project_id, String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+		// Update project
 		Project project = Project.findById(project_id);
 		project.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash, allocation_method, public_user, public_register_user, public_register_number);
 		project.save();
+		// notification!
 
+		// Delete group
+		int d_group_num = Integer.parseInt(params.get("d-group-num"));
+		for (int i = 0; i < d_group_num; i++){
+			long group_id = Long.parseLong(params.get("d-group-"+ i +"[id]"));
+			Group group = Group.findById(group_id);
+			group.delete();
+				// notification!
+		}
+
+		// Update or Create group!
 		int group_num = Integer.parseInt(params.get("group-num"));
-
-		System.out.println("=====================================================================================");
-		System.out.println("group_num: " + params.get("group-num"));
 		for (int i = 0; i < group_num; i++){
-			System.out.println("=====================================================================================");
-
 			String group_name = params.get("group-"+ i +"[name]");
 			String group_detail = params.get("group-"+ i +"[detail]");
 			int group_capacity = Integer.parseInt(params.get("group-"+ i +"[capacity]"));
 			Group group;
 
-
 			if (params.get("group-"+ i +"[id]").equals("new")){
 				group = new Group(group_name, group_detail, group_capacity, project.getId());
-
-				System.out.println("new group");
-				System.out.println(group.name);
-				System.out.println(group.detail);
-				System.out.println(group.capacity);
-				System.out.println(group.project_id);
-
 			} else {
 				long group_id = Long.parseLong(params.get("group-"+ i +"[id]"));
 				group = Group.findById(group_id);
-				System.out.println("edit group");
-				System.out.println("before");
-				System.out.println(group.name);
-				System.out.println(group.detail);
-				System.out.println(group.capacity);
-				System.out.println(group.project_id);
-
 				group.setAttributes(group_name, group_detail, group_capacity);
-
-				System.out.println("after");
-				System.out.println(group.name);
-				System.out.println(group.detail);
-				System.out.println(group.capacity);
-				System.out.println(group.project_id);
 			}
-
+				// notification!
 			group.save();
 		}
-		System.out.println("=====================================================================================");
 
-		int d_group_num = Integer.parseInt(params.get("d-group-num"));
-
-		System.out.println("=====================================================================================");
-		System.out.println("d_group_num: " + params.get("d-group-num"));
-		for (int i = 0; i < d_group_num; i++){
-			System.out.println("=====================================================================================");
-			System.out.println(i);
-			System.out.println("d-group-"+ i +"[id]");
-			System.out.println(params.get("d-group-"+ i +"[id]"));
-
-			long group_id = Long.parseLong(params.get("d-group-"+ i +"[id]"));
-			Group group = Group.findById(group_id);
-			group.delete();
-			
-			// debug factor
-			Group d_group = Group.findById(group_id);
-			System.out.println(d_group == null);
+		// Delete user_project
+		int d_user_num = Integer.parseInt(params.get("d-user-num"));
+		for (int i = 0; i < d_user_num; i++){
+			long user_id = Long.parseLong(params.get("d-user-"+ i +"[id]"));
+			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project.getId(), user_id).first();
+			user_project.delete();
+			// notification!
 		}
-		System.out.println("=====================================================================================");
 
-
+		// Update ot Create user_project
         int user_num = Integer.parseInt(params.get("user-num"));
-		System.out.println("=====================================================================================");
-		System.out.println("user_num: " + params.get("user-num"));
-	
+		for (int i = 0; i < user_num; i++){
+			int user_score = Integer.parseInt(params.get("user-"+ i +"[score]"));
 
-
+			if (params.get("user-"+ i +"[id]").equals("new")){
+				User user = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
+				// notification!
+				UserProject.createUserProject(user.getId(), project.getId(), user_score);
+			} else {
+				long user_id = Long.parseLong(params.get("user-"+ i +"[id]"));
+				UserProject user_project = UserProject.find("project_id=? AND user_id=?", project.getId(), user_id).first();
+				user_project.score = user_score;
+				user_project.save();
+			}
+		}
 
 		mypage();
     }
