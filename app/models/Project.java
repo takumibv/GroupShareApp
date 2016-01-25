@@ -105,6 +105,7 @@ public class Project extends Model {
 			Project p = Project.find("invitation_code = ?", invitation_code).first();
 			if(UserProject.count("user_id = ? AND project_id = ?", user_id, p.getId()) > 0)return false;
 			if(p.isFinished())return false;
+			if(!p.valid_invitation)return false;
 
 			UserProject.createUserProjectByInvitationCode(user_id, p.getId());
 			return true;
