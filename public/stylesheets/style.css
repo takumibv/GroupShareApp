@@ -546,6 +546,7 @@ h3 {
     border-radius: 4px;
     left: -12px;
     box-shadow: 2px 2px 4px #aaa;
+    text-shadow: none;
     opacity: 1;
 }
 .project-table a.share:hover::after {
