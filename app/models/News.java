@@ -89,4 +89,11 @@ public class News extends Model {
 				return "";
 		}
 	}
+
+　　public boolean equals(Object obj){
+　　　　if(obj!=null && obj instanceof Long){
+　　　　　　return project_id == obj;
+　　　　}
+　　　　return false;
+　　}
 }
