@@ -13,6 +13,7 @@ GET     /                                       Application.index
 *       /{action}                               Application.{action}
 GET     /projects/{id}                          Application.project
 GET     /result/{id}                            Application.result
+GET     /register/{id}                          Application.register
 
 # 上記以外のリクエストをすべて受け取る
 *       /{controller}/                          {controller}.index
