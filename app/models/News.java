@@ -90,10 +90,11 @@ public class News extends Model {
 		}
 	}
 
-　　public boolean equals(Object obj){
-　　　　if(obj!=null && obj instanceof Long){
-　　　　　　return project_id == obj;
-　　　　}
-　　　　return false;
-　　}
+	// objにはProject型のみ入る
+	public boolean equals(Object obj){
+		if(obj != null){
+			return (this.project_id == ((Project)obj).id);
+		}
+		return false;
+	}
 }

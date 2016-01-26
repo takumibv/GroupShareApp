@@ -182,18 +182,11 @@ public class Project extends Model {
 		}
 	}
 
-	public Boolean isHavingUnreadNews(String user_name){
-		Long user_id = User.getIDByName(user_name);
-		List<News> news_list = News.find("project_id = ? AND user_id = ? AND isRead = false", this.id, user_id).fetch();
-
-		return news_list.size() != 0;
-	}
-
-	public int newsNum(String user_name){
-		Long user_id = User.getIDByName(user_name);
-		List<News> news_list = News.find("project_id = ? AND user_id = ? AND isRead = false", this.id, user_id).fetch();
-
-		return news_list.size();
+	public Boolean isHavingNewsInList(List<News> n_list){
+		for(News n : n_list){
+			if(n.equals(this)) return true;
+		}
+		return false;
 	}
 
 }
