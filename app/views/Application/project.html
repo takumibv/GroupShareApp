@@ -18,10 +18,19 @@
     </div>
     #{/if}
     #{if models.UserProject.getRegistered(u.id, project.id)}
-    #{list items:1..project.wish_limit, as:'i'}
+    %{
+		wishes = wishes_maps.get(u.id);
+	}%
+	#{list items:1..project.wish_limit, as:'i'}
+	%{
+		w = null;
+		if(wishes.indexOf(models.Wish.newWish(i)) != -1){
+			w = wishes.get(wishes.indexOf(models.Wish.newWish(i)));
+		}
+	}%
     <div class="input-group">
       	<span class="input-group-addon">第${i}志望</span>
-      	<span class="form-control">${my_wishes_map.get(i)?.getGroupName()}</span>
+      	<span class="form-control">${w?.getGroupName()}</span>
     </div>
     #{/list}
     #{/if}
@@ -141,7 +150,9 @@
 	          #{if project.assign_system==1}
 	          <th class="th-capacity">点数</th>
 	          #{/if}
-	          <th class="th-right">登録グループ<br>(第１志望)</th>
+	          #{list items:1..project.wish_limit, as:'i'}
+	          <th class="#{if i==project.wish_limit}th-right#{/if}">登録グループ<br>(第${i}志望)</th>
+	          #{/list}
 	        </tr>
 	        #{if models.UserProject.checkUserProject(u.id, project.id)}
 	        <tr class='user'>
@@ -149,14 +160,25 @@
 				#{if project.assign_system==1}
 				<td>${models.UserProject.getScore(u.id, project.id)}</td>
 				#{/if}
+				%{
+					wishes = wishes_maps.get(u.id);
+				}%
+				#{list items:1..project.wish_limit, as:'i'}
+				%{
+					w = null;
+					if(wishes.indexOf(models.Wish.newWish(i)) != -1){
+						w = wishes.get(wishes.indexOf(models.Wish.newWish(i)));
+					}
+				}%
 				<td>
-					#{if models.UserProject.getRegistered(u.id, project.id) && wishes_map.get(u.id)!=null}
-						${wishes_map.get(u.id).getGroupName()}
+					#{if models.UserProject.getRegistered(u.id, project.id) && w!=null}
+						${w.getGroupName()}
 					#{/if}
 					#{else}
 						未登録
 					#{/else}
 				</td>
+				#{/list}
 			</tr>
 			#{/if}
 	        #{list items:joinUsers, as:'user'}
@@ -174,25 +196,36 @@
 						#{else} 非公開 #{/else}
 					</td>
 					#{/if}
-					<td>
-					#{if project.public_register_user == 1}
-						#{if models.UserProject.getRegistered(user.id, project.id) && wishes_map.get(user.id)!=null}
-							${wishes_map.get(user.id).getGroupName()}
+					%{
+						wishes = wishes_maps.get(user.id);
+					}%
+					#{list items:1..project.wish_limit, as:'i'}
+					%{
+						w = null;
+						if(wishes.indexOf(models.Wish.newWish(i)) != -1){
+							w = wishes.get(wishes.indexOf(models.Wish.newWish(i)));
+						}
+					}%
+						<td>
+						#{if project.public_register_user == 1}
+							#{if models.UserProject.getRegistered(user.id, project.id) && w!=null}
+								${w.getGroupName()}
+							#{/if}
+							#{else}
+								未登録
+							#{/else}
 						#{/if}
-						#{else}
-							未登録
-						#{/else}
-					#{/if}
-					#{elseif project.owner_id==u.id}
-						#{if models.UserProject.getRegistered(user.id, project.id) && wishes_map.get(user.id)!=null}
-							${wishes_map.get(user.id).getGroupName()}<br>(非公開)
-						#{/if}
-						#{else}
-							未登録<br>(非公開)
-						#{/else}
-					#{/elseif}
-					#{else} 非公開 #{/else}
-					</td>
+						#{elseif project.owner_id==u.id}
+							#{if models.UserProject.getRegistered(user.id, project.id) && w!=null}
+								${w.getGroupName()}<br>(非公開)
+							#{/if}
+							#{else}
+								未登録<br>(非公開)
+							#{/else}
+						#{/elseif}
+						#{else} 非公開 #{/else}
+						</td>
+					#{/list}
 				</tr>
 			#{/if}
 	        #{/list}

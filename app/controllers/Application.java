@@ -130,17 +130,10 @@ public class Application extends Controller {
 	    final long projectID = p.id;
 	    List<Group> groups = Group.getGroupListByProjectID(projectID);
         List<User> users  = UserProject.getUsersByProjectID(projectID);
-        HashMap<Long, Wish> wishes_map = new HashMap<Long, Wish>();
+        HashMap<Long, List<Wish>> wishes_map = new HashMap<Long, List<Wish>>();
         for(User usr : users){
-            List<Wish> w_list = Wish.find("user_id = ? AND rank = 1", usr.id).fetch();
-            for(Wish w : w_list){
-                if(w.getProjectId() == id) wishes_map.put(usr.id, w);
-            }
-        }
-        HashMap<Integer, Wish> my_wishes_map = new HashMap<Integer, Wish>();
-        List<Wish> my_w_list = Wish.find("user_id = ?", u.id).fetch();
-        for(Wish w : my_w_list){
-            if(w.getProjectId() == id) my_wishes_map.put(w.rank, w);
+            List<Wish> w_list = Wish.getWishesByUserProjectId(usr.id, id);
+            wishes_map.put(usr.id, w_list);
         }
 
         renderArgs.put("project", p);
@@ -148,9 +141,7 @@ public class Application extends Controller {
         renderArgs.put("owner_name", u.name);
         renderArgs.put("groups", groups);
         renderArgs.put("joinUsers", users);
-        renderArgs.put("joinUsers", users);
-        renderArgs.put("wishes_map", wishes_map);
-	    renderArgs.put("my_wishes_map", my_wishes_map);
+        renderArgs.put("wishes_maps", wishes_map);
         render();
     }
 

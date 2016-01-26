@@ -21,7 +21,11 @@ public class Wish extends Model {
 		this.user_id = user_id;
 		this.group_id = group_id;
 		this.rank = rank;
-	}		
+	}
+	
+	public static Wish newWish(int rank){
+		return new Wish(new Long(0), new Long(0), rank);
+	}
 	
 	public static void createWish(Long user_id, Long group_id, int rank){
 		new Wish(user_id, group_id, rank).save();
@@ -76,5 +80,21 @@ public class Wish extends Model {
 	public String getGroupName(){
 		Group g = Group.find("id = ?", group_id).first();
 		return g.name;
+	}
+
+	public static List<Wish> getWishesByUserProjectId(Long user_id, Long project_id){
+		List<Wish> wishes 		= new ArrayList<Wish>();
+		List<Wish> wish_list 	= Wish.find("user_id=?", user_id).fetch();
+
+		for(Wish w : wish_list){
+			if(Group.getGroupById(w.group_id).project_id == project_id) wishes.add(w);
+		}
+		return wishes;
+	}
+
+	@Override
+	public boolean equals(Object object){
+		System.out.println("rank:"+rank);
+		return rank==((Wish)object).rank;
 	}
 }
