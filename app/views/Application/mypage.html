@@ -4,12 +4,14 @@
 
 <div id="news-block" class="sans-serif">
 	<h3>お知らせ</h3>
+	<p class="note">
 	#{if unread_news.size() == 0}
-	<p class="note">お知らせはありません。</p>
+		新しいお知らせはありません。
 	#{/if}
 	#{else}
-	<p class="note">${unread_news.size()}件のお知らせがあります。</p>
+		${unread_news.size()}件のお知らせがあります。
 	#{/else}
+	</p>
 	<a class="seeMore" href="@{news()}">過去のお知らせを見る</a>
 	<table class="table table-bordered">
 		<tbody>
