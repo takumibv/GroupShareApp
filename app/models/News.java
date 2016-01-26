@@ -36,7 +36,7 @@ public class News extends Model {
 	}
 
 	public static List<News> getUnreadNews(Long user_id){
-		List<News> unread_news = News.find("user_id = ? AND isRead = ?", user_id, false).fetch();
+		List<News> unread_news = News.find("user_id = ? AND isRead = ? ORDER BY date DESC", user_id, false).fetch();
 
 		// Make isRead true
 		for (int i = 0, n = unread_news.size(); i < n; i++) {
@@ -48,7 +48,7 @@ public class News extends Model {
 	}
 
 	public static List<News> getAllNews(Long user_id){
-		List<News> ret = News.find("user_id = ?", user_id).fetch();
+		List<News> ret = News.find("user_id = ? ORDER BY date DESC", user_id).fetch();
 		return ret;
 	}
 
