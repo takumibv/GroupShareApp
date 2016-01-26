@@ -66,6 +66,8 @@ public class News extends Model {
 				return "プロジェクト「" + project.name + "」から退会させられました。";
 			case 6:
 				return "プロジェクト「" + project.name + "」が編集されました。";
+			case 7:
+				return "プロジェクト「" + project.name + "」は点数を持たないユーザーが存在するため振り分けを停止しました。";
 			default:
 				return "";
 		}

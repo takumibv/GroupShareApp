@@ -134,6 +134,11 @@ public class Project extends Model {
 		}
 	}
 
+	public void createNewsType7(){
+		if(News.count("user_id = ? AND project_id = ? AND type = ?", this.owner_id, this.getId(), 7) < 1)
+			News.createNews(new Date(), this.owner_id, this.getId(), 7);
+	}
+
 	public static List<Project> getNotValidProjects(){
 		List<Project> p_list = Project.find("valid = ?", true).fetch();
 		List<Project> ret = new ArrayList<Project>();

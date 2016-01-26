@@ -25,6 +25,8 @@ public class Result {
 				UserGroupAssignor uga = new UserGroupAssignor(project.id);
 				uga.assign();
 				project.createNewsType2and3();
+			}else{
+				project.createNewsType7();
 			}
 		}
 		List<Project> p_list = Project.getNotValidProjects();
