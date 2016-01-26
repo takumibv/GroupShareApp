@@ -8,7 +8,6 @@ $(document).ready(function(){
  	// ユーザー名の有効、無効の切り替え
 	$("#signup-form input[name=name]").keyup(function(){
 		var name 		= $("#signup-form input[name=name]").val();
-		console.log("name:"+(name=="")+" "+isValidUser(name));
 		if(name=="" || isValidUser(name)){
 			$("#signup-btn").prop("disabled", true);
 		}else{
@@ -164,7 +163,6 @@ $(document).ready(function(){
 				this.remove();
 				checkTable();
 			});
-			console.log(del_table.attr("class"));
 			if(del_table.attr("class") == "user"){
 				$("#deleted-users-field").append(
 					"<tr id='" + del_table.attr("id") + "' class='user'>"
@@ -256,7 +254,6 @@ $(document).ready(function(){
 	$("#use-past-project").on("change", function(){
 		var project_id = $(this).val();
 		if(project_id=="0"){
-			console.log("選択してない");
 		}else{
 			$("#users-field .user").remove();
 			$("#groups-field .group").remove();
@@ -359,6 +356,27 @@ $(document).ready(function(){
 		$("input[name=d-user-num]").val(deleted_user_num);
 
 		return checkBeforeSaveProject();
+	});
+
+/****
+ * 登録ページ
+ ****/
+	$("#registration-form").on("submit", function(){
+		if(!confirm('この内容で登録しますか？')){
+			return false;
+		}
+		var num = $("#register select").size();
+		var value = "";
+		var response = true;
+		$("#register select").each(function(){
+			value = $(this).val();
+			if($("#register option[value="+value+"]:selected").size() > 1){
+				response = false;
+				$(".validation-register").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>同じものを志望することはできません。");
+				return false;
+			}
+		});
+		return response;
 	});
 
 });
@@ -474,7 +492,6 @@ function checkTable(){
 function checkAssignSystem(){
 
 	var select = $("select[name=assign_system]").val();
-	console.log("check:"+select);
 	var score_input = $("#add-user-modal input[name=score]");
 	if(select=="1"){
 		score_input.parent().removeClass("display-none");

@@ -2,14 +2,13 @@
 #{extends 'Application/header.html' /}
 <h2>「${project.name}」の志望を登録</h2>
 
-<form action="@{saveRegistration}" onSubmit="return confirm('この内容で登録しますか？');">
+<form id="registration-form" action="@{saveRegistration}">
 <input type="hidden" name="projectID" value="${projectID}" />
 <input type="hidden" name="wishLimit" value="${wishLimit}" />
 
 	<div id="register" class="panel-body">
 	  <div class="panel-body-inner">
 	    <h3>第${wishLimit}志望まで選んでください<span class="note"></span></h3>
-
 	    #{list items:wishRank, as:'rank'}
 		    <div class="input-group">
 		      <span class="input-group-addon">第${rank}志望</span>
@@ -23,6 +22,7 @@
 	  </div>
 	
 	<div class="center">
+		<p class="validation-register"></p>
 		<input class="register-btn btn" type="submit" value="登録する">
 	</div>
 	</div>
