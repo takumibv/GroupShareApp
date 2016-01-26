@@ -13,17 +13,19 @@ public class UserProject extends Model {
 	public boolean registered;
 	public boolean finished;
 	public int score;
+	public boolean hasScore;
 
-	public UserProject(Long user_id, Long project_id, int score){
+	public UserProject(Long user_id, Long project_id, int score, boolean hasScore){
 		this.user_id = user_id;
 		this.project_id = project_id;
 		this.registered = false;
 		this.finished = false;
 		this.score = score;
+		this.hasScore = hasScore;
 	}
 
 	public static void createUserProject(Long user_id, Long project_id, int score){
-		UserProject newUsrPro = new UserProject(user_id, project_id, score);
+		UserProject newUsrPro = new UserProject(user_id, project_id, score, true);
 		newUsrPro.save();
 		News.createNews(new Date(), user_id, project_id, 1); 
 	}
@@ -31,6 +33,12 @@ public class UserProject extends Model {
 	public static UserProject getUserProject(Long project_id, Long user_id) {
 		UserProject userProject = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
 		return userProject;
+	}
+
+	public static void createUserProjectByInvitationCode(Long user_id, Long project_id){
+		UserProject newUsrPro = new UserProject(user_id, project_id, 0, false);
+		newUsrPro.save();
+		News.createNews(new Date(), user_id, project_id, 1); 
 	}
 
 	public static ArrayList<Project> findProject(Long user_id, boolean registered,  boolean finished){

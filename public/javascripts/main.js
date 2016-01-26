@@ -38,6 +38,74 @@ $(document).ready(function(){
 		}
  	});
 
+	$("#input-invitation-code").on("click",function(){
+		return false;
+	});
+
+	// モーダル　招待コード入力
+	$("#input-invitation-code-modal .form").keyup(function(){
+		var invitation_code = $("#input-invitation-code-modal input[name=invitation_code]").val();
+		// 入力がない場合ボタンを無効にする
+		if(invitation_code==""){
+			$("#input-invitation-code-btn").prop("disabled", true);
+		}else{
+			$("#input-invitation-code-btn").prop("disabled", false);
+		}
+	});
+
+	// 招待コード送信ボタン
+	$("#input-invitation-code-btn").on("click", function(){
+		var invitation_code = $("#input-invitation-code-modal input[name=invitation_code]").val();
+		if(isValidInvitationCode(invitation_code)){
+			var project = informationProject(invitation_code);
+			if($("#nothing-project").length){
+				$("#nothing-project").after(
+					"<table class='table table-bordered project-table'>"
+					+ "<tbody><tr id='invitated-project-header'>"
+					+ "<th>プロジェクト</th><th>締め切り</th><th>登録</th></tr>"
+					+ "<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
+					+ "<td class='column-2'>" + project[2] + "</td>"
+				 	+ "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>"
+					+ "</tbody></table>");
+				$("#nothing-project").remove();
+			}else{
+				$("#invitated-project-header").after(
+					"<tr><td class='column-1'><a href='project?id=" + project[0] + "'>" + project[1] + "</a></td>"
+					+ "<td class='column-2'>" + project[2] + "</td>"
+				 	+ "<td class='column-3'><a class='register-btn btn' href='register?id=" + project[0] + "'>登録する</a></td></tr>");
+			}
+			alert("プロジェクト「" + project[1] + "」に参加しました。");
+		}else{
+			alert("無効な招待コードです.");
+		}
+
+		resetModal();
+	});
+
+	// 招待コードの有効・無効の切り替え	
+	$(".select-valid-invitation").on("change", function(){
+		var is_valid;
+		if($(this).val()=="1"){
+			is_valid = true;
+		}else{
+			is_valid = false;
+		}
+		var project_id = $(this).attr("id").substring(20);
+		var code = getInvitationCode(project_id, is_valid);
+
+		is_valid = (code != null);
+		if(is_valid){
+			$("#invitation-code-modal-"+project_id+" p.invitation-code").html(code);
+			$("#is-valid-invitation-"+project_id).val("1");
+			$("a[data-target=#invitation-code-modal-"+project_id+"]").addClass("share--active");
+		}else{
+			$("#invitation-code-modal-"+project_id+" p.invitation-code").html("招待コードを有効にしてください");
+			$("#is-valid-invitation-"+project_id).val("2");
+			$("a[data-target=#invitation-code-modal-"+project_id+"]").removeClass("share--active");
+		}
+	});
+
+/*
 /****
  * プロジェクト詳細ページ
  ****/
@@ -464,6 +532,11 @@ function resetModal(){
 	$("#validation-user-score").html("");
 	$("#add-user-btn").prop("disabled", true);
 	$("#add-user-modal .close").click();
+
+	//招待コード
+  $("#input-invitation-code-modal input[name=invitation_code]").val("");
+	$("#input-invitation-code-btn").prop("disabled", true);
+	$("#input-invitation-code-modal .close").click();
 }
 
 // 表に参加ユーザとグループがあるかどうかをチェックする
@@ -573,4 +646,49 @@ function checkBeforeSaveProject(){
 	// }
 
 	return true;
+}
+
+// 引数の招待コードが有効かどうかを返す ajax
+function isValidInvitationCode(invitation_code){
+	var valid_flg = true;
+
+	var result = $.ajax({
+        type: 'GET',
+        url: '/isValidInvitationCode',
+        data: "invitation_code="+invitation_code,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+
+	var isValid = result.isValid;
+	valid_flg = isValid;
+
+	return valid_flg; 
+}
+
+// 引数の招待コードが指すProjectの情報を返す ajax
+function informationProject(invitation_code){
+	var result = $.ajax({
+        type: 'GET',
+        url: '/informationProject',
+        data: "invitation_code="+invitation_code,
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+
+	return new Array(result.project_id, result.project_name, result.project_deadline);
+}
+
+function getInvitationCode(project_id, is_valid) {
+	var result = $.ajax({
+        type: 'GET',
+        url: '/getInvitationCode',
+        data: { project_id: project_id , is_valid: is_valid },
+        dataType: "json",
+        async: false // 同期的
+    }).responseJSON;
+    if(result.code != null){
+    	return result.code;
+    }
+	return null;
 }

@@ -30,6 +30,7 @@ public class Project extends Model {
 	public String deadline_ymd;
 	public String deadline_hm;
 	public boolean valid;
+	public Boolean valid_invitation;
 
 
 	public Project(String name, String detail, Long owner_id, Date deadline, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number, String deadline_ymd, String deadline_hm){
@@ -47,6 +48,7 @@ public class Project extends Model {
 		this.deadline_ymd = deadline_ymd;
 		this.deadline_hm = deadline_hm;
 		this.valid = true;
+		this.valid_invitation = false;
 	}
 
 	public static Project getProjectByID(long projectID){
@@ -93,12 +95,35 @@ public class Project extends Model {
 	}
 
 	public String getDeadlineTime(){
-		return (deadline.getMonth()+1) +"/"+ deadline.getDate() +" "+ String.format("%1$02d", deadline.getHours()) +":"+ String.format("%1$02d", deadline.getMinutes());
+		return deadline_ymd + " " + deadline_hm;
 	}
 
 	public Boolean isFinished(){
 		Date now = new Date();
 		return now.after(deadline);
+	}
+
+	public static boolean isValidInvitationCode(String invitation_code, long user_id){
+		if(Project.count("invitation_code = ?", invitation_code) > 0){
+			Project p = Project.find("invitation_code = ?", invitation_code).first();
+			if(UserProject.count("user_id = ? AND project_id = ?", user_id, p.getId()) > 0)return false;
+			if(p.isFinished())return false;
+			if(!p.valid_invitation)return false;
+
+			UserProject.createUserProjectByInvitationCode(user_id, p.getId());
+			return true;
+		}
+		return false;
+	}
+
+	public boolean hasUnFinishedUser(){
+		if(this.assign_system == 2)return false;
+
+		List<UserProject> list = UserProject.find("project_id = ?", this.getId()).fetch();
+		for(UserProject up : list){
+			if(!up.hasScore)return true;
+		}
+		return false;
 	}
 
 	public void createNewsType2and3(){
@@ -146,4 +171,15 @@ public class Project extends Model {
 				+ Long.valueOf(deadline_hm.split(":")[1]) * 60) * 1000;
 		return new Date(deadline_ymd.getTime() + hm);
 	}
+
+	public Boolean setValidInvitation(Boolean is_valid){
+		if(!is_valid || !this.isFinished()){
+			this.valid_invitation = is_valid;
+			save();
+			return true;
+		}else{
+			return false;
+		}
+	}
+
 }

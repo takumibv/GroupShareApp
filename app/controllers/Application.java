@@ -411,7 +411,7 @@ public class Application extends Controller {
 
 	    UserProject.register(userID, projectID);
 
-	    Wish.resetWishByUserID(userID);
+	    Wish.resetWishByUserID(userID, projectID);
     	
         for(int wishRank=1; wishRank<=wishLimit; wishRank++){
         	long groupID = Long.valueOf(params.get("wish-"+ wishRank));
@@ -457,9 +457,38 @@ public class Application extends Controller {
         renderJSON(result);
     }
 
+		// 招待コードが有効かを返し、有効ならばUserProjectを作成する
+		public static void isValidInvitationCode(String invitation_code){
+        Map<String, Object> result = new HashMap<String, Object>();
+				User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
+        result.put("isValid", Project.isValidInvitationCode(invitation_code, u.getId()));
+        renderJSON(result);
+		}
+
+		// 招待コードに対応するProjectの情報を返す
+		public static void informationProject(String invitation_code){
+				Project p = Project.find("invitation_code = ?", invitation_code).first();
+				Map<String, Object> result = new HashMap<String, Object>();
+				result.put("project_id", p.getId());
+				result.put("project_name", p.name);
+				result.put("project_deadline", p.getDeadlineTime());
+				renderJSON(result);
+		}
+
     public static void news(){
 		User user = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 		List<News> news = News.getAllNews(user.getId());
     	render(news);
+    }
+
+    public static void getInvitationCode(Long project_id, Boolean is_valid){
+        Map<String, Object> result = new HashMap<String, Object>();
+        Project p = Project.find("id=?", project_id).first();
+        String code = null;
+        if(p.setValidInvitation(is_valid) && is_valid){
+            code = p.invitation_code;
+        }
+        result.put("code", code);
+        renderJSON(result);
     }
 }

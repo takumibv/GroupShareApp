@@ -144,7 +144,7 @@ public class UserGroupAssignor {
 			Collections.reverse(users);
 
 			for(User user : users){
-				List<Long> groupIDsSortedByRank = Wish.getGroupIDsSortedByRank(user.id);
+				List<Long> groupIDsSortedByRank = Wish.getGroupIDsSortedByRank(user.id, projectID);
 
 				//try to add user into all wish ranks of groupSheet
 				for(long id : groupIDsSortedByRank){

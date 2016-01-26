@@ -113,6 +113,11 @@ a::after {
 	border: none !important;
 }
 
+.no-deco-form {
+	box-shadow: none;
+	border: none
+}
+
 .center {
 	text-align: center;
 }
@@ -418,7 +423,11 @@ h3 {
 .makeproject-btn {
 	margin: 8px 0;
     background-color: #FF8240;
-    /*box-shadow: 0 0 3px #888;*/
+}
+
+.inputinvitationcode-btn {
+	margin: 8px 0;
+    background-color: #FF8240;
 }
 
 .register-btn {
@@ -494,6 +503,7 @@ h3 {
 }
 
 .project-table td {
+	position: relative;
 	height: 44px;
     vertical-align: middle !important;
     text-align: center;
@@ -501,6 +511,7 @@ h3 {
 
 .project-table .column-1 {
 	width: 60%;
+	padding-right: 40px;
 }
 
 .project-table .column-1 a {
@@ -512,6 +523,57 @@ h3 {
 
 .project-table .column-2 {
 	width: 20%;
+}
+
+.project-table a.share {
+	display: block;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    margin-top: -10px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.project-table a.share:hover::before {
+	content: "招待コードが無効です";
+    font-size: 12px;
+    line-height: 2;
+    position: absolute;
+    width: 160px;
+    top: -32px;
+    background: #555;
+    border-radius: 4px;
+    left: -12px;
+    box-shadow: 2px 2px 4px #aaa;
+    text-shadow: none;
+    opacity: 1;
+}
+.project-table a.share:hover::after {
+	content: "";
+    width: 0px;
+    height: 0px;
+    border: 10px solid transparent;
+    border-top: 10px solid #555;
+    position: absolute;
+    top: -12px;
+    left: 0px;
+}
+
+.project-table a.share--active {
+	color: #FF8240;
+}
+.project-table a.share--active:hover::before {
+	content: "招待コードが有効です";
+}
+
+.project-table a.share--disabled {
+	color: #efefef;
+	cursor: default;
+}
+.project-table a.share--disabled:hover::before {
+	content: "期限が過ぎているため招待コードを発行できません";
+	width: 320px;
 }
 
 .new-project {
