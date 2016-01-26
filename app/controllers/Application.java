@@ -332,15 +332,13 @@ public class Application extends Controller {
 		Project project = Project.findById(project_id);
 		project.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash, allocation_method, public_user, public_register_user, public_register_number);
 		project.save();
-		// notification!
 
 		// Delete group
 		int d_group_num = Integer.parseInt(params.get("d-group-num"));
 		for (int i = 0; i < d_group_num; i++){
 			long group_id = Long.parseLong(params.get("d-group-"+ i +"[id]"));
 			Group group = Group.findById(group_id);
-			group.delete();
-				// notification!
+			group.deleteWithWishes();
 		}
 
 		// Update or Create group!
@@ -352,13 +350,12 @@ public class Application extends Controller {
 			Group group;
 
 			if (params.get("group-"+ i +"[id]").equals("new")){
-				group = new Group(group_name, group_detail, group_capacity, project.getId());
+				group = new Group(group_name, group_detail, group_capacity, project_id);
 			} else {
 				long group_id = Long.parseLong(params.get("group-"+ i +"[id]"));
 				group = Group.findById(group_id);
 				group.setAttributes(group_name, group_detail, group_capacity);
 			}
-				// notification!
 			group.save();
 		}
 
@@ -366,9 +363,10 @@ public class Application extends Controller {
 		int d_user_num = Integer.parseInt(params.get("d-user-num"));
 		for (int i = 0; i < d_user_num; i++){
 			long user_id = Long.parseLong(params.get("d-user-"+ i +"[id]"));
-			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project.getId(), user_id).first();
+			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
 			user_project.delete();
-			// notification!
+			News news = new News(new Date(), user_id, project_id, 5);
+			news.save();
 		}
 
 		// Update ot Create user_project
@@ -378,13 +376,14 @@ public class Application extends Controller {
 
 			if (params.get("user-"+ i +"[id]").equals("new")){
 				User user = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
-				// notification!
-				UserProject.createUserProject(user.getId(), project.getId(), user_score);
+				UserProject.createUserProject(user.getId(), project_id, user_score);
 			} else {
 				long user_id = Long.parseLong(params.get("user-"+ i +"[id]"));
-				UserProject user_project = UserProject.find("project_id=? AND user_id=?", project.getId(), user_id).first();
+				UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
 				user_project.score = user_score;
 				user_project.save();
+				News news = new News(new Date(), user_id, project_id, 6);
+				news.save();
 			}
 		}
 
