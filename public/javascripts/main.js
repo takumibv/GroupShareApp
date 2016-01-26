@@ -226,13 +226,6 @@ $(document).ready(function(){
 	// プロジェクトを保存ボタン
 	$("#make-project").on("submit", function(){
 		$(window).off('beforeunload');
-		var edit_form = $(document).find(".replace-input").size();
-		if(edit_form > 0){
-			$(".replace-input").addClass("error-form");
-        	var p = $(".error-form").eq(0).offset().top;
-        	$('html,body').animate({ scrollTop: p }, 'fast');
-			return false;
-		}
 
 		var group_num = 0;
 		$("#input-groups-field").html("");
@@ -254,20 +247,10 @@ $(document).ready(function(){
 			user_num++;
 		});
 
-		if(group_num < 2){
-			$("#validation-group").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>グループは2つ以上追加してください。");
-			return false;
-		}else{
-			$("#validation-group").html("");
-		}
 		$("input[name=group-num]").val(group_num);
-		// if(user_num < 2){
-		// 	$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは2人以上追加してください。");
-		// 	return false;
-		// }else{
-			$("#validation-group").html("");
-		// }
 		$("input[name=user-num]").val(user_num);
+
+		return checkBeforeSaveProject();
 	});
 
 	$("#use-past-project").on("change", function(){
@@ -330,13 +313,6 @@ $(document).ready(function(){
 	// (編集ページ)プロジェクトの変更を保存ボタン
 	$("#update-project").on("submit", function(){
 		$(window).off('beforeunload');
-		var edit_form = $(document).find(".replace-input").size();
-		if(edit_form > 0){
-			$(".replace-input").addClass("error-form");
-			var p = $(".error-form").eq(0).offset().top;
-        	$('html,body').animate({ scrollTop: p }, 'fast');
-			return false;
-		}
 
 		var group_num = 0;
 		$("#input-groups-field").html("");
@@ -354,9 +330,6 @@ $(document).ready(function(){
 		$('#deleted-groups-field .group').each(function(){
 			$("#input-deleted-groups-field").append(
 				 "<input type='text' name='d-group-"+group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
-				// +"<input type='text' name='d-group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
-				// +"<input type='text' name='d-group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
-				// +"<input type='text' name='d-group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>"
 				);
 			deleted_group_num++;
 		});
@@ -376,29 +349,16 @@ $(document).ready(function(){
 		$('#deleted-users-field .user').each(function(){
 			$("#input-deleted-users-field").append(
 				  "<input type='text' name='d-user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
-				// + "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
-				// + "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>"
 				);
 			deleted_user_num++;
 		});
 
-		if(group_num < 2){
-			$("#validation-group").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>グループは2つ以上追加してください。");
-			return false;
-		}else{
-			$("#validation-group").html("");
-		}
 		$("input[name=group-num]").val(group_num);
 		$("input[name=d-group-num]").val(deleted_group_num);
-		// if(user_num < 2){
-		// 	$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは2人以上追加してください。");
-		// 	return false;
-		// }else{
-			$("#validation-group").html("");
-		// }
 		$("input[name=user-num]").val(user_num);
 		$("input[name=d-user-num]").val(deleted_user_num);
 
+		return checkBeforeSaveProject();
 	});
 
 });
@@ -550,4 +510,50 @@ function escapeText(text){
 		else { val += word; }
 	}
 	return val;
+}
+
+// 引数セレクタの場所まで移動
+function move(selecta){
+	var p = selecta.eq(0).offset().top;
+	$('html,body').animate({ scrollTop: p }, 'fast');
+}
+
+// プロジェクト保存ボタンを押したとき、適切な入力かを調べる
+function checkBeforeSaveProject(){
+	$(".validation-input").html("");
+	$(".validation-group").html("");
+	$(".validation-user").html("");
+
+	var edit_form 	= $(document).find(".replace-input").size();
+	var group_num 	= $('#groups-field .group').size();
+	var user_num 	= $('#users-field .user').size();
+
+	if(edit_form > 0){
+		$(".replace-input").addClass("error-form");
+		$(".validation-input").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>必要項目を入力してください。");
+    	move($(".error-form"));
+		return false;
+	}
+
+	var wish_limit = parseInt($("select[name=wish_limit]").val());
+	if(wish_limit > group_num){
+		$(".validation-wish").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>志望数はグループの数より小さくしてください。");
+		move($(".validation-wish"));
+		return false;
+	}
+	if(group_num < 2){
+		$(".validation-group").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>グループは2つ以上追加してください。");
+		move($(".validation-group"));
+		return false;
+	}else{
+		$(".validation-group").html("");
+	}
+	// if(user_num < 2){
+	// 	$("#validation-user").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>ユーザは2人以上追加してください。");
+	// 	return false;
+	// }else{
+		$(".validation-user").html("");
+	// }
+
+	return true;
 }

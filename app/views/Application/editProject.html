@@ -27,6 +27,7 @@
         <option value="2" #{if project.assign_system==2}selected#{/if}>じゃんけん</option>
       </select>
     </div>
+    <p class="validation-wish"></p>
     <div class="input-group">
       <span class="input-group-addon required">第n希望まで登録</span>
       <select class="form-control form-number" name="wish_limit">
@@ -59,7 +60,7 @@
       </select>
     </div>
 
-    <p id="validation-group"></p>
+    <p class="validation-group"></p>
     <button type="button" class="add-btn btn" data-toggle="modal" data-target="#add-group-modal">＋グループを追加</button>
     <table class="table">
       <tbody id="groups-field" class="#{if groups.size()==0}no-element#{/if}">
@@ -99,7 +100,7 @@
       </select>
     </div>
 
-    <p id="validation-user"></p>
+    <p class="validation-user"></p>
     <button type="button" class="add-btn btn" data-toggle="modal" data-target="#add-user-modal">＋ユーザを追加</button>
     <table class="table">
       <tbody id="users-field" class="#{if users.size()==0}no-element#{/if}">
@@ -152,6 +153,10 @@
     <p class="note">※「いいえ」を選択した場合、参加ユーザがどこにも所属できない場合があります。</p>
   </div>
 </div>
+
+  <p class="validation-input"></p>
+  <p class="validation-group"></p>
+  <p class="validation-user"></p>
 
   <input type="hidden" name="project_id" value="${project.id}">
   <div id="input-groups-field"></div>
