@@ -60,6 +60,12 @@ public class News extends Model {
 			case 2:
 			case 3:
 				return "プロジェクト「" + project.name + "」の結果が出ました。";
+			case 4:
+				return "プロジェクト「" + project.name + "」の希望を出していたグループが削除されました。希望の再登録をお願いします。";
+			case 5:
+				return "プロジェクト「" + project.name + "」から退会させられました。";
+			case 6:
+				return "プロジェクト「" + project.name + "」が編集されました。";
 			default:
 				return "";
 		}
@@ -73,6 +79,12 @@ public class News extends Model {
 			case 2:
 			case 3:
 				return "result/" + this.project_id;
+			case 4:
+				return "register/" + this.project_id;
+			case 5:
+				return "";
+			case 6:
+				return "projects/" + this.project_id;
 			default:
 				return "";
 		}
