@@ -129,10 +129,10 @@ $(document).ready(function(){
 
 	// モーダル　グループ追加ボタンを有効、無効の切り替え
 	$("#add-group-modal .form").keyup(function(){
-		var name 		= $("#add-group-modal input[name=name]").val();
+		var name 		= escapeText($("#add-group-modal input[name=name]").val());
 		var capacity 	= $("#add-group-modal input[name=capacity]").val();
-		var detail 		= $("#add-group-modal textarea[name=detail]").val();
-		if(name=="" || capacity=="" || detail=="" || !isValidGroup(name) || !isFinite(capacity)){
+		var detail 		= escapeText($("#add-group-modal textarea[name=detail]").val());
+		if(name=="" || capacity=="" || detail=="" || !isValidGroup(name) || !isValidNumber(capacity)){
 			$("#add-group-btn").prop("disabled", true);
 		}else{
 			$("#add-group-btn").prop("disabled", false);
@@ -144,8 +144,8 @@ $(document).ready(function(){
 			$("#validation-group-name").removeClass("ng").addClass("ok").html("<i class='fa fa-check-circle'></i>このグループ名は有効です。");
 		}
 		// 定員項目が数字かどうかのチェック
-		if(!isFinite(capacity)){
-			$("#validation-group-capacity").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>数値を入力してください。");
+		if(!isValidNumber(capacity)){
+			$("#validation-group-capacity").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>無効な入力です。");
 		}else{
 			$("#validation-group-capacity").removeClass("ng").addClass("ok").html("");
 		}
@@ -153,11 +153,11 @@ $(document).ready(function(){
 
 	// グループ追加ボタン
 	$("#add-group-btn").on("click", function(){
-		var name 		= $("#add-group-modal input[name=name]").val();
+		var name 		= escapeText($("#add-group-modal input[name=name]").val());
 		var capacity 	= parseInt($("#add-group-modal input[name=capacity]").val());
-		var detail 		= $("#add-group-modal textarea[name=detail]").val();
+		var detail 		= escapeText($("#add-group-modal textarea[name=detail]").val());
 		$("#groups-field").append(
-			  "<tr class='group'>"
+			  "<tr id='group-new' class='group'>"
 			+ "<td><span class='name'>" + name + "</span></td>"
 			+ "<td><span class='capacity'>" + capacity + "</span></td>"
 			+ "<td><span class='detail'>" + detail + "</span></td>"
@@ -170,9 +170,9 @@ $(document).ready(function(){
 
 	// モーダル　参加ユーザ追加ボタンを有効、無効の切り替え
 	$("#add-user-modal .form").keyup(function(){
-		var name 		= $("#add-user-modal input[name=name]").val();
+		var name 		= escapeText($("#add-user-modal input[name=name]").val());
 		var score 		= $("#add-user-modal input[name=score]").val();
-		if(name=="" || score=="" || !isValidUser(name) || !isFinite(score)){
+		if(name=="" || score=="" || !isValidUser(name) || !isValidNumber(score)){
 			$("#add-user-btn").prop("disabled", true);
 		}else{
 			$("#add-user-btn").prop("disabled", false);
@@ -186,8 +186,8 @@ $(document).ready(function(){
 			$("#add-user-modal input[name=id]").val(isValidUser(name)); // 有効であれば、idをフォームに追加
 		}
 		// 得点が数字かどうかのチェック
-		if(!isFinite(score)){
-			$("#validation-user-score").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>数値を入力してください。");
+		if(!isValidNumber(score)){
+			$("#validation-user-score").removeClass("ok").addClass("ng").html("<i class='fa fa-exclamation-triangle'></i>無効な入力です。");
 		}else{
 			$("#validation-user-score").removeClass("ng").addClass("ok").html("");
 		}
@@ -196,19 +196,19 @@ $(document).ready(function(){
 	// 参加ユーザ追加ボタン
 	$("#add-user-btn").on("click", function(){
 		var id 			= $("#add-user-modal input[name=id]").val();
-		var name 		= $("#add-user-modal input[name=name]").val();
+		var name 		= escapeText($("#add-user-modal input[name=name]").val());
 		var score 		= parseInt($("#add-user-modal input[name=score]").val());
 		if(isValidUser(name)){
-			$("#deleted-users-field #user-" + id).remove();
 			$("#users-field").append(
-				  "<tr id='user-" + id + "' class='user'>"
+				  "<tr id='user-new' class='user'>"
 				+ "<td><span class='name'>" + name + "</span></td>"
-				+ "<td><span class='score'>" + score + "</span></td>"
+				+ "<td class='td-score'><span class='score'>" + score + "</span></td>"
 				+ "<td><a class='delete'>削除</a></td>"
 				+ "</tr>");
 
 			resetModal();
 			checkTable();
+			checkAssignSystem();
 		}else{
 			return false;
 		}
@@ -268,22 +268,28 @@ $(document).ready(function(){
 			if ( e.which == 13 ) {
 				if($(this).parent().parent().attr("class")=="group" && $(this).attr("name")=="name"){
 					if(isValidGroup($(this).val())){
-						$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ $(this).val() +"</span>");
+						$(this).replaceWith("<span class='"+ escapeText($(this).attr("name")) +"'>"+ escapeText($(this).val()) +"</span>");
 					}else{
 						alert("無効なグループ名です。");
 					}
 				}else if($(this).attr("name")=="score" || $(this).attr("name")=="capacity"){
-					if($(this).val()!="" && isFinite($(this).val())){
-						$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ parseInt($(this).val()) +"</span>");
+					if($(this).val()!="" && isValidNumber($(this).val())){
+						$(this).replaceWith("<span class='"+ escapeText($(this).attr("name")) +"'>"+ parseInt($(this).val()) +"</span>");
 					}else{
-						alert("数値でありません。");
+						alert("無効な数値です。");
 					}
 				}else{
-					$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ $(this).val() +"</span>");
+					$(this).replaceWith("<span class='"+ $(this).attr("name") +"'>"+ escapeText($(this).val()) +"</span>");
 				}
 			}
 		}
 	});
+	// 表の編集ここまで
+
+	$("select[name=assign_system]").on("change", function(){
+		checkAssignSystem();
+	});
+
 
 	// プロジェクトを保存ボタン
 	$("#make-project").on("submit", function(){
@@ -363,7 +369,7 @@ $(document).ready(function(){
 				$("#users-field").append(
 					  "<tr id='user-" + user.id + "' class='user'>"
 					+ "<td><span class='name'>" + user.name + "</span></td>"
-					+ "<td><span class='score'>" + user_score[user.id] + "</span></td>"
+					+ "<td class='td-score'><span class='score'>" + user_score[user.id] + "</span></td>"
 					+ "<td><a class='delete'>削除</a></td>"
 					+ "</tr>");
 			}
@@ -380,11 +386,15 @@ $(document).ready(function(){
 			}
 
 			checkTable();
+			checkAssignSystem();
 		}
 	});
 /****
  * プロジェクト編集ページ
  ****/
+ 	// URL指定してないため、すべてのページで呼ばれるが、編集ページでのみ使用
+ 	checkAssignSystem();
+
 	// (編集ページ)プロジェクトの変更を保存ボタン
 	$("#update-project").on("submit", function(){
 		$(window).off('beforeunload');
@@ -457,7 +467,6 @@ $(document).ready(function(){
 		$("input[name=user-num]").val(user_num);
 		$("input[name=d-user-num]").val(deleted_user_num);
 
-		return false;
 	});
 
 });
@@ -518,6 +527,14 @@ function isValidGroup(name){
     return valid_flg;
 }
 
+function isValidNumber(num){
+	if(isFinite(num)){
+		return (parseInt(num) >= 0 && parseInt(num) <= 2147483647);
+	}else{
+		return false;
+	}
+}
+
 // モーダルを閉じる時にリセットする
 function resetModal(){
 	//グループ
@@ -551,15 +568,61 @@ function checkTable(){
 
 	if(users.size() == 0){
 		$("#users-field").addClass("no-element");
+		$(".user-table-note").addClass("no-element");
 	}else{
 		$("#users-field").removeClass("no-element");
+		$(".user-table-note").removeClass("no-element");
 	}
 
 	if(groups.size() == 0){
 		$("#groups-field").addClass("no-element");
+		$(".group-table-note").addClass("no-element");
 	}else{
 		$("#groups-field").removeClass("no-element");
+		$(".group-table-note").removeClass("no-element");
 	}
+}
+
+// 点数優先かじゃんけんかで、ユーザのスコアの表示・非表示を切り替える
+function checkAssignSystem(){
+
+	var select = $("select[name=assign_system]").val();
+	console.log("check:"+select);
+	var score_input = $("#add-user-modal input[name=score]");
+	if(select=="1"){
+		score_input.parent().removeClass("display-none");
+		score_input.val("");
+		score_input.prop("disabled", false);
+
+		$("#users-field .th-score").removeClass("display-none");
+		$("#users-field .td-score").removeClass("display-none");
+
+		$("#allocation-method-field").removeClass("display-none");
+	}else if(select=="2"){
+		score_input.parent().addClass("display-none");
+		score_input.val("0");
+		score_input.prop("disabled", true);
+
+		$("#users-field .th-score").addClass("display-none");
+		$("#users-field .td-score").addClass("display-none");
+
+		$("#allocation-method-field").addClass("display-none");
+	}
+}
+
+// XXS対策
+function escapeText(text){
+	var val = "";
+	for(var i=0; i<text.length; i++){
+		var word = text.substring(i, i+1);
+		if(word == "<") { val += "&lt"; }
+		else if(word == ">") { val += "&gt"; }
+		else if(word == "&") { val += "&amp"; }
+		else if(word == '"') { val += "&quot"; }
+		else if(word == '\n') { val += "<br>"; }
+		else { val += word; }
+	}
+	return val;
 }
 
 // 引数の招待コードが有効かどうかを返す ajax

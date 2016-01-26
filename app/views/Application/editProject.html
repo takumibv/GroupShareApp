@@ -111,7 +111,7 @@
         #{list items:users, as : 'user'}
         <tr id="user-${user.id}" class="user">
         	<td><span class="name">${user.name}</span></td>
-        	<td><span class="score">${user_score.get(user.id)}</span></td>
+        	<td class="td-score"><span class="score">${user_score.get(user.id)}</span></td>
         	<td><span class="delete-existing">削除</span></td>
         </tr>
         #{/list}
@@ -129,17 +129,19 @@
   <div class="panel-body-inner">
     <h3>詳細設定<span class="note">グループの振り分けに関する詳細設定など</span></h3>
 
-    <div class="input-group">
-      <span class="input-group-addon">振り分けの優先</span>
-      <select class="form-control form-number" name="allocation_method">
-        <option value="1" #{if project.allocation_method==1}selected#{/if}>志望を優先する</option>
-        <option value="2" #{if project.allocation_method==2}selected#{/if}>点数を優先する</option>
-      </select>
+    <div id="allocation-method-field">
+      <div class="input-group">
+        <span class="input-group-addon">振り分けの優先</span>
+        <select class="form-control form-number" name="allocation_method">
+          <option value="1" #{if project.allocation_method==1}selected#{/if}>志望を優先する</option>
+          <option value="2" #{if project.allocation_method==2}selected#{/if}>点数を優先する</option>
+        </select>
+      </div>
+      <p class="note">
+        ※志望を優先・・・点数の高い第２志望より点数の低い第１志望を優先します。<br>
+        　点数を優先・・・点数の低い第１志望より点数の高い第２志望を優先します。
+      </p>
     </div>
-    <p class="note">
-      ※志望を優先・・・点数の高い第２志望より点数の低い第１志望を優先します。<br>
-      　点数を優先・・・点数の低い第１志望より点数の高い第２志望を優先します。
-    </p>
     <div class="input-group">
       <span class="input-group-addon">すべての志望が通らなかった人をランダムで空いてるグループに振り分ける</span>
       <select class="form-control form-number" name="trash">
