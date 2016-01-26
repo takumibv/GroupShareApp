@@ -47,4 +47,17 @@ public class Group extends Model {
 		this.detail = detail;
 		this.capacity = capacity;
 	}
+
+	public void deleteWithWishes(){
+		long group_id = this.getId();
+		List<Wish> wishes = Wish.find("group_id = ?", group_id).fetch();
+		for (int j = 0, n = wishes.size(); j < n; j++){
+			Wish wish = wishes.get(j);
+			News news = new News(new Date(), wish.user_id, this.project_id, 4);
+			wish.delete();
+			news.save();
+		}
+
+		this.delete();
+	}
 }
