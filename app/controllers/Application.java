@@ -366,7 +366,7 @@ public class Application extends Controller {
 		for (int i = 0; i < d_user_num; i++){
 			long user_id = Long.parseLong(params.get("d-user-"+ i +"[id]"));
 			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
-			user_project.delete();
+			user_project.deleteWithWishes();
 			News news = new News(new Date(), user_id, project_id, 5);
 			news.save();
 		}
