@@ -90,7 +90,7 @@
         </tr>
       </tbody>
     </table>
-    <p class="table-note note no-element">※要素をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
+    <p class="group-table-note note no-element">※要素をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
   </div>
 </div>
 
@@ -117,7 +117,7 @@
         </tr>
       </tbody>
     </table>
-    <p class="table-note note no-element">※点数をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
+    <p class="user-table-note note no-element">※点数をクリックして編集できます。変更を確定する場合は「Enter」キーを押してください。</p>
   </div>
 </div>
 
@@ -125,17 +125,19 @@
   <div class="panel-body-inner">
     <h3>詳細設定<span class="note">グループの振り分けに関する詳細設定など</span></h3>
 
-    <div class="input-group">
-      <span class="input-group-addon">振り分けの優先</span>
-      <select class="form-control form-number" name="allocation_method">
-        <option value="1">志望を優先する</option>
-        <option value="2">点数を優先する</option>
-      </select>
+    <div id="allocation-method-field">
+      <div class="input-group">
+        <span class="input-group-addon">振り分けの優先</span>
+        <select class="form-control form-number" name="allocation_method">
+          <option value="1">志望を優先する</option>
+          <option value="2">点数を優先する</option>
+        </select>
+      </div>
+      <p class="note">
+        ※志望を優先・・・点数の高い第２志望より点数の低い第１志望を優先します。<br>
+        　点数を優先・・・点数の低い第１志望より点数の高い第２志望を優先します。
+      </p>
     </div>
-    <p class="note">
-      ※志望を優先・・・点数の高い第２志望より点数の低い第１志望を優先します。<br>
-      　点数を優先・・・点数の低い第１志望より点数の高い第２志望を優先します。
-    </p>
     <div class="input-group">
       <span class="input-group-addon">すべての志望が通らなかった人をランダムで空いてるグループに振り分ける</span>
       <select class="form-control form-number" name="trash">

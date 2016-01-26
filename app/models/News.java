@@ -35,9 +35,16 @@ public class News extends Model {
 		news.save();
 	}
 
-	public static List<News> getNotReadNews(Long user_id){
-		List<News> ret = News.find("user_id = ? AND isRead = ?", user_id, false).fetch();
-		return ret;
+	public static List<News> getUnreadNews(Long user_id){
+		List<News> unread_news = News.find("user_id = ? AND isRead = ?", user_id, false).fetch();
+
+		// Make isRead true
+		for (int i = 0, n = unread_news.size(); i < n; i++) {
+			News news = unread_news.get(i);
+			news.isRead = true;
+			news.save();
+		}
+		return unread_news;
 	}
 
 	public static List<News> getAllNews(Long user_id){

@@ -80,7 +80,9 @@ public class Application extends Controller {
         renderArgs.put("MP", maked_project);
 		renderArgs.put("ug_map", ug_map);
 
-        render();
+		List<News> unread_news = News.getUnreadNews(owner.getId());
+
+        render(unread_news);
     }
 
     // プロジェクト作成ページ
