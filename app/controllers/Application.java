@@ -329,8 +329,67 @@ public class Application extends Controller {
 			mypage();
     }
 
-    public static void updateProject(Long project_id, String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
-        mypage();
+    public static void updateProject(long project_id, String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+		// Update project
+		Project project = Project.findById(project_id);
+		project.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash, allocation_method, public_user, public_register_user, public_register_number);
+		project.save();
+
+		// Delete group
+		int d_group_num = Integer.parseInt(params.get("d-group-num"));
+		for (int i = 0; i < d_group_num; i++){
+			long group_id = Long.parseLong(params.get("d-group-"+ i +"[id]"));
+			Group group = Group.findById(group_id);
+			group.deleteWithWishes();
+		}
+
+		// Update or Create group!
+		int group_num = Integer.parseInt(params.get("group-num"));
+		for (int i = 0; i < group_num; i++){
+			String group_name = params.get("group-"+ i +"[name]");
+			String group_detail = params.get("group-"+ i +"[detail]");
+			int group_capacity = Integer.parseInt(params.get("group-"+ i +"[capacity]"));
+			Group group;
+
+			if (params.get("group-"+ i +"[id]").equals("new")){
+				group = new Group(group_name, group_detail, group_capacity, project_id);
+			} else {
+				long group_id = Long.parseLong(params.get("group-"+ i +"[id]"));
+				group = Group.findById(group_id);
+				group.setAttributes(group_name, group_detail, group_capacity);
+			}
+			group.save();
+		}
+
+		// Delete user_project
+		int d_user_num = Integer.parseInt(params.get("d-user-num"));
+		for (int i = 0; i < d_user_num; i++){
+			long user_id = Long.parseLong(params.get("d-user-"+ i +"[id]"));
+			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
+			user_project.deleteWithWishes();
+			News news = new News(new Date(), user_id, project_id, 5);
+			news.save();
+		}
+
+		// Update ot Create user_project
+        int user_num = Integer.parseInt(params.get("user-num"));
+		for (int i = 0; i < user_num; i++){
+			int user_score = Integer.parseInt(params.get("user-"+ i +"[score]"));
+
+			if (params.get("user-"+ i +"[id]").equals("new")){
+				User user = User.find("name = ?", params.get("user-"+ i +"[name]")).first();
+				UserProject.createUserProject(user.getId(), project_id, user_score);
+			} else {
+				long user_id = Long.parseLong(params.get("user-"+ i +"[id]"));
+				UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
+				user_project.score = user_score;
+				user_project.save();
+				News news = new News(new Date(), user_id, project_id, 6);
+				news.save();
+			}
+		}
+
+		mypage();
     }
 
     // 登録を保存する

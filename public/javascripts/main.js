@@ -326,7 +326,7 @@ $(document).ready(function(){
 		$("#input-deleted-groups-field").html("");
 		$('#deleted-groups-field .group').each(function(){
 			$("#input-deleted-groups-field").append(
-				 "<input type='text' name='d-group-"+group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
+				 "<input type='text' name='d-group-"+deleted_group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
 				);
 			deleted_group_num++;
 		});
@@ -345,7 +345,7 @@ $(document).ready(function(){
 		$("#input-deleted-users-field").html("");
 		$('#deleted-users-field .user').each(function(){
 			$("#input-deleted-users-field").append(
-				  "<input type='text' name='d-user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
+				  "<input type='text' name='d-user-"+deleted_user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				);
 			deleted_user_num++;
 		});

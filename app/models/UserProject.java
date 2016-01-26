@@ -143,4 +143,17 @@ public class UserProject extends Model {
 		userProject.registered = true;
 		userProject.save();
 	}
+
+	public void deleteWithWishes(){
+		List<Group> groups = Group.find("project_id = ?", this.project_id).fetch();
+		for (int i = 0, n = groups.size(); i < n; i++){
+			Group group = groups.get(i);
+			Wish wish = Wish.find("user_id = ? AND group_id = ?", this.user_id, group.getId()).first();
+			if (wish != null){
+				wish.delete();
+			}
+		}
+
+		this.delete();
+	}
 }

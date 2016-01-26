@@ -42,4 +42,22 @@ public class Group extends Model {
 		return result;
 	}
 
+	public void setAttributes(String name, String detail, int capacity){
+		this.name = name;
+		this.detail = detail;
+		this.capacity = capacity;
+	}
+
+	public void deleteWithWishes(){
+		long group_id = this.getId();
+		List<Wish> wishes = Wish.find("group_id = ?", group_id).fetch();
+		for (int i = 0, n = wishes.size(); i < n; i++){
+			Wish wish = wishes.get(i);
+			News news = new News(new Date(), wish.user_id, this.project_id, 4);
+			wish.delete();
+			news.save();
+		}
+
+		this.delete();
+	}
 }
