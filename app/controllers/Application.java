@@ -383,6 +383,7 @@ public class Application extends Controller {
 				long user_id = Long.parseLong(params.get("user-"+ i +"[id]"));
 				UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
 				user_project.score = user_score;
+				user_project.hasScore = true;
 				user_project.save();
 				News news = new News(new Date(), user_id, project_id, 6);
 				news.save();
