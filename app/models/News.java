@@ -91,4 +91,12 @@ public class News extends Model {
 				return "";
 		}
 	}
+
+	// objにはProject型のみ入る
+	public boolean equals(Object obj){
+		if(obj != null){
+			return (this.project_id == ((Project)obj).id);
+		}
+		return false;
+	}
 }

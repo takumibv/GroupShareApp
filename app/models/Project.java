@@ -187,4 +187,11 @@ public class Project extends Model {
 		}
 	}
 
+	public Boolean isHavingNewsInList(List<News> n_list){
+		for(News n : n_list){
+			if(n.equals(this)) return true;
+		}
+		return false;
+	}
+
 }

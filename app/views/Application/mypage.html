@@ -4,14 +4,12 @@
 
 <div id="news-block" class="sans-serif">
 	<h3>お知らせ</h3>
-	<p class="note">
-	#{if unread_news.size() == 0}
-		新しいお知らせはありません。
+	#{if unread_news.size() != 0}
+	<p class="note">${unread_news.size()}件のお知らせがあります。</p>
 	#{/if}
 	#{else}
-		${unread_news.size()}件のお知らせがあります。
+	<p>お知らせはありません。</p>
 	#{/else}
-	</p>
 	<a class="seeMore" href="@{news()}">過去のお知らせを見る</a>
 	<table class="table table-bordered">
 		<tbody>
@@ -49,7 +47,7 @@
 			<!-- 招待された登録未完了 -->
 			#{list items:InR, as : 'ele'}
 			<tr>
-				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="#{if ele.isHavingNewsInList(unread_news)}new-project#{/if} column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
 				<td class="column-2">${ele.getDeadlineTime()}</td>
 				<td class="column-3"><a class="register-btn btn" href="@{register(ele.id)}">登録する</a></td>
 			</tr>
@@ -57,7 +55,7 @@
 			<!-- 招待された登録完了 -->
 			#{list items:IR, as : 'ele'}
 			<tr>
-				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="#{if ele.isHavingNewsInList(unread_news)}new-project#{/if} column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
 				<td class="column-2">${ele.getDeadlineTime()}</td>
 				<td class="column-3">登録済み<br><a class="note" href="@{register(ele.id)}">再登録する</a></td>
 			</tr>
@@ -84,8 +82,8 @@
 			<!-- 作成したプロジェクト -->
 			#{list items:MP, as : 'ele'}
 			<tr>
-				<td class="column-1">
-					<a href="@{project(ele.id)}">${ele.name}</a> 
+				<td class="#{if ele.isHavingNewsInList(unread_news)}new-project#{/if} column-1">
+					<a href="@{project(ele.id)}">${ele.name}</a>
 					<a class="share #{if ele.valid_invitation}share--active#{/if} #{if ele.isFinished()}share--disabled#{/if}" data-toggle="modal" data-target="#invitation-code-modal-${ele.id}"><i class="fa fa-share-alt"></i></a>
 				</td>
 				<td class="column-2">${ele.getDeadlineTime()}</td>
@@ -126,7 +124,7 @@
 			<!-- 終了した登録未完了 -->
 			#{list items:FnR, as : 'ele'}
 			<tr>
-				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="#{if ele.isHavingNewsInList(unread_news)}new-project#{/if} column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
 				<td class="column-2">
 					#{if ug_map.get(ele.id)==null}
 						なし
@@ -141,7 +139,7 @@
 			<!-- 終了した登録完了 -->
 			#{list items:FR, as : 'ele'}
 			<tr>
-				<td class="column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
+				<td class="#{if ele.isHavingNewsInList(unread_news)}new-project#{/if} column-1"><a href="@{project(ele.id)}">${ele.name}</a></td>
 				<td class="column-2">
 					#{if ug_map.get(ele.id)==null}
 						なし
