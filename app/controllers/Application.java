@@ -335,6 +335,7 @@ public class Application extends Controller {
 		project.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash, allocation_method, public_user, public_register_user, public_register_number);
 		project.save();
 
+/*
 		// Delete group
 		int d_group_num = Integer.parseInt(params.get("d-group-num"));
 		for (int i = 0; i < d_group_num; i++){
@@ -389,7 +390,7 @@ public class Application extends Controller {
 				news.save();
 			}
 		}
-
+*/
 		mypage();
     }
 

@@ -379,6 +379,7 @@ $(document).ready(function(){
 	$("#update-project").on("submit", function(){
 		$(window).off('beforeunload');
 
+/*
 		var group_num = 0;
 		$("#input-groups-field").html("");
 		$('#groups-field .group').each(function(){
@@ -422,7 +423,7 @@ $(document).ready(function(){
 		$("input[name=d-group-num]").val(deleted_group_num);
 		$("input[name=user-num]").val(user_num);
 		$("input[name=d-user-num]").val(deleted_user_num);
-
+*/
 		return checkBeforeSaveProject();
 	});
 
