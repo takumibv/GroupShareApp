@@ -379,43 +379,50 @@ $(document).ready(function(){
 	$("#update-project").on("submit", function(){
 		$(window).off('beforeunload');
 
-/*
 		var group_num = 0;
 		$("#input-groups-field").html("");
 		$('#groups-field .group').each(function(){
+/*
 			$("#input-groups-field").append(
 				 "<input type='text' name='group-"+group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
 				+"<input type='text' name='group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
 				+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
+*/
 			group_num++;
 		});
 
 		var deleted_group_num = 0;
 		$("#input-deleted-groups-field").html("");
 		$('#deleted-groups-field .group').each(function(){
+/*
 			$("#input-deleted-groups-field").append(
 				 "<input type='text' name='d-group-"+deleted_group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
 				);
+*/
 			deleted_group_num++;
 		});
 
 		var user_num = 0;
 		$("#input-users-field").html("");
 		$('#users-field .user').each(function(){
+/*
 			$("#input-users-field").append(
 				  "<input type='text' name='user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				+ "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
+*/
 			user_num++;
 		});
 
 		var deleted_user_num = 0;
 		$("#input-deleted-users-field").html("");
 		$('#deleted-users-field .user').each(function(){
+/*
 			$("#input-deleted-users-field").append(
 				  "<input type='text' name='d-user-"+deleted_user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				);
+*/
 			deleted_user_num++;
 		});
 
@@ -423,7 +430,6 @@ $(document).ready(function(){
 		$("input[name=d-group-num]").val(deleted_group_num);
 		$("input[name=user-num]").val(user_num);
 		$("input[name=d-user-num]").val(deleted_user_num);
-*/
 		return checkBeforeSaveProject();
 	});
 
