@@ -298,8 +298,8 @@ $(document).ready(function(){
 		$('#groups-field .group').each(function(){
 			$("#input-groups-field").append(
 				"<input type='text' name='group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
-				+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
-				+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
+	   		+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
+		  	+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
 			group_num++;
 		});
 
@@ -389,8 +389,7 @@ $(document).ready(function(){
 				+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
 				+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
 */
-			if($(this).attr("id").substring(6) == "new")var id = -1;
-			else var id = $(this).attr("id").substring(6);
+			var id = $(this).attr("id").substring(6);
 			var name = $(this).find(".name").html();
 			var detail = $(this).find(".detail").html();
 			var capacity = $(this).find(".capacity").html();
@@ -398,7 +397,7 @@ $(document).ready(function(){
 			$.ajax({
         type: 'GET',
         url: '/updateOrCreateGroup',
-        data: {name:name,detail:detail,capacity:capacity,group_id:id},
+        data: {name:name,detail:detail,capacity:capacity,group_id_str:id},
         dataType: "json",
         async: false // 同期的
 			});

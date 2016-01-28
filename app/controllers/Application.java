@@ -503,12 +503,13 @@ public class Application extends Controller {
 		}
 
 		// Update or Create group
-		public static void updateOrCreateGroup(String name, String detail, int capacity, Long group_id){
+		public static void updateOrCreateGroup(String name, String detail, int capacity, String group_id_str){
 			Long project_id = Long.parseLong(session.get(SESSION_PROJECT_ID));
 			Group group;
-			if (group_id < 0L){
+			if (group_id_str.equals("new")){
 				group = new Group(name, detail, capacity, project_id);
 			} else {
+				Long group_id = Long.parseLong(group_id_str);
 				group = Group.findById(group_id);
 				group.setAttributes(name, detail, capacity);
 			}
