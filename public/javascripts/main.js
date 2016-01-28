@@ -296,20 +296,45 @@ $(document).ready(function(){
 		var group_num = 0;
 		$("#input-groups-field").html("");
 		$('#groups-field .group').each(function(){
+/*
 			$("#input-groups-field").append(
 				"<input type='text' name='group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 	   		+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
 		  	+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
+*/
+			var id = "new";
+			var name = $(this).find(".name").html();
+			var detail = $(this).find(".detail").html();
+			var capacity = $(this).find(".capacity").html();
+
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateGroup',
+        data: {name:name,detail:detail,capacity:capacity,group_id_str:id},
+        dataType: "json",
+        async: false // 同期的
+			});
 			group_num++;
 		});
 
 		var user_num = 0;
 		$("#input-users-field").html("");
 		$('#users-field .user').each(function(){
+/*
 			$("#input-users-field").append(
 				  "<input type='text' name='user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				+ "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
+*/
+			var user_name = $(this).find(".name").html();
+			var user_score = $(this).find(".score").html();
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateUserProject',
+        data: {user_name:user_name,user_score:user_score},
+        dataType: "json",
+        async: false // 同期的
+			});
 			user_num++;
 		});
 

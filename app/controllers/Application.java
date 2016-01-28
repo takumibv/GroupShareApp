@@ -89,6 +89,8 @@ public class Application extends Controller {
     public static void makeProject() {
         User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
         List<Project> maked_project = Project.getMakedProject(owner.getId());
+				Project p = Project.createEmptyProject(owner.getId());
+				session.put(SESSION_PROJECT_ID, p.getId());
         renderArgs.put("MP", maked_project);
         render();
     }
@@ -290,22 +292,29 @@ public class Application extends Controller {
 
 	// プロジェクトを保存する
 	public static void saveProject(String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+/*
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
+*/
 
 	    validation.required(name);
 	    validation.required(deadline_ymd);
 	    validation.required(deadline_hm);
 	    validation.required(assign_system);
 		validation.required(wish_limit);
+/*
 		long hm = (Long.valueOf(deadline_hm.split(":")[0]) * 60 * 60
 			+ Long.valueOf(deadline_hm.split(":")[1]) * 60) * 1000;
 						
-		Date deadline = new Date(deadline_ymd.getTime() + hm);
+			Date deadline = new Date(deadline_ymd.getTime() + hm);
 
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-
-		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number, params.get("deadline_ymd"), deadline_hm);
+*/
+		Project p = Project.find("ID = ?", session.get(SESSION_PROJECT_ID)).first();
+		p.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number);
+		p.valid = true;
+		p.save();
+/*
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;
@@ -328,6 +337,7 @@ public class Application extends Controller {
 						System.out.println(addUser.getId() + "\n" +  p.getId() + "\n" + 
 	            Integer.parseInt(params.get("user-"+ i +"[score]")));
         }
+*/
 			mypage();
     }
 

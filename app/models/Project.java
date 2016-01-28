@@ -63,6 +63,14 @@ public class Project extends Model {
 		return newProject;
 	}
 
+	public static Project createEmptyProject(Long owner_id){
+		Project newProject = new Project("", "", owner_id, new Date(), -1, -1, -1, -1, -1, -1, -1, "", "");
+		newProject.valid = false;
+		newProject.save();
+		setInvitationCode(newProject.getId());
+		return newProject;
+	}
+
 	public static void setInvitationCode(Long id){
 		Project p = Project.find("ID = ?", id).first();
 		String suffix = "@" + String.valueOf(p.id);
