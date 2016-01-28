@@ -89,7 +89,7 @@ public class Application extends Controller {
     public static void makeProject() {
         User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
         List<Project> maked_project = Project.getMakedProject(owner.getId());
-				Project p = Project.createEmptyProject(owner.getId());
+				Project p = Project.createEmptyProject();
 				session.put(SESSION_PROJECT_ID, p.getId());
         renderArgs.put("MP", maked_project);
         render();
@@ -308,11 +308,11 @@ public class Application extends Controller {
 						
 			Date deadline = new Date(deadline_ymd.getTime() + hm);
 
-		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 */
+		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
 		Project p = Project.find("ID = ?", session.get(SESSION_PROJECT_ID)).first();
 		p.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number);
-		p.valid = true;
+		p.owner_id = owner.getId();
 		p.save();
 /*
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);

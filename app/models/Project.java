@@ -10,7 +10,6 @@ import javax.persistence.*;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
-
 @Entity
 public class Project extends Model {
 	static public final String DATE_FORMAT ="yyyy-MM-dd";
@@ -63,9 +62,8 @@ public class Project extends Model {
 		return newProject;
 	}
 
-	public static Project createEmptyProject(Long owner_id){
-		Project newProject = new Project("", "", owner_id, new Date(), -1, -1, -1, -1, -1, -1, -1, "", "");
-		newProject.valid = false;
+	public static Project createEmptyProject(){
+		Project newProject = new Project("", "", -1L, new Date(Long.MAX_VALUE), -1, -1, -1, -1, -1, -1, -1, "", "");
 		newProject.save();
 		setInvitationCode(newProject.getId());
 		return newProject;
