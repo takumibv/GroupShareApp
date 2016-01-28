@@ -493,4 +493,45 @@ public class Application extends Controller {
         result.put("code", code);
         renderJSON(result);
     }
+
+		// Delete group
+		public static void DeleteGroup(Long group_id){
+			Group group = Group.findById(group_id);
+			group.deleteWithWishes();
+		}
+
+		// Create group
+		public static void createGroup(String group_name, String group_detail, int group_capacity, Long project_id){
+			Group group = new Group(group_name, group_detail, group_capacity, project_id);
+			group.save();
+		}
+		public static void updateGroup(Long group_id, String group_name, String group_detail, int group_capacity, Long project_id){
+				Group group = Group.findById(group_id);
+				group.setAttributes(group_name, group_detail, group_capacity);
+				group.save();
+		}
+
+		// Delete user_project
+		public static void deleteUserProject(Long user_id, Long project_id){
+			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
+			user_project.deleteWithWishes();
+			News news = new News(new Date(), user_id, project_id, 5);
+			news.save();
+		}
+
+		// create user_project
+		public static void createUserProject(int user_score, String user_name, Long project_id){
+			User user = User.find("name = ?", user_name).first();
+			UserProject.createUserProject(user.getId(), project_id, user_score);
+		}
+
+		// update user_project		
+		public static void updateUserProject(int user_score, Long user_id,Long project_id){
+			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
+			user_project.score = user_score;
+			user_project.hasScore = true;
+			user_project.save();
+			News news = new News(new Date(), user_id, project_id, 6);
+			news.save();
+		}
 }
