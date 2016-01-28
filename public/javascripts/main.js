@@ -434,8 +434,6 @@ $(document).ready(function(){
 */
 			var user_name = $(this).find(".name").html();
 			var user_score = $(this).find(".score").html();
-console.log(user_name);
-console.log(user_score);
 			$.ajax({
         type: 'GET',
         url: '/updateOrCreateUserProject',
