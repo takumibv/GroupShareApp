@@ -15,7 +15,7 @@ public class Application extends Controller {
 	private final static String SESSION_KEY_LOGIN_STATUS = "login_status";
 	private final static String SESSION_LOGIN = "login";
 	private final static String SESSION_LOGOUT = "logout";
-
+	private final static String SESSION_PROJECT_ID = "-1";
 
 
 	@Before(unless={"index", "signup", "makeAccount", "signin", "isExistsUser", "resultTrigger"})
@@ -97,6 +97,8 @@ public class Application extends Controller {
     public static void editProject(Long id) {
         User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
         Project p = Project.find("ID = ?", id).first();
+				session.put(SESSION_PROJECT_ID, String.valueOf(id));
+
         if(p.owner_id != u.getId()){
             mypage();
         }
@@ -495,43 +497,46 @@ public class Application extends Controller {
     }
 
 		// Delete group
-		public static void DeleteGroup(Long group_id){
+		public static void deleteGroup(Long group_id){
 			Group group = Group.findById(group_id);
 			group.deleteWithWishes();
 		}
 
-		// Create group
-		public static void createGroup(String group_name, String group_detail, int group_capacity, Long project_id){
-			Group group = new Group(group_name, group_detail, group_capacity, project_id);
+		// Update or Create group
+		public static void updateOrCreateGroup(String name, String detail, int capacity, Long group_id){
+			Long project_id = Long.parseLong(session.get(SESSION_PROJECT_ID));
+			Group group;
+			if (group_id < 0L){
+				group = new Group(name, detail, capacity, project_id);
+			} else {
+				group = Group.findById(group_id);
+				group.setAttributes(name, detail, capacity);
+			}
 			group.save();
-		}
-		public static void updateGroup(Long group_id, String group_name, String group_detail, int group_capacity, Long project_id){
-				Group group = Group.findById(group_id);
-				group.setAttributes(group_name, group_detail, group_capacity);
-				group.save();
 		}
 
 		// Delete user_project
-		public static void deleteUserProject(Long user_id, Long project_id){
+		public static void deleteUserProject(Long user_id){
+			Long project_id = Long.parseLong(session.get(SESSION_PROJECT_ID));
 			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
 			user_project.deleteWithWishes();
 			News news = new News(new Date(), user_id, project_id, 5);
 			news.save();
 		}
 
-		// create user_project
-		public static void createUserProject(int user_score, String user_name, Long project_id){
+		// Update ot Create user_project
+		public static void updateOrCreateUserProject(String user_name, int user_score){
+			Long project_id = Long.parseLong(session.get(SESSION_PROJECT_ID));
 			User user = User.find("name = ?", user_name).first();
-			UserProject.createUserProject(user.getId(), project_id, user_score);
-		}
-
-		// update user_project		
-		public static void updateUserProject(int user_score, Long user_id,Long project_id){
-			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
-			user_project.score = user_score;
-			user_project.hasScore = true;
-			user_project.save();
-			News news = new News(new Date(), user_id, project_id, 6);
-			news.save();
+			if(UserProject.count("user_id=? AND project_id=?", user.getId(), project_id) < 1){
+				UserProject.createUserProject(user.getId(), project_id, user_score);
+			} else {
+				UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user.getId()).first();
+				user_project.score = user_score;
+				user_project.hasScore = true;
+				user_project.save();
+				News news = new News(new Date(), user.getId(), project_id, 6);
+				news.save();
+			}
 		}
 }

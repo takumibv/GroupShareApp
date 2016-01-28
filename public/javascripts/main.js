@@ -389,6 +389,19 @@ $(document).ready(function(){
 				+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
 				+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
 */
+			if($(this).attr("id").substring(6) == "new")var id = -1;
+			else var id = $(this).attr("id").substring(6);
+			var name = $(this).find(".name").html();
+			var detail = $(this).find(".detail").html();
+			var capacity = $(this).find(".capacity").html();
+
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateGroup',
+        data: {name:name,detail:detail,capacity:capacity,group_id:id},
+        dataType: "json",
+        async: false // 同期的
+			});
 			group_num++;
 		});
 
@@ -400,6 +413,13 @@ $(document).ready(function(){
 				 "<input type='text' name='d-group-"+deleted_group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
 				);
 */
+			$.ajax({
+        type: 'GET',
+        url: '/deleteGroup',
+        data: "group_id="+$(this).attr("id").substring(6),
+        dataType: "json",
+        async: false // 同期的
+    	});
 			deleted_group_num++;
 		});
 
@@ -412,6 +432,17 @@ $(document).ready(function(){
 				+ "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
 */
+			var user_name = $(this).find(".name").html();
+			var user_score = $(this).find(".score").html();
+console.log(user_name);
+console.log(user_score);
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateUserProject',
+        data: {user_name:user_name,user_score:user_score},
+        dataType: "json",
+        async: false // 同期的
+			});
 			user_num++;
 		});
 
@@ -423,6 +454,14 @@ $(document).ready(function(){
 				  "<input type='text' name='d-user-"+deleted_user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				);
 */
+			var id = $(this).attr("id").substring(5);
+			$.ajax({
+        type: 'GET',
+        url: '/deleteUserProject',
+        data: {user_id: $(this).attr("id").substring(5)},
+        dataType: "json",
+        async: false // 同期的
+			});
 			deleted_user_num++;
 		});
 
