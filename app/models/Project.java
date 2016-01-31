@@ -106,7 +106,7 @@ public class Project extends Model {
 
 	public Boolean isFinished(){
 		Date now = new Date();
-		return now.after(deadline);
+		return now.after(deadline) && !this.hasUnFinishedUser();
 	}
 
 	public static boolean isValidInvitationCode(String invitation_code, long user_id){
