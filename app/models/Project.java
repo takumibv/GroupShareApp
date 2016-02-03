@@ -10,7 +10,6 @@ import javax.persistence.*;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
-
 @Entity
 public class Project extends Model {
 	static public final String DATE_FORMAT ="yyyy-MM-dd";
@@ -63,6 +62,13 @@ public class Project extends Model {
 		return newProject;
 	}
 
+	public static Project createEmptyProject(){
+		Project newProject = new Project("", "", -1L, new Date(Long.MAX_VALUE), -1, -1, -1, -1, -1, -1, -1, "", "");
+		newProject.save();
+		setInvitationCode(newProject.getId());
+		return newProject;
+	}
+
 	public static void setInvitationCode(Long id){
 		Project p = Project.find("ID = ?", id).first();
 		String suffix = "@" + String.valueOf(p.id);
@@ -100,7 +106,7 @@ public class Project extends Model {
 
 	public Boolean isFinished(){
 		Date now = new Date();
-		return now.after(deadline);
+		return now.after(deadline) && !this.hasUnFinishedUser();
 	}
 
 	public static boolean isValidInvitationCode(String invitation_code, long user_id){

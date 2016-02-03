@@ -15,7 +15,7 @@ public class Application extends Controller {
 	private final static String SESSION_KEY_LOGIN_STATUS = "login_status";
 	private final static String SESSION_LOGIN = "login";
 	private final static String SESSION_LOGOUT = "logout";
-
+	private final static String SESSION_PROJECT_ID = "-1";
 
 
 	@Before(unless={"index", "signup", "makeAccount", "signin", "isExistsUser", "resultTrigger"})
@@ -89,6 +89,8 @@ public class Application extends Controller {
     public static void makeProject() {
         User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
         List<Project> maked_project = Project.getMakedProject(owner.getId());
+				Project p = Project.createEmptyProject();
+				session.put(SESSION_PROJECT_ID, p.getId());
         renderArgs.put("MP", maked_project);
         render();
     }
@@ -97,6 +99,8 @@ public class Application extends Controller {
     public static void editProject(Long id) {
         User u = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
         Project p = Project.find("ID = ?", id).first();
+				session.put(SESSION_PROJECT_ID, String.valueOf(id));
+
         if(p.owner_id != u.getId()){
             mypage();
         }
@@ -279,22 +283,29 @@ public class Application extends Controller {
 
 	// プロジェクトを保存する
 	public static void saveProject(String name, String detail, Date deadline_ymd, String deadline_hm, int assign_system, int wish_limit, int trash, int allocation_method, int public_user, int public_register_user, int public_register_number){
+/*
         Integer group_num               = Integer.parseInt(params.get("group-num"));    // グループの個数
         Integer user_num                = Integer.parseInt(params.get("user-num"));     // ユーザの個数
+*/
 
 	    validation.required(name);
 	    validation.required(deadline_ymd);
 	    validation.required(deadline_hm);
 	    validation.required(assign_system);
 		validation.required(wish_limit);
+/*
 		long hm = (Long.valueOf(deadline_hm.split(":")[0]) * 60 * 60
 			+ Long.valueOf(deadline_hm.split(":")[1]) * 60) * 1000;
 						
-		Date deadline = new Date(deadline_ymd.getTime() + hm);
+			Date deadline = new Date(deadline_ymd.getTime() + hm);
 
+*/
 		User owner = User.find("name = ?", session.get(SESSION_KEY_USER)).first();
-
-		Project p = Project.makeProject(name, detail, owner.getId(),  deadline, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number, params.get("deadline_ymd"), deadline_hm);
+		Project p = Project.find("ID = ?", session.get(SESSION_PROJECT_ID)).first();
+		p.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash,  allocation_method, public_user, public_register_user, public_register_number);
+		p.owner_id = owner.getId();
+		p.save();
+/*
 		System.out.println(p.name + "\n" + p.owner_id + "\n" + p.deadline + "\n" + p.assign_system + "\n" + p.wish_limit + "\n" + p.invitation_code);
 
 		final long projectID = p.id;
@@ -317,6 +328,7 @@ public class Application extends Controller {
 						System.out.println(addUser.getId() + "\n" +  p.getId() + "\n" + 
 	            Integer.parseInt(params.get("user-"+ i +"[score]")));
         }
+*/
 			mypage();
     }
 
@@ -326,6 +338,7 @@ public class Application extends Controller {
 		project.setAttributes(name, detail, deadline_ymd, deadline_hm, assign_system, wish_limit, trash, allocation_method, public_user, public_register_user, public_register_number);
 		project.save();
 
+/*
 		// Delete group
 		int d_group_num = Integer.parseInt(params.get("d-group-num"));
 		for (int i = 0; i < d_group_num; i++){
@@ -380,7 +393,7 @@ public class Application extends Controller {
 				news.save();
 			}
 		}
-
+*/
 		mypage();
     }
 
@@ -483,4 +496,49 @@ public class Application extends Controller {
         result.put("code", code);
         renderJSON(result);
     }
+
+		// Delete group
+		public static void deleteGroup(Long group_id){
+			Group group = Group.findById(group_id);
+			group.deleteWithWishes();
+		}
+
+		// Update or Create group
+		public static void updateOrCreateGroup(String name, String detail, int capacity, String group_id_str){
+			Long project_id = Long.parseLong(session.get(SESSION_PROJECT_ID));
+			Group group;
+			if (group_id_str.equals("new")){
+				group = new Group(name, detail, capacity, project_id);
+			} else {
+				Long group_id = Long.parseLong(group_id_str);
+				group = Group.findById(group_id);
+				group.setAttributes(name, detail, capacity);
+			}
+			group.save();
+		}
+
+		// Delete user_project
+		public static void deleteUserProject(Long user_id){
+			Long project_id = Long.parseLong(session.get(SESSION_PROJECT_ID));
+			UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user_id).first();
+			user_project.deleteWithWishes();
+			News news = new News(new Date(), user_id, project_id, 5);
+			news.save();
+		}
+
+		// Update ot Create user_project
+		public static void updateOrCreateUserProject(String user_name, int user_score){
+			Long project_id = Long.parseLong(session.get(SESSION_PROJECT_ID));
+			User user = User.find("name = ?", user_name).first();
+			if(UserProject.count("user_id=? AND project_id=?", user.getId(), project_id) < 1){
+				UserProject.createUserProject(user.getId(), project_id, user_score);
+			} else {
+				UserProject user_project = UserProject.find("project_id=? AND user_id=?", project_id, user.getId()).first();
+				user_project.score = user_score;
+				user_project.hasScore = true;
+				user_project.save();
+				News news = new News(new Date(), user.getId(), project_id, 6);
+				news.save();
+			}
+		}
 }

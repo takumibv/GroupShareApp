@@ -296,20 +296,45 @@ $(document).ready(function(){
 		var group_num = 0;
 		$("#input-groups-field").html("");
 		$('#groups-field .group').each(function(){
+/*
 			$("#input-groups-field").append(
 				"<input type='text' name='group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
-				+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
-				+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
+	   		+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
+		  	+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
+*/
+			var id = "new";
+			var name = $(this).find(".name").html();
+			var detail = $(this).find(".detail").html();
+			var capacity = $(this).find(".capacity").html();
+
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateGroup',
+        data: {name:name,detail:detail,capacity:capacity,group_id_str:id},
+        dataType: "json",
+        async: false // 同期的
+			});
 			group_num++;
 		});
 
 		var user_num = 0;
 		$("#input-users-field").html("");
 		$('#users-field .user').each(function(){
+/*
 			$("#input-users-field").append(
 				  "<input type='text' name='user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				+ "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
+*/
+			var user_name = $(this).find(".name").html();
+			var user_score = $(this).find(".score").html();
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateUserProject',
+        data: {user_name:user_name,user_score:user_score},
+        dataType: "json",
+        async: false // 同期的
+			});
 			user_num++;
 		});
 
@@ -382,39 +407,83 @@ $(document).ready(function(){
 		var group_num = 0;
 		$("#input-groups-field").html("");
 		$('#groups-field .group').each(function(){
+/*
 			$("#input-groups-field").append(
 				 "<input type='text' name='group-"+group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
 				+"<input type='text' name='group-"+group_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+"<input type='text' name='group-"+group_num+"[capacity]' value='"+ $(this).find(".capacity").html() +"'>"
 				+"<input type='text' name='group-"+group_num+"[detail]' value='"+ $(this).find(".detail").html() +"'>");
+*/
+			var id = $(this).attr("id").substring(6);
+			var name = $(this).find(".name").html();
+			var detail = $(this).find(".detail").html();
+			var capacity = $(this).find(".capacity").html();
+
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateGroup',
+        data: {name:name,detail:detail,capacity:capacity,group_id_str:id},
+        dataType: "json",
+        async: false // 同期的
+			});
 			group_num++;
 		});
 
 		var deleted_group_num = 0;
 		$("#input-deleted-groups-field").html("");
 		$('#deleted-groups-field .group').each(function(){
+/*
 			$("#input-deleted-groups-field").append(
 				 "<input type='text' name='d-group-"+deleted_group_num+"[id]' value='"+ $(this).attr("id").substring(6) +"'>"
 				);
+*/
+			$.ajax({
+        type: 'GET',
+        url: '/deleteGroup',
+        data: "group_id="+$(this).attr("id").substring(6),
+        dataType: "json",
+        async: false // 同期的
+    	});
 			deleted_group_num++;
 		});
 
 		var user_num = 0;
 		$("#input-users-field").html("");
 		$('#users-field .user').each(function(){
+/*
 			$("#input-users-field").append(
 				  "<input type='text' name='user-"+user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				+ "<input type='text' name='user-"+user_num+"[name]' value='"+ $(this).find(".name").html() +"'>"
 				+ "<input type='text' name='user-"+user_num+"[score]' value='"+ $(this).find(".score").html() +"'>");
+*/
+			var user_name = $(this).find(".name").html();
+			var user_score = $(this).find(".score").html();
+			$.ajax({
+        type: 'GET',
+        url: '/updateOrCreateUserProject',
+        data: {user_name:user_name,user_score:user_score},
+        dataType: "json",
+        async: false // 同期的
+			});
 			user_num++;
 		});
 
 		var deleted_user_num = 0;
 		$("#input-deleted-users-field").html("");
 		$('#deleted-users-field .user').each(function(){
+/*
 			$("#input-deleted-users-field").append(
 				  "<input type='text' name='d-user-"+deleted_user_num+"[id]' value='"+ $(this).attr("id").substring(5) +"'>"
 				);
+*/
+			var id = $(this).attr("id").substring(5);
+			$.ajax({
+        type: 'GET',
+        url: '/deleteUserProject',
+        data: {user_id: $(this).attr("id").substring(5)},
+        dataType: "json",
+        async: false // 同期的
+			});
 			deleted_user_num++;
 		});
 
@@ -422,7 +491,6 @@ $(document).ready(function(){
 		$("input[name=d-group-num]").val(deleted_group_num);
 		$("input[name=user-num]").val(user_num);
 		$("input[name=d-user-num]").val(deleted_user_num);
-
 		return checkBeforeSaveProject();
 	});
 
